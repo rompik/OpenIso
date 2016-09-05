@@ -1,1 +1,0 @@
-TUBI 214 214-PAU-001H 214-PR-00094 01 50   03CA1D60   C6CT92      - -         T 2.0000"    2.0000"  1499.99      Pipe, ASME B36.10, BE, Seamless, -,/S-STD
