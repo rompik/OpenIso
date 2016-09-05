@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-31 14:59+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/openiso.core.drawing.shape.line.vala:7
+#: src/openiso.core.drawing.shape.rectangle.vala:12
+msgid "Simple"
+msgstr ""
+
+#: src/openiso.core.drawing.shape.rectangle.vala:10
+msgid "Left"
+msgstr ""
+
+#: src/openiso.core.drawing.shape.rectangle.vala:11
+msgid "Bottom"
+msgstr ""
+
+#: src/openiso.core.import.idf.vala:95
+#, c-format
+msgid "File '%s' does not exist.\n"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:14
+msgid "OpenIso"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:15
+msgid "ver. 0.0.1 alpha"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:19 src/openiso.ui.windows.main.vala:29
+msgid "Import file"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:23 src/openiso.ui.windows.main.vala:34
+msgid "Save As"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:27 src/openiso.ui.windows.main.vala:39
+msgid "About"
+msgstr ""
+
+#: src/openiso.ui.mainheaderbar.vala:31 src/openiso.ui.windows.main.vala:44
+msgid "Settings"
+msgstr ""
+
+#: src/openiso.ui.windows.main.vala:78
+msgid "Import File"
+msgstr ""
+
+#: src/openiso.ui.windows.main.vala:80
+msgid "Cancel"
+msgstr ""
+
+#: src/openiso.ui.windows.main.vala:81
+msgid "Open"
+msgstr ""
+
+#: src/openiso.ui.windows.main.vala:110
+msgid "IDF File"
+msgstr ""

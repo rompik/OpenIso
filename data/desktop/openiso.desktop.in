@@ -1,0 +1,25 @@
+[Desktop Entry]
+Name=OpenIso
+Name[ru]=openiso.desktop.in
+GenericName=CAD
+GenericName[ru]=САПР
+Version=0.0.1
+Encoding=UTF-8
+Comment=Application to produce piping isometric
+Comment[ru]=Программа для выпуска изометрических чертежей трубопроводов
+MimeType=application/x-openiso;
+Categories=GNOME;GTK;Graphics;
+Keywords=OpenIso;CAD;Isometric;
+Keywords[ru]=OpenIso;САПР;Изометрички;Чертежи
+Exec=./src/openiso
+Icon=../../data/icons/openiso.png
+Terminal=false
+Type=Application
+StartupNotify=true
+X-GNOME-Gettext-Domain=openpds
+X-GNOME-Keywords=GNOME;CAD;Iso;Isometric;
+Actions=AboutDialog;
+
+[Desktop Action AboutDialog]
+Exec=openiso --about
+Name=About OpenIso
