@@ -1,4 +1,5 @@
-/*
+/* openiso.core.import.xml.vala
+ *
  * Copyright (C) 2016 Rompik <rompik@mail.ru>
  *
  * This file is free software; you can redistribute it and/or modify it
@@ -14,3 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+
+using OpenIso.Core;
+
+namespace OpenIso.Core.Import {
+    public class XML : GLib.Object {
+        /*
+        *   Read IDF file and save data to array of strings
+        */
+        public XML (File _file){
+
+
+        }
+
+    }
+}

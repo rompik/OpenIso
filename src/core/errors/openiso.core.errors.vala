@@ -1,4 +1,5 @@
-/*
+/* openiso.core.errors.vala
+ *
  * Copyright (C) 2016 Rompik <rompik@mail.ru>
  *
  * This file is free software; you can redistribute it and/or modify it
@@ -14,3 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+public errordomain OpenIso.Error {
+    General,
+}

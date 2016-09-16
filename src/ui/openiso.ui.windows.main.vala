@@ -1,3 +1,22 @@
+/* openiso.ui.windows.main.vala
+ *
+ * Copyright (C) 2016 Rompik <rompik@mail.ru>
+ *
+ * This file is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This file is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 using Gtk;
 using Gdk;
 using GLib;
@@ -69,8 +88,6 @@ namespace OpenIso.UI.Windows{
                 ScrolledDrawingArea.add(DrawingAreaMain);
                 ScrolledDrawingArea.set_size_request (600, 600);
 
-                DrawingAreaMain.draw.connect (on_draw);
-
             //Setup panel container
             var MainPanned = new Paned(Gtk.Orientation.HORIZONTAL);
                 MainPanned.add1 (ScrolledPipesExplorer);
@@ -92,7 +109,7 @@ namespace OpenIso.UI.Windows{
             _("Open"),Gtk.ResponseType.ACCEPT);
 
             file_chooser_import.destroy_with_parent = true;
-            file_chooser_import.set_current_folder (Environment.get_home_dir () + "/Dropbox/VALA/openiso/test");
+            file_chooser_import.set_current_folder (Environment.get_home_dir () + "/Dropbox/VALA/OpenIso/test/ComplexPipe/");
 
             var filter = import_dialog_filter();
 
@@ -184,7 +201,7 @@ namespace OpenIso.UI.Windows{
 
             //TODO: Clean previous data for TreeView
 
-            var pipes_store = new TreeStore (1, typeof (string));
+            TreeStore pipes_store = new TreeStore (1, typeof (string));
 
             //pipes_explorer.clear();
 		    pipes_explorer.enable_tree_lines = true;
@@ -210,59 +227,6 @@ namespace OpenIso.UI.Windows{
 		    pipes_explorer.collapse_all ();
 
 		}
-
-		//Method for drawing
-	    private bool on_draw (Widget da, Context ctx) {
-
-	        //int width = get_allocated_width();
-	        //int height = get_allocated_height();
-
-            //var radius = double.min (width / 2, height /2 ) - 5;
-            //ctx.arc (width, height, radius, 0, 2 * Math.PI);
-            //ctx.set_source_rgb (1, 1, 1);
-            //ctx.fill_preserve();
-
-            //Setup color of outline
-            //ctx.set_source_rgb (0, 0, 0);
-            //ctx.stroke();
-
-            //Setup thikness of line
-            //ctx.set_line_width ( 1 );
-
-            //Setup tolerance of line
-            //ctx.set_tolerance ( 1 );
-
-            //ctx.set_line_join (LineJoin.ROUND);
-            //ctx.set_dash (new double[] {SIZE / 4.0, SIZE / 4.0}, 0);
-            //stroke_shapes (ctx, 0, 0);
-
-            //ctx.set_dash (null, 0);
-            //stroke_shapes (ctx, 0, 3 * SIZE);
-
-            //ctx.set_line_join (LineJoin.BEVEL);
-            //stroke_shapes (ctx, 0, 6 * SIZE);
-
-            //ctx.set_line_join (LineJoin.MITER);
-            //stroke_shapes(ctx, 0, 9 * SIZE);
-
-            //fill_shapes (ctx, 0, 12 * SIZE);
-
-            //ctx.set_line_join (LineJoin.BEVEL);
-            //fill_shapes (ctx, 0, 15 * SIZE);
-            //ctx.set_source_rgb (1, 0, 0);
-            //stroke_shapes (ctx, 0, 15 * SIZE);
-
-            return true;
-        }
-
-        private delegate void DrawMethod ();
-
-        public override void size_allocate (Allocation allocation) {
-            //The base method will save the allocation and move/resize the
-            // widget's GDK window if widget is already realised.
-            base.size_allocate (allocation);
-        }
-
     }
 }
 
