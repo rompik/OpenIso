@@ -18,6 +18,7 @@
 
 using GLib;
 using OpenIso.Core;
+using Math;
 
 namespace OpenIso.Core.Piping {
     public class Component : Object {
@@ -35,10 +36,14 @@ namespace OpenIso.Core.Piping {
         public string Type { get; set; }
 
 		//* Start position of component *//
-		public double[] PosStart { get; set; }
+		public double StartEast { get; set; }
+		public double StartNorth { get; set; }
+		public double StartElev { get; set; }
 
 		//* End position of component *//
-		public double[] PosEnd { get; set; }
+		public double EndEast { get; set; }
+		public double EndNorth { get; set; }
+		public double EndElev { get; set; }
 
         //* Subtype of Component *//
         public string Subtype { get; set; }
@@ -60,7 +65,17 @@ namespace OpenIso.Core.Piping {
 
         //* Length of component - mainly for tube *//
         public double Length {
-			get { return _length; }
+			get {
+
+	            if (this.Type == "TUBE"){
+
+	                _length = sqrt( pow (this.StartEast - this.EndEast, 2) + pow (this.StartNorth - this.EndNorth, 2 ) + pow ( this.StartElev - this.EndElev, 2));
+                    //TODO: Round values to .01 mm
+
+	            }
+
+			    return _length;
+			}
 			set { _length = value; }
 		}
 

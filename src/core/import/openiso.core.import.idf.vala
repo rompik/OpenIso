@@ -541,10 +541,20 @@ namespace OpenIso.Core.Import {
             //* Component Skey *//
             _component.Skey = _skey;
 
+
+            //* TODO: Remove after test //
+            _component.StartEast = _start_pos_east;
+            _component.StartNorth = _start_pos_north;
+            _component.StartElev = _start_pos_elev;
+
+            _component.EndEast = _end_pos_east;
+            _component.EndNorth = _end_pos_north;
+            _component.EndElev = _end_pos_elev;
+
+
             /* TODO: Setup table with connection points of component
             / to exclude duplicating of points with the same number
              */
-
 
             //* Creating Connection Points *//
             // Start point
@@ -580,6 +590,7 @@ namespace OpenIso.Core.Import {
 				    if ( _pipes.index(i).Components.index(j).Material.Number != 0) {
 				      	_pipes.index(i).Components.index(j).Material.Code = property_materials.index(_pipes.index(i).Components.index(j).Material.Number - 1 ).Code;
 				        _pipes.index(i).Components.index(j).Material.Description = property_materials.index(_pipes.index(i).Components.index(j).Material.Number - 1 ).Description;
+				        stdout.printf("Pipe Length - " + _pipes.index(i).Components.index(j).Length.to_string() + "\n");
 				    }
                 }
 			}

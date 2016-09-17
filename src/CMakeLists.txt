@@ -62,6 +62,7 @@ PACKAGES
 )
 
 add_executable(openiso ${VALA_C})
+target_link_libraries( openiso m )
 
 
 install(TARGETS
