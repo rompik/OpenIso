@@ -29,18 +29,6 @@ namespace OpenIso.Core.Import {
         /**
         * New IDF file
         */
-        //private File _File = null;
-        //private int i = 0;
-        //private string[] _FileStrings = null;
-
-        //* Collect values from string and remove spaces *//
-        //private HashTable<string, GLib.Variant?> _table_from_string = new HashTable <string, GLib.Variant?> (str_hash, str_equal);
-
-        //* New Pipe component *//
-        //private Piping.Component _new_comp = null;
-        //private MTO.Material _new_material = null;
-        //private Connections.Point _comp_point_1 = null;
-        //private Connections.Point _comp_point_2 = null;
 
         //*String for IDF file path*//
         private Array <string> _file_strings = new Array <string> ();
@@ -75,10 +63,6 @@ namespace OpenIso.Core.Import {
         //*Next number for future loaded note text *//
         private int _iNextNoteTextNumber = 0;
 
-
-        //*Map for storing Types of components*//
-        //private HashMap<int, string> mapComponentTypes = new HashMap<int, string> ();
-
         //*Collection of imported notes*//
         //private Array <string> property_notes = new Array <string> ();
         //private Array <Drawing.Note.Text> property_note_texts = new Array<Drawing.Note.Text> ();
@@ -86,7 +70,6 @@ namespace OpenIso.Core.Import {
 
         //*Array of imported materials*//
         private Array <MTO.Material> property_materials = new Array <MTO.Material> ();
-
 
         //** List of pipes **//
         // Has to use detailed as there is problem with addining new component to array
