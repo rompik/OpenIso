@@ -55,6 +55,11 @@ set (APP_SOURCES ${APP_SOURCES} openiso.test.pipes.vala)
 set (APP_SOURCES ${APP_SOURCES} openiso.vala)
 set (APP_SOURCES ${APP_SOURCES} ui/openiso.ui.windows.main.vala)
 
+
+if ((${CMAKE_BUILD_TYPE} STREQUAL "Debug") OR (${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo"))
+	set(COMPILE_OPTIONS ${COMPILE_OPTIONS} "-g")
+endif()
+
 vala_precompile(VALA_C openiso
 	${APP_SOURCES}
 PACKAGES
