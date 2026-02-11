@@ -1,0 +1,20 @@
+[MASTER]
+# Extension modules that PyLint cannot analyze
+extension-pkg-whitelist=PyQt6
+
+[MESSAGES CONTROL]
+# Disable specific messages for PyQt6 compatibility
+disable=no-name-in-module,
+        c-extension-no-member,
+        attribute-defined-outside-init
+
+[TYPECHECK]
+# PyQt6 modules that use compiled extensions
+ignored-modules=PyQt6,
+                PyQt6.QtWidgets,
+                PyQt6.QtGui,
+                PyQt6.QtCore,
+                PyQt6.sip
+
+# Generated members that exist at runtime but not in stubs
+generated-members=PyQt6.*
