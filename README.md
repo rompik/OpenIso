@@ -1,4 +1,6 @@
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
+[![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
+[![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows/)
 
 # OpenIso
 OpenIso is an open-source, lightweight graphical editor designed specifically for creating and managing piping isometric fitting symbols.  It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing Symbol Keys (SKEYs) and component graphics used in industrial piping isometrics.
