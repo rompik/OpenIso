@@ -1,4 +1,4 @@
-# 📖 Iso Symbols Library Help
+# 📖 OpenIso Help
 
 Welcome to the documentation for **Iso Symbols Library**. Choose a section from the list below to get started.
 
