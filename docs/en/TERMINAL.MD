@@ -1,36 +1,36 @@
-# Справка по командам терминала
+# Terminal Commands Reference
 
-Терминал позволяет управлять редактором символов с помощью текстовых команд.
+The terminal allows you to control the symbol editor using text commands.
 
-## Перемещение (Move)
-**Команда:** `BY`
-**Описание:** Перемещает выделенные элементы по осям X и Y.
-**Синтаксис:** `BY <Ось> <Значение> [<Ось> <Значение> ...]`
-**Параметры:**
-*   `<Ось>`: `X` или `Y`
-*   `<Значение>`: Число (смещение в относительных единицах)
-**Примеры:**
-*   `BY X 0.1` — сдвинуть на 0.1 вправо
-*   `BY Y -0.2` — сдвинуть на 0.2 вниз
-*   `BY X 0.5 Y 0.5` — сдвинуть по обеим осям одновременно
+## Move
+**Command:** `BY`
+**Description:** Moves selected elements along the X and Y axes.
+**Syntax:** `BY <Axis> <Value> [<Axis> <Value> ...]`
+**Parameters:**
+*   `<Axis>`: `X` or `Y`
+*   `<Value>`: Number (offset in relative units)
+**Examples:**
+*   `BY X 0.1` — shift 0.1 to the right
+*   `BY Y -0.2` — shift 0.2 down
+*   `BY X 0.5 Y 0.5` — shift along both axes simultaneously
 
-## Поворот (Rotate)
-**Команда:** `ROTATE`
-**Описание:** Поворачивает выделенные элементы на заданный угол.
-**Синтаксис:** `ROTATE [<Угол>]`
-**Параметры:**
-*   `<Угол>`: Число в градусах (по умолчанию 90)
-**Примеры:**
-*   `ROTATE` — повернуть на 90 градусов по часовой стрелке
-*   `ROTATE 45` — повернуть на 45 градусов
-*   `ROTATE -90` — повернуть на 90 градусов против часовой стрелки
+## Rotate
+**Command:** `ROTATE`
+**Description:** Rotates selected elements by a specified angle.
+**Syntax:** `ROTATE [<Angle>]`
+**Parameters:**
+*   `<Angle>`: Number in degrees (default 90)
+**Examples:**
+*   `ROTATE` — rotate 90 degrees clockwise
+*   `ROTATE 45` — rotate 45 degrees
+*   `ROTATE -90` — rotate 90 degrees counterclockwise
 
-## Очистка (Clear)
-**Команда:** `CLR`
-**Описание:** Снимает выделение со всех элементов на холсте.
-**Синтаксис:** `CLR`
+## Clear
+**Command:** `CLR`
+**Description:** Deselects all elements on the canvas.
+**Syntax:** `CLR`
 
-## Помощь (Help)
-**Команда:** `HELP`
-**Описание:** Выводит список доступных команд или краткую справку по конкретной команде.
-**Синтаксис:** `HELP [<Команда>]`
+## Help
+**Command:** `HELP`
+**Description:** Displays a list of available commands or brief help for a specific command.
+**Syntax:** `HELP [<Command>]`

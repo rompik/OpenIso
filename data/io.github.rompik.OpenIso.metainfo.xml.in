@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<!-- SPDX-FileCopyrightText: 2024 OpenIso Authors -->
+
+<component type="desktop">
+  <id>io.github.rompik.OpenIso</id>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>OpenIso</name>
+  <summary>Skey Symbol Library Editor for Isometric Drawings</summary>
+
+  <description>
+    <p>
+      OpenIso is a graphical editor for managing and creating
+      Skey symbols used in isometric piping drawings. It provides tools for:
+    </p>
+    <p>• Creating and editing geometric primitives</p>
+    <p>• Managing symbol libraries</p>
+    <p>• Importing symbols from ASCII and IDF formats</p>
+    <p>• Organizing symbols into categories</p>
+  </description>
+
+  <developer_name>Roman PARYGIN</developer_name>
+
+  <launchable type="desktop-id">io.github.rompik.OpenIso.desktop</launchable>
+
+  <categories>
+    <category>Utility</category>
+    <category>Graphics</category>
+    <category>Science</category>
+  </categories>
+
+  <!-- Local icon bundled inside the Flatpak -->
+  <icon type="cached">io.github.rompik.OpenIso</icon>
+
+  <url type="homepage">https://github.com/rompik/OpenIso</url>
+  <url type="bugtracker">https://github.com/rompik/OpenIso/issues</url>
+  <url type="vcs-browser">https://github.com/rompik/OpenIso</url>
+
+  <translation type="gettext">openiso</translation>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </recommends>
+
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+
+  <releases>
+    <release version="0.5.0" date="2026-02-08">
+      <description>
+        <p>Stable release with export capabilities and core fixes:</p>
+        <p>• Implemented Intergraph ASCII (.asc) export functionality</p>
+        <p>• Added Save functionality with database persistence</p>
+        <p>• Improved coordinate mapping and scaling logic</p>
+        <p>• UI stability and bug fixes</p>
+      </description>
+    </release>
+  </releases>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>Main window with symbol editor</caption>
+      <image>https://raw.githubusercontent.com/rompik/OpenIso/main/data/screenshots/main-window.png</image>
+    </screenshot>
+  </screenshots>
+
+  <keywords>
+    <keyword>isometric</keyword>
+    <keyword>skey</keyword>
+    <keyword>symbols</keyword>
+    <keyword>piping</keyword>
+    <keyword>engineering</keyword>
+    <keyword>CAD</keyword>
+  </keywords>
+
+</component>

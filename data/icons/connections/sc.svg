@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 128 128" stroke="currentColor" stroke-width="6"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+  <!-- Connecting Pipe Center Line -->
+  <line x1="20" y1="64" x2="40" y2="64" />
+  <line x1="88" y1="64" x2="108" y2="64" />
+
+  <!-- Threaded joint symbol (ISO style) -->
+  <line x1="58" y1="56" x2="70" y2="56" stroke-width="3" />
+  <line x1="58" y1="72" x2="70" y2="72" stroke-width="3" />
+
+</svg>
+

@@ -1,0 +1,117 @@
+/* Adwaita-inspired styling for Markdown documentation */
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    padding: 30px;
+    color: #2e3436;
+    background-color: #ffffff;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 26pt;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #1a1c1d;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 19pt;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 10px;
+    color: #2e3436;
+    margin-top: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 15pt;
+    color: #2e3436;
+    margin-top: 32px;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: 18px;
+}
+
+code {
+    background-color: #f3f3f3;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: 'Source Code Pro', 'Cascadia Code', monospace;
+    font-size: 0.9em;
+}
+
+pre {
+    background-color: #f6f6f6;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    margin: 24px 0;
+    font-family: 'Source Code Pro', 'Cascadia Code', monospace;
+    overflow-x: auto;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+a {
+    color: #3584e4;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul, ol {
+    padding-left: 24px;
+    margin-bottom: 18px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    margin: 40px 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 24px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #555753;
+}
+
+blockquote {
+    border-left: 4px solid #3584e4;
+    padding: 10px 20px;
+    margin: 20px 0;
+    background-color: #f0f7ff;
+    color: #2e3436;
+    border-radius: 0 8px 8px 0;
+}

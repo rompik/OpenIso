@@ -1,0 +1,156 @@
+/* Global Terminal Styles */
+#TerminalHistory {
+    background-color: #ffffff;
+    color: #333333;
+    font-family: 'Consolas', 'Monaco', monospace;
+    border: 1px solid #cccccc;
+    font-size: 12px;
+}
+
+#TerminalInput {
+    background-color: #f9f9f9;
+    color: #000000;
+    border: none;
+    padding: 4px;
+    font-family: 'Consolas', monospace;
+}
+
+#TerminalPrompt {
+    background-color: #f9f9f9;
+    color: #555555;
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    padding-left: 5px;
+    border-bottom: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+}
+
+#TerminalInputContainer {
+    background-color: #f9f9f9;
+    border: 1px solid #cccccc;
+    border-top: none;
+}
+
+/* About Dialog Styles */
+#AboutDialog {
+    background-color: #f6f6f6;
+}
+
+#AboutTitle {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #2e3436;
+}
+
+#AboutAuthor {
+    font-size: 10pt;
+    color: #555753;
+}
+
+#VersionBadge {
+    background-color: #f2d5d0;
+    color: #c01c28;
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-weight: bold;
+    font-size: 9pt;
+}
+
+.ListGroup {
+    background-color: white;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+}
+
+.ListRow {
+    background-color: white;
+    border: none;
+    text-align: left;
+    padding: 10px;
+    font-size: 10pt;
+    border-radius: 10px;
+}
+
+.ListRow:hover {
+    background-color: #eeeeee;
+}
+
+.Separator {
+    background-color: #dcdcdc;
+    max-height: 1px;
+}
+
+#HeaderTitle {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+#BackButton {
+    border: none;
+    background: transparent;
+    font-size: 14pt;
+    font-weight: bold;
+    border-radius: 14px;
+    width: 28px;
+    height: 28px;
+}
+
+#BackButton:hover {
+    background-color: #eeeeee;
+}
+
+.SubPageContent {
+    background-color: #f6f6f6;
+}
+
+.LegalText {
+    font-size: 10pt;
+    color: #2e3436;
+}
+
+#AboutCopyright {
+    color: #888a85;
+    font-size: 8pt;
+}
+
+#MenuToolbar QPushButton {
+    border: none;
+    background-color: transparent;
+}
+
+#MenuToolbar QPushButton:hover {
+    background-color: #e5e5e5;
+    border-radius: 4px;
+}
+
+#MenuToolbar QPushButton:pressed {
+    background-color: #cccccc;
+}
+
+/* Help Window Styles */
+#HelpNavTree {
+    background-color: #f6f6f6;
+    border: none;
+    border-right: 1px solid #dcdcdc;
+    font-size: 10pt;
+}
+
+#HelpNavTree::item {
+    padding: 8px;
+    border-radius: 6px;
+    margin: 2px 5px;
+}
+
+#HelpNavTree::item:hover {
+    background-color: #eeeeee;
+}
+
+#HelpNavTree::item:selected {
+    background-color: #3584e4;
+    color: white;
+}
+
+QTextBrowser {
+    border: none;
+    background-color: white;
+}

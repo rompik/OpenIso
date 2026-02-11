@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2024 OpenIso Authors -->
+<schemalist gettext-domain="openiso">
+
+  <schema id="io.github.rompik.OpenIso" path="/io/github/rompik/OpenIso/">
+
+    <!-- Window settings -->
+    <key name="window-width" type="i">
+      <default>1200</default>
+      <summary>Window width</summary>
+      <description>The width of the main window</description>
+    </key>
+
+    <key name="window-height" type="i">
+      <default>800</default>
+      <summary>Window height</summary>
+      <description>The height of the main window</description>
+    </key>
+
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <summary>Window maximized</summary>
+      <description>Whether the window is maximized</description>
+    </key>
+
+    <!-- Editor settings -->
+    <key name="sheet-size" type="i">
+      <default>400</default>
+      <summary>Drawing sheet size</summary>
+      <description>The size of the drawing sheet in pixels</description>
+    </key>
+
+    <key name="grid-enabled" type="b">
+      <default>true</default>
+      <summary>Show grid</summary>
+      <description>Whether to show the grid on the drawing sheet</description>
+    </key>
+
+    <key name="grid-snap" type="b">
+      <default>true</default>
+      <summary>Snap to grid</summary>
+      <description>Whether to snap elements to the grid</description>
+    </key>
+
+    <!-- Recent files -->
+    <key name="recent-database" type="s">
+      <default>''</default>
+      <summary>Recent database path</summary>
+      <description>Path to the last opened database</description>
+    </key>
+
+    <key name="last-import-directory" type="s">
+      <default>''</default>
+      <summary>Last import directory</summary>
+      <description>The last directory used for importing files</description>
+    </key>
+
+  </schema>
+
+</schemalist>

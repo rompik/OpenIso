@@ -1,0 +1,38 @@
+"""
+OpenIso - Skey Symbol Library Editor
+This is the main entry point script that gets installed to bindir.
+"""
+
+import sys
+import signal
+import locale
+import gettext
+
+# Application constants (configured by meson)
+VERSION = '@VERSION@'
+APPLICATION_ID = '@APPLICATION_ID@'
+pkgdatadir = '@pkgdatadir@'
+localedir = '@localedir@'
+
+# Set up localization
+locale.bindtextdomain('openiso', localedir)
+locale.textdomain('openiso')
+gettext.install('openiso', localedir)
+
+# Add module path
+sys.path.insert(1, pkgdatadir)
+
+# Handle SIGINT gracefully
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+
+def main():
+    """Application entry point."""
+    # Import here to ensure paths are set up
+    from application import Application
+
+    app = Application(APPLICATION_ID, VERSION, pkgdatadir)
+    return app.run(sys.argv)
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,0 +1,27 @@
+<svg width="400" height="250" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="250" rx="8" fill="#f8f9fa"/>
+  <path d="M0 50H400M0 100H400M0 150H400M0 200H400M50 0V250M100 0V250M150 0V250M200 0V250M250 0V250M300 0V250M350 0V250" stroke="#e9ecef" stroke-width="1"/>
+  
+  <path d="M100 125L150 100V150L100 125Z" fill="#0078D6" stroke="#005A9E" stroke-width="2"/>
+  <path d="M200 125L150 100V150L200 125Z" fill="#0078D6" stroke="#005A9E" stroke-width="2"/>
+  <rect x="145" y="75" width="10" height="25" fill="#6c757d"/>
+  <circle cx="150" cy="70" r="10" stroke="#6c757d" stroke-width="2"/>
+
+  <circle cx="100" cy="125" r="5" fill="#dc3545"/>
+  <text x="75" y="115" font-family="Arial" font-size="12" fill="#dc3545" font-weight="bold">Arrive</text>
+  
+  <circle cx="200" cy="125" r="5" fill="#28a745"/>
+  <text x="205" y="115" font-family="Arial" font-size="12" fill="#28a745" font-weight="bold">Leave</text>
+  
+  <circle cx="150" cy="60" r="5" fill="#ffc107"/>
+  <text x="165" y="65" font-family="Arial" font-size="12" fill="#856404" font-weight="bold">Spindle</text>
+
+  <path d="M110 170H190" stroke="#6c757d" stroke-width="2" stroke-dasharray="4 2" marker-end="url(#arrowhead)"/>
+  <text x="125" y="185" font-family="Arial" font-size="10" fill="#6c757d">Flow Direction</text>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6c757d" />
+    </marker>
+  </defs>
+</svg>

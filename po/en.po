@@ -1,0 +1,606 @@
+# English translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-09 00:24+0100\n"
+"PO-Revision-Date: 2026-01-31 11:44+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/view/window.py:151
+msgid "No items selected to fill"
+msgstr ""
+
+#: src/view/window.py:158
+msgid "Fill color applied"
+msgstr ""
+
+#: src/view/window.py:165
+#, python-brace-format
+msgid "Spindle selected: {name}"
+msgstr ""
+
+#: src/view/window.py:187
+#, python-brace-format
+msgid "Connection point: {0} ({1})"
+msgstr ""
+
+#: src/view/window.py:234
+msgid "Skeys"
+msgstr "Skeys"
+
+#: src/view/window.py:238 src/view/window.py:560
+msgid "Shape"
+msgstr "Shape"
+
+#: src/view/window.py:245 src/view/properties.py:152 src/view/properties.py:166
+msgid "Properties"
+msgstr "Properties"
+
+#: src/view/window.py:246 src/view/window.py:562
+msgid "Preview"
+msgstr "Preview"
+
+#: src/view/window.py:298 src/view/window.py:558
+msgid "Ready"
+msgstr ""
+
+#: src/view/window.py:316 src/view/connection_items.py:75
+msgid "Select Connection Point Type"
+msgstr ""
+
+#: src/view/window.py:384
+#, fuzzy
+msgid "Create new Skey"
+msgstr "Spindle Skey"
+
+#: src/view/window.py:421 src/view/skey_tree.py:244
+#, fuzzy
+msgid "Delete Skey"
+msgstr "Spindle Skey"
+
+#: src/view/window.py:422
+#, python-brace-format
+msgid "Are you sure you want to delete Skey '{0}'?"
+msgstr ""
+
+#: src/view/window.py:439
+#, python-brace-format
+msgid "Skey '{0}' deleted"
+msgstr ""
+
+#: src/view/window.py:445 src/view/window.py:1049
+msgid "Error"
+msgstr ""
+
+#: src/view/window.py:445
+#, python-brace-format
+msgid "Failed to delete Skey '{0}'"
+msgstr ""
+
+#: src/view/window.py:557
+#, fuzzy
+msgid "Iso Symbols Library"
+msgstr "ISO Symbols Library"
+
+#: src/view/window.py:559
+#, fuzzy
+msgid "Skeys List"
+msgstr "Skeys"
+
+#: src/view/window.py:623
+msgid "No items selected to scale"
+msgstr ""
+
+#: src/view/window.py:626
+#, fuzzy
+msgid "Scale Element"
+msgstr "Select File"
+
+#: src/view/window.py:626
+msgid "Scale Factor:"
+msgstr ""
+
+#: src/view/window.py:956 src/view/window.py:957
+msgid "Unknown"
+msgstr ""
+
+#: src/view/window.py:971 src/view/window.py:1019
+msgid "Export Error"
+msgstr ""
+
+#: src/view/window.py:971
+msgid "No Skey selected or name is empty"
+msgstr ""
+
+#: src/view/window.py:1003
+msgid "Export Skey as ASCII"
+msgstr ""
+
+#: src/view/window.py:1005
+#, fuzzy
+msgid "ASCII Symbolic File"
+msgstr "symbols"
+
+#: src/view/window.py:1005
+msgid "All Files"
+msgstr ""
+
+#: src/view/window.py:1016
+#, python-brace-format
+msgid "Skey '{0}' exported to {1}"
+msgstr ""
+
+#: src/view/window.py:1019
+#, python-brace-format
+msgid "Failed to export Skey: {0}"
+msgstr ""
+
+#: src/view/window.py:1049
+msgid "Skey name cannot be empty"
+msgstr ""
+
+#: src/view/window.py:1081
+#, python-brace-format
+msgid "Skey '{0}' saved successfully"
+msgstr ""
+
+#: src/view/window.py:1186
+#, fuzzy
+msgid "Select File"
+msgstr "Select File"
+
+#: src/view/window.py:1188
+#, fuzzy
+msgid "Symbols file"
+msgstr "symbols"
+
+#: src/view/skey_tree.py:44
+msgid "Components"
+msgstr "Components"
+
+#: src/view/skey_tree.py:215
+#, fuzzy
+msgid "Clear Filter"
+msgstr "Select File"
+
+#: src/view/skey_tree.py:216
+msgid "Search..."
+msgstr ""
+
+#: src/view/skey_tree.py:233
+#, fuzzy
+msgid "Create New Skey"
+msgstr "Spindle Skey"
+
+#: src/view/properties.py:31 src/view/properties.py:153
+#: src/view/properties.py:167
+msgid "Skey"
+msgstr "Skey"
+
+#: src/view/properties.py:33 src/view/properties.py:154
+#: src/view/properties.py:168
+msgid "Group"
+msgstr "Group"
+
+#: src/view/properties.py:36 src/view/properties.py:155
+#: src/view/properties.py:169
+msgid "Subgroup"
+msgstr "Subgroup"
+
+#: src/view/properties.py:39 src/view/properties.py:156
+#, fuzzy
+msgid "Spindle"
+msgstr "Spindle Skey"
+
+#: src/view/properties.py:45 src/view/properties.py:157
+#: src/view/properties.py:170
+msgid "Description"
+msgstr "Description"
+
+#: src/view/properties.py:53 src/view/properties.py:158
+#: src/view/properties.py:171
+msgid "Orientation"
+msgstr "Orientation"
+
+#: src/view/properties.py:61 src/view/properties.py:174
+msgid "Use on symmetrical component"
+msgstr "Use on symmetrical component"
+
+#: src/view/properties.py:62 src/view/properties.py:175
+msgid "Use on non-symmetrical component"
+msgstr "Use on non-symmetrical component"
+
+#: src/view/properties.py:63 src/view/properties.py:176
+msgid "Use on reducers"
+msgstr "Use on reducers"
+
+#: src/view/properties.py:64 src/view/properties.py:177
+msgid "Use on flanges"
+msgstr "Use on flanges"
+
+#: src/view/properties.py:97 src/view/properties.py:159
+#: src/view/properties.py:183
+msgid "Flow Arrow"
+msgstr "Flow Arrow"
+
+#: src/view/properties.py:99 src/view/properties.py:160
+#: src/view/properties.py:184
+msgid "Dimensioned"
+msgstr "Dimensioned"
+
+#: src/view/properties.py:101 src/view/properties.py:161
+#: src/view/properties.py:185
+msgid "Tracing"
+msgstr ""
+
+#: src/view/properties.py:103 src/view/properties.py:162
+#: src/view/properties.py:186
+msgid "Insulation"
+msgstr ""
+
+#: src/view/properties.py:105 src/view/properties.py:163
+msgid "Geometry"
+msgstr ""
+
+#: src/view/properties.py:110 src/view/properties.py:111
+#: src/view/properties.py:164 src/view/properties.py:165
+#: src/view/properties.py:187 src/view/properties.py:188
+msgid "Save Changes to Skey File"
+msgstr "Save Changes to Skey File"
+
+#: src/view/menu_toolbar.py:72
+#, fuzzy
+msgid "Import File"
+msgstr "Import from IDF"
+
+#: src/view/menu_toolbar.py:73
+#, fuzzy
+msgid "Export File"
+msgstr "Import from IDF"
+
+#: src/view/menu_toolbar.py:74
+msgid "Print"
+msgstr ""
+
+#: src/view/menu_toolbar.py:75
+msgid "Save"
+msgstr ""
+
+#: src/view/menu_toolbar.py:76
+msgid "Import of Skeys from ASCII file ( Intergraph )"
+msgstr "Import of Skeys from ASCII file ( Intergraph )"
+
+#: src/view/menu_toolbar.py:77
+msgid "Import Skeys from IDF file ( AVEVA )"
+msgstr "Import Skeys from IDF file ( AVEVA )"
+
+#: src/view/menu_toolbar.py:78
+msgid "Settings"
+msgstr ""
+
+#: src/view/menu_toolbar.py:79
+msgid "Help"
+msgstr ""
+
+#: src/view/menu_toolbar.py:80 src/view/about_dialog.py:28
+msgid "About"
+msgstr ""
+
+#: src/view/draw_toolbar.py:99
+#, fuzzy
+msgid "Select Element"
+msgstr "Select File"
+
+#: src/view/draw_toolbar.py:100
+#, fuzzy
+msgid "Select All"
+msgstr "Select File"
+
+#: src/view/draw_toolbar.py:101
+msgid "Move"
+msgstr ""
+
+#: src/view/draw_toolbar.py:102
+msgid "Rotate"
+msgstr ""
+
+#: src/view/draw_toolbar.py:103
+msgid "Scale"
+msgstr "Scale"
+
+#: src/view/draw_toolbar.py:104
+msgid "Undo"
+msgstr ""
+
+#: src/view/draw_toolbar.py:105
+msgid "Redo"
+msgstr ""
+
+#: src/view/draw_toolbar.py:106
+msgid "Draw Connection Point"
+msgstr ""
+
+#: src/view/draw_toolbar.py:107
+msgid "Draw Spindle Connection Point"
+msgstr ""
+
+#: src/view/draw_toolbar.py:108
+msgid "Draw Line"
+msgstr ""
+
+#: src/view/draw_toolbar.py:109
+msgid "Draw Rectangle"
+msgstr ""
+
+#: src/view/draw_toolbar.py:110
+msgid "Draw Triangle"
+msgstr ""
+
+#: src/view/draw_toolbar.py:111
+msgid "Draw Dish"
+msgstr ""
+
+#: src/view/draw_toolbar.py:112
+msgid "Draw Hexagon"
+msgstr ""
+
+#: src/view/draw_toolbar.py:113 src/view/fill_color_popup.py:36
+msgid "Fill Color"
+msgstr ""
+
+#: src/view/draw_toolbar.py:114
+#, fuzzy
+msgid "Clear Sheet"
+msgstr "Select File"
+
+#: src/view/about_dialog.py:146
+msgid "Website"
+msgstr "Website"
+
+#: src/view/about_dialog.py:155
+msgid "Support Questions"
+msgstr "Support Questions"
+
+#: src/view/about_dialog.py:159
+msgid "Report an Issue"
+msgstr "Report an Issue"
+
+#: src/view/about_dialog.py:163
+msgid "Troubleshooting"
+msgstr "Troubleshooting"
+
+#: src/view/about_dialog.py:168 src/view/about_dialog.py:181
+msgid "Credits"
+msgstr "Credits"
+
+#: src/view/about_dialog.py:169 src/view/about_dialog.py:185
+msgid "Legal"
+msgstr "Legal"
+
+#: src/view/about_dialog.py:170 src/view/about_dialog.py:189
+msgid "Acknowledgments"
+msgstr "Acknowledgments"
+
+#: src/view/about_dialog.py:213
+#, python-brace-format
+msgid ""
+"This application is distributed without any warranties. More details in "
+"{link}."
+msgstr ""
+"This application is distributed without any warranties. More details in "
+"{link}."
+
+#: src/view/about_dialog.py:214
+msgid "version 3 or later"
+msgstr "version 3 or later"
+
+#: src/view/about_dialog.py:226
+msgid "Special thanks to all contributors and users!"
+msgstr "Special thanks to all contributors and users!"
+
+#: src/view/fill_color_popup.py:83
+msgid "Recent"
+msgstr ""
+
+#: src/view/fill_color_popup.py:103
+msgid "Custom Color..."
+msgstr ""
+
+#: src/view/spindle_popup.py:63
+#, fuzzy
+msgid "Select Spindle"
+msgstr "Select File"
+
+#: src/view/spindle_popup.py:79
+msgid "No spindles found in database"
+msgstr ""
+
+#: src/view/connection_items.py:17
+msgid "Butt Weld"
+msgstr ""
+
+#: src/view/connection_items.py:18
+msgid "Socket Weld"
+msgstr ""
+
+#: src/view/connection_items.py:19
+msgid "Flanged"
+msgstr ""
+
+#: src/view/connection_items.py:20
+msgid "Threaded"
+msgstr ""
+
+#: src/view/connection_items.py:21
+msgid "Plain"
+msgstr ""
+
+#: src/view/connection_items.py:22
+msgid "Compression"
+msgstr ""
+
+#: src/view/connection_items.py:23
+msgid "Screwed"
+msgstr ""
+
+#: src/view/connection_items.py:24
+msgid "Plain End"
+msgstr ""
+
+#: src/view/connection_items.py:25
+msgid "Beveled End"
+msgstr ""
+
+#: src/view/connection_items.py:26
+msgid "Threaded End"
+msgstr ""
+
+#: src/view/connection_items.py:100
+msgid "Arrive Point"
+msgstr ""
+
+#: src/view/connection_items.py:101
+msgid "Leave Point"
+msgstr ""
+
+#: src/view/connection_items.py:102
+msgid "Additional Point (Tee)"
+msgstr ""
+
+#~ msgid "Rotate Spindle Angle Minus"
+#~ msgstr "Rotate Spindle Angle Minus"
+
+#~ msgid "Rotate Spindle Angle Plus"
+#~ msgstr "Rotate Spindle Angle Plus"
+
+#~ msgid "Default"
+#~ msgstr "Default"
+
+#~ msgid "Off"
+#~ msgstr "Off"
+
+#~ msgid "On"
+#~ msgstr "On"
+
+#~ msgid "Skey Symbol Library Editor for Isometric Drawings"
+#~ msgstr "Skey Symbol Library Editor for Isometric Drawings"
+
+#~ msgid "isometric;skey;symbols;piping;engineering;"
+#~ msgstr "isometric;skey;symbols;piping;engineering;"
+
+#~ msgid ""
+#~ "ISO Symbols Library is a graphical editor for managing and creating Skey "
+#~ "symbols used in isometric piping drawings. It provides tools for:"
+#~ msgstr ""
+#~ "ISO Symbols Library is a graphical editor for managing and creating Skey "
+#~ "symbols used in isometric piping drawings. It provides tools for:"
+
+#~ msgid "Creating and editing geometric primitives"
+#~ msgstr "Creating and editing geometric primitives"
+
+#~ msgid "Managing symbol libraries"
+#~ msgstr "Managing symbol libraries"
+
+#~ msgid "Importing symbols from ASCII and IDF formats"
+#~ msgstr "Importing symbols from ASCII and IDF formats"
+
+#~ msgid "Organizing symbols into categories"
+#~ msgstr "Organizing symbols into categories"
+
+#~ msgid "OpenIso Developers"
+#~ msgstr "OpenIso Developers"
+
+#~ msgid "Initial release with core features:"
+#~ msgstr "Initial release with core features:"
+
+#~ msgid "Symbol editor with geometric primitives"
+#~ msgstr "Symbol editor with geometric primitives"
+
+#~ msgid "ASCII and IDF file import"
+#~ msgstr "ASCII and IDF file import"
+
+#~ msgid "Symbol library management"
+#~ msgstr "Symbol library management"
+
+#~ msgid "Category organization"
+#~ msgstr "Category organization"
+
+#~ msgid "Main window with symbol editor"
+#~ msgstr "Main window with symbol editor"
+
+#~ msgid "isometric"
+#~ msgstr "isometric"
+
+#~ msgid "skey"
+#~ msgstr "skey"
+
+#~ msgid "piping"
+#~ msgstr "piping"
+
+#~ msgid "engineering"
+#~ msgstr "engineering"
+
+#~ msgid "CAD"
+#~ msgstr "CAD"
+
+#~ msgid "Window width"
+#~ msgstr "Window width"
+
+#~ msgid "The width of the main window"
+#~ msgstr "The width of the main window"
+
+#~ msgid "Window height"
+#~ msgstr "Window height"
+
+#~ msgid "The height of the main window"
+#~ msgstr "The height of the main window"
+
+#~ msgid "Window maximized"
+#~ msgstr "Window maximized"
+
+#~ msgid "Whether the window is maximized"
+#~ msgstr "Whether the window is maximized"
+
+#~ msgid "Drawing sheet size"
+#~ msgstr "Drawing sheet size"
+
+#~ msgid "The size of the drawing sheet in pixels"
+#~ msgstr "The size of the drawing sheet in pixels"
+
+#~ msgid "Show grid"
+#~ msgstr "Show grid"
+
+#~ msgid "Whether to show the grid on the drawing sheet"
+#~ msgstr "Whether to show the grid on the drawing sheet"
+
+#~ msgid "Snap to grid"
+#~ msgstr "Snap to grid"
+
+#~ msgid "Whether to snap elements to the grid"
+#~ msgstr "Whether to snap elements to the grid"
+
+#~ msgid "Recent database path"
+#~ msgstr "Recent database path"
+
+#~ msgid "Path to the last opened database"
+#~ msgstr "Path to the last opened database"
+
+#~ msgid "Last import directory"
+#~ msgstr "Last import directory"
+
+#~ msgid "The last directory used for importing files"
+#~ msgstr "The last directory used for importing files"
+
+#~ msgid "Import from ASCII"
+#~ msgstr "Import from ASCII"
