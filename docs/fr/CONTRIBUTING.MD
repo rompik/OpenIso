@@ -1,4 +1,4 @@
-We use Crowdin to localize our documentation. This helps us keep translations up to date without needing to edit the code directly.
+.. This helps us keep translations up to date without needing to edit the code directly.
 
 How to contribute:
 
