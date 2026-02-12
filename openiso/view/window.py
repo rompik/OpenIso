@@ -104,10 +104,6 @@ class SkeyEditor(QMainWindow):
 
     def _on_group_changed(self, index):
         """Updates the subgroup selection list whenever the main Skey group is changed in the properties."""
-        # TODO: При смене группы, группа может исчезнуть из списка, если в ней нет skeys.
-        # Нужно использовать таблицы groups и subgroups из базы данных для постоянного
-        # хранения всех групп и подгрупп, независимо от наличия в них skeys.
-        # Это позволит пользователю выбирать группы/подгруппы даже если они пустые.
         if index < 0:
             return
 
@@ -228,7 +224,6 @@ class SkeyEditor(QMainWindow):
         self._load_styles(data_path)
 
         # Initialize business logic service
-        # Используем SQLite-базу для хранения Skey
         self.skey_service = SkeyService(data_path, use_db=True)
         self.skey_service.load_descriptions()
         self.help_window = None
@@ -400,8 +395,20 @@ class SkeyEditor(QMainWindow):
             if lang_code != get_current_language():
                 self._change_language(lang_code)
 
+            # Handle isometric view change
+            iso_view = dialog.get_selected_isometric_view()
+            self.preview_widget.set_isometric_view(iso_view)
+
             # Apply color changes
             self._apply_color_settings(dialog)
+
+            # Refresh preview with new view
+            if hasattr(self, 'current_skey_name') and self.current_skey_name:
+                self.preview_widget.update_preview(
+                    self.scene.symbol_drawlist,
+                    self.origin_x,
+                    self.origin_y
+                )
 
     def _apply_color_settings(self, dialog):
         """Apply color settings from the dialog to the application."""
@@ -419,14 +426,6 @@ class SkeyEditor(QMainWindow):
 
         # Redraw the scene to apply new colors
         self.scene.draw_grid()
-
-        # Update preview if there's a current symbol (uses POINT_COLORS)
-        if hasattr(self, 'current_skey_name') and self.current_skey_name:
-            self.preview_widget.update_preview(
-                self.scene.symbol_drawlist,
-                self.origin_x,
-                self.origin_y
-            )
 
         self.status_bar_widget.showMessage(_t("Color settings applied"), 3000)
 
@@ -697,7 +696,6 @@ class SkeyEditor(QMainWindow):
     def keyPressEvent(self, event):
         """Overrides the default handler to process keyboard events, such as using Escape to cancel a tool."""
         if event.key() == Qt.Key.Key_Escape:
-            # Снять выделение и вернуть цвет по Esc
             if hasattr(self.scene, 'selected_for_highlight'):
                 for item in self.scene.selected_for_highlight:
                     if hasattr(item, '_original_pen'):
@@ -1092,9 +1090,6 @@ class SkeyEditor(QMainWindow):
 
     def save_current_skey(self):
         """Gathers form data and scene geometry, and saves the Skey information to the database."""
-        # TODO: При сохранении нового skey с новой группой/подгруппой,
-        # автоматически добавлять эти группы/подгруппы в таблицы groups и subgroups.
-        # Это обеспечит их постоянное хранение и доступность для выбора.
         try:
             # Get current values from form
             skey_name = self.properties_widget.txt_skey.text().strip()

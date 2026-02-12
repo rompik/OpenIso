@@ -134,12 +134,10 @@ class SkeyService:
 
     def get_subgroup_names(self, group: str):
         """Get subgroup names for a group from database."""
-        # Пытаемся получить из БД для полноты списка
         db_subgroups = self._db.get_subgroups_by_group(group)
         if db_subgroups:
             return db_subgroups
 
-        # Если в БД нет, берем из текущей структуры (например, если загружено только из памяти)
         return self._groups.get_subgroups(group)
 
     def get_skey(self, name: str):
@@ -152,7 +150,7 @@ class SkeyService:
         """Update or create a Skey in the database using hierarchical keys."""
         from openiso.core.i18n import save_json_translation
 
-        # Очищаем ключи от старых префиксов, если они есть
+
         def clean_key(val):
             if not val: return "unknown"
             for prefix in ["group.", "subgroup.", "description."]:

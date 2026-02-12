@@ -28,7 +28,7 @@ class PropertiesWidget(QGroupBox):
         self.setup_ui()
 
     def setup_ui(self):
-        self.lbl_skey = QLabel(_t("Skey"))
+        self.lbl_skey_code = QLabel(_t("Code"))
         self.txt_skey = QLineEdit("")
         self.lbl_skey_group = QLabel(_t("Group"))
         self.cb_skey_group = QComboBox()
@@ -111,7 +111,7 @@ class PropertiesWidget(QGroupBox):
         self.btn_save.setToolTip(_t("Save Changes to Skey File"))
 
         # Add to grid
-        self.grid_properties.addWidget(self.lbl_skey, 0, 0)
+        self.grid_properties.addWidget(self.lbl_skey_code, 0, 0)
         self.grid_properties.addWidget(self.txt_skey, 0, 1)
         self.grid_properties.addWidget(self.lbl_skey_group, 1, 0)
         self.grid_properties.addWidget(self.cb_skey_group, 1, 1)
@@ -150,7 +150,7 @@ class PropertiesWidget(QGroupBox):
     def update_translations(self, _t):
         """Redraws and re-translates all static UI elements."""
         self.setTitle(_t("Properties"))
-        self.lbl_skey.setText(_t("Skey"))
+        self.lbl_skey_code.setText(_t("Code"))
         self.lbl_skey_group.setText(_t("Group"))
         self.lbl_skey_subgroup.setText(_t("Subgroup"))
         self.lbl_spindle.setText(_t("Spindle"))

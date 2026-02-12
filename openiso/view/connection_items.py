@@ -53,20 +53,17 @@ class ConnectionItem(QPushButton):
                 ))
             else:
                 self.icon_label.setText("❓")
-                self.icon_label.setStyleSheet("font-size: 24pt;")
+                self.icon_label.setProperty("class", "ConnectionItemIcon")
 
         self.name_label = QLabel(name)
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.name_label.setStyleSheet("font-size: 8pt;")
+        self.name_label.setProperty("class", "ConnectionItemName")
 
         layout.addWidget(self.icon_label)
         layout.addWidget(self.name_label)
 
         self.clicked.connect(lambda: self.connection_selected.emit(self.connection_name))
-        self.setStyleSheet("""
-            QPushButton { border: 1px solid transparent; background: transparent; border-radius: 4px; }
-            QPushButton:hover { background-color: #eeeeee; border: 1px solid #ddd; }
-        """)
+        self.setProperty("class", "ConnectionItem")
 
 class ConnectionPopup(QWidget):
     # Emits (connection_type, action_name)
@@ -81,7 +78,7 @@ class ConnectionPopup(QWidget):
 
         # Title
         self.lbl_title = QLabel(title)
-        self.lbl_title.setStyleSheet("font-weight: bold; font-size: 11pt; padding-bottom: 5px;")
+        self.lbl_title.setProperty("class", "ConnectionPopupTitle")
         self.main_layout.addWidget(self.lbl_title)
 
         # Scroll Area
@@ -104,11 +101,11 @@ class ConnectionPopup(QWidget):
 
         for point_title, action in points:
             group_box = QFrame()
-            group_box.setStyleSheet("QFrame { background: #f5f5f5; border-radius: 6px; }")
+            group_box.setProperty("class", "ConnectionGroupBox")
             group_layout = QVBoxLayout(group_box)
 
             group_label = QLabel(point_title)
-            group_label.setStyleSheet("font-weight: bold; font-size: 10pt; color: #555; background: transparent;")
+            group_label.setProperty("class", "ConnectionGroupLabel")
             group_layout.addWidget(group_label)
 
             grid = QGridLayout()

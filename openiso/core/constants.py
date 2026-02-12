@@ -1,6 +1,7 @@
 import os
 from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
+from openiso.model.enums import IsometricView
 
 # ============================================================================
 # OpenIso Constants Module
@@ -42,6 +43,15 @@ SMALL_BUTTON_SIZE = 24
 SHEET_SIZE = 600
 PREVIEW_WIDTH = 300
 PREVIEW_HEIGHT = 300
+
+# Isometric View Settings
+DEFAULT_ISO_VIEW = IsometricView.NE
+ISO_VIEW_NAMES = {
+    IsometricView.NE: "North-East (NE)",
+    IsometricView.NW: "North-West (NW)",
+    IsometricView.SE: "South-East (SE)",
+    IsometricView.SW: "South-West (SW)",
+}
 
 # Color Theme Configuration
 # These colors can be customized through settings

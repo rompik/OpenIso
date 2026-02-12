@@ -46,13 +46,13 @@ class AboutDialog(QDialog):
         layout.setContentsMargins(12, 8, 12, 8)
 
         label = QLabel(text)
-        label.setStyleSheet("background: transparent; border: none;")
+        label.setProperty("class", "AboutRowLabel")
         layout.addWidget(label)
 
         layout.addStretch()
 
         icon_label = QLabel("↗" if url else "›")
-        icon_label.setStyleSheet("color: #888a85; font-size: 12pt; background: transparent; border: none;")
+        icon_label.setProperty("class", "AboutRowIcon")
         layout.addWidget(icon_label)
 
         if url:
@@ -197,7 +197,7 @@ class AboutDialog(QDialog):
         c_layout = QVBoxLayout(self.credits_content)
         c_layout.setContentsMargins(10, 10, 10, 10)
         lbl = QLabel("Roman PARYGIN")
-        lbl.setStyleSheet("font-size: 10pt;")
+        lbl.setProperty("class", "AboutCreditsText")
         c_layout.addWidget(lbl)
         c_layout.addStretch()
 
@@ -207,7 +207,7 @@ class AboutDialog(QDialog):
         l_layout.setSpacing(10)
 
         cp = QLabel("© 2024 Roman PARYGIN")
-        cp.setStyleSheet("font-size: 10pt; font-weight: bold;")
+        cp.setProperty("class", "AboutCopyrightBold")
         l_layout.addWidget(cp)
 
         license_text = self._t("This application is distributed without any warranties. More details in {link}.").format(
@@ -216,7 +216,7 @@ class AboutDialog(QDialog):
         desc = QLabel(license_text)
         desc.setWordWrap(True)
         desc.setOpenExternalLinks(True)
-        desc.setStyleSheet("font-size: 10pt; color: #2e3436;")
+        desc.setProperty("class", "AboutLegalText")
         l_layout.addWidget(desc)
         l_layout.addStretch()
 
@@ -224,6 +224,6 @@ class AboutDialog(QDialog):
         a_layout = QVBoxLayout(self.acks_content)
         a_layout.setContentsMargins(15, 15, 15, 15)
         ack = QLabel(self._t("Special thanks to all contributors and users!"))
-        ack.setStyleSheet("font-size: 10pt;")
+        ack.setProperty("class", "AboutAcknowledgment")
         a_layout.addWidget(ack)
         a_layout.addStretch()

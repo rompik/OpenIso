@@ -9,8 +9,10 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
 from openiso.core.constants import (
-    AVAILABLE_LANGUAGES, POINT_COLORS, SCENE_COLORS
+    AVAILABLE_LANGUAGES, POINT_COLORS, SCENE_COLORS,
+    DEFAULT_ISO_VIEW, ISO_VIEW_NAMES
 )
+from openiso.model.enums import IsometricView
 from openiso.core.i18n import setup_i18n, get_current_language
 
 class ColorButton(QPushButton):
@@ -108,6 +110,28 @@ class SettingsDialog(QDialog):
 
         content_layout.addWidget(self.groupI18n)
 
+        # Isometric View Settings Group
+        self.groupIsoView = QGroupBox(self._t("Isometric View"))
+        iso_view_layout = QVBoxLayout(self.groupIsoView)
+
+        view_layout = QHBoxLayout()
+        self.lblIsoView = QLabel(self._t("Select Isometric Direction:"))
+        self.cbIsoView = QComboBox()
+
+        # Populate isometric view combo
+        for view in IsometricView:
+            view_name = ISO_VIEW_NAMES.get(view, f"View {view}")
+            self.cbIsoView.addItem(view_name, view)
+
+        # Set default view
+        self.cbIsoView.setCurrentIndex(DEFAULT_ISO_VIEW)
+
+        view_layout.addWidget(self.lblIsoView)
+        view_layout.addWidget(self.cbIsoView)
+        iso_view_layout.addLayout(view_layout)
+
+        content_layout.addWidget(self.groupIsoView)
+
         # Color Settings Groups (below Language Settings)
         self._add_color_groups(content_layout)
 
@@ -151,7 +175,7 @@ class SettingsDialog(QDialog):
             lbl = QLabel(label + ":")
             btn = ColorButton(color)
             desc = QLabel(self._t("Color for connection point type"))
-            desc.setStyleSheet("color: #666; font-size: 9pt;")
+            desc.setProperty("class", "SettingsDescriptionText")
 
             point_layout.addWidget(lbl, row, 0)
             point_layout.addWidget(btn, row, 1)
@@ -182,7 +206,7 @@ class SettingsDialog(QDialog):
             lbl = QLabel(label + ":")
             btn = ColorButton(color)
             desc = QLabel(desc_text)
-            desc.setStyleSheet("color: #666; font-size: 9pt;")
+            desc.setProperty("class", "SettingsDescriptionText")
 
             scene_layout.addWidget(lbl, row, 0)
             scene_layout.addWidget(btn, row, 1)
@@ -227,6 +251,10 @@ class SettingsDialog(QDialog):
     def get_selected_language(self):
         """Returns the selected language code."""
         return self.cbLanguage.currentData()
+
+    def get_selected_isometric_view(self):
+        """Returns the selected isometric view."""
+        return self.cbIsoView.currentData()
 
     def get_point_colors(self):
         """Returns dictionary of point colors."""

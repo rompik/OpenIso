@@ -1,13 +1,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-import sys
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit,
-                             QLineEdit, QLabel, QApplication)
-from PyQt6.QtCore import pyqtSignal, Qt
+                             QLineEdit, QLabel)
+from PyQt6.QtCore import Qt
 
 class CommandLineEdit(QLineEdit):
-    """Поле ввода с поддержкой истории (стрелки Вверх/Вниз)."""
+    """ Custom QLineEdit that maintains a history of entered commands and allows navigation through them using arrow keys."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.history = []
@@ -21,7 +20,6 @@ class CommandLineEdit(QLineEdit):
             self._navigate_history(-1)
         else:
             super().keyPressEvent(event)
-            # Сохраняем текущий ввод, если пользователь не в истории
             if self.history_index == -1:
                 self.temp_text = self.text()
 
@@ -36,7 +34,6 @@ class CommandLineEdit(QLineEdit):
 
         if 0 <= new_index < len(self.history):
             self.history_index = new_index
-            # history[0] - самая последняя команда
             self.setText(self.history[self.history_index])
         elif new_index == -1:
             self.history_index = -1
@@ -88,11 +85,11 @@ class TerminalWidget(QWidget):
         if not text:
             return
 
-        # Добавляем в историю и выводим в консоль
+        # Add to history and display in the terminal
         self.input_line.add_to_history(text)
         self.history_area.append(f"<span style='color: #888;'>&gt; {text}</span>")
 
-        # Парсим
+        # Parsing and executing the command
         response = self.parser.parse(text)
         if response:
             self.history_area.append(f"<span style='color: #005f5f;'>{response}</span>")

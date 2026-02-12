@@ -9,7 +9,8 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPen, QPainter, QPolygonF
 from PyQt6.QtCore import Qt, QPointF
-from openiso.core.constants import PREVIEW_WIDTH, PREVIEW_HEIGHT, SCENE_COLORS, POINT_COLORS
+from openiso.core.constants import PREVIEW_WIDTH, PREVIEW_HEIGHT, SCENE_COLORS, POINT_COLORS, DEFAULT_ISO_VIEW
+from openiso.model.enums import IsometricView
 from openiso.view.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
 
 class PreviewWidget(QGroupBox):
@@ -36,6 +37,18 @@ class PreviewWidget(QGroupBox):
         self.view_preview.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.view_preview.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.vbox_lay_preview.addWidget(self.view_preview)
+
+        # Set default isometric view
+        self.iso_view = DEFAULT_ISO_VIEW
+
+    def set_isometric_view(self, view):
+        """
+        Set the isometric view direction.
+
+        Args:
+            view (IsometricView): The isometric view direction to use.
+        """
+        self.iso_view = view
 
     def update_preview(self, symbol_drawlist, origin_x, origin_y):
         """
@@ -86,7 +99,7 @@ class PreviewWidget(QGroupBox):
         if arrive_point_pos:
             ax, ay = arrive_point_pos
             cx, cy = PREVIEW_WIDTH / 2, PREVIEW_HEIGHT / 2
-            dx, dy = ax - cx, ay - cy
+            dx, dy = - ax + cx, - ay + cy
             length = (dx ** 2 + dy ** 2) ** 0.5
             if length == 0:
                 dx, dy = 0, -1
@@ -116,7 +129,7 @@ class PreviewWidget(QGroupBox):
 
     def _to_isometric(self, x, y):
         """
-        Convert 2D coordinates to isometric projection.
+        Convert 2D coordinates to isometric projection based on current view.
 
         Args:
             x (float): 2D X-coordinate.
@@ -126,8 +139,28 @@ class PreviewWidget(QGroupBox):
             tuple: (iso_x, iso_y) projected coordinates.
         """
         iso_angle = math.pi / 6
-        iso_x = (x - y) * math.cos(iso_angle)
-        iso_y = (x + y) * math.sin(iso_angle)
+
+        if self.iso_view == IsometricView.NE:
+            # North-East (default): X right-up, Y left-up
+            iso_x = (x - y) * math.cos(iso_angle)
+            iso_y = (x + y) * math.sin(iso_angle)
+        elif self.iso_view == IsometricView.NW:
+            # North-West: X left-up, Y right-up (mirror horizontally)
+            iso_x = -(x - y) * math.cos(iso_angle)
+            iso_y = (x + y) * math.sin(iso_angle)
+        elif self.iso_view == IsometricView.SE:
+            # South-East: X right-down, Y left-down (mirror vertically)
+            iso_x = (x - y) * math.cos(iso_angle)
+            iso_y = -(x + y) * math.sin(iso_angle)
+        elif self.iso_view == IsometricView.SW:
+            # South-West: X left-down, Y right-down (rotate 180°)
+            iso_x = -(x - y) * math.cos(iso_angle)
+            iso_y = -(x + y) * math.sin(iso_angle)
+        else:
+            # Fallback to NE
+            iso_x = (x - y) * math.cos(iso_angle)
+            iso_y = (x + y) * math.sin(iso_angle)
+
         return iso_x, iso_y
 
     def _collect_preview_points(self, symbol_drawlist, origin_x, origin_y):

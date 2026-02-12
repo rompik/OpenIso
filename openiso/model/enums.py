@@ -33,3 +33,10 @@ class Insulation(IntEnum):
     DEFAULT = 0
     OFF = 1
     ON = 2
+
+class IsometricView(IntEnum):
+    """Isometric view directions"""
+    NE = 0  # North-East (default): X right-up, Y left-up
+    NW = 1  # North-West: X left-up, Y right-up
+    SE = 2  # South-East: X right-down, Y left-down
+    SW = 3  # South-West: X left-down, Y right-down

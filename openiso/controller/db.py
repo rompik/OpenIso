@@ -140,7 +140,7 @@ class SkeyDB:
         return skey_id if skey_id is not None else 0
 
     def get_spindle_geometry(self, spindle_name: str) -> List[str]:
-        """Запрашивает актуальную геометрию шпинделя по его имени из базы данных."""
+
         conn = self.connect()
         cur = conn.cursor()
         try:
@@ -150,7 +150,6 @@ class SkeyDB:
                 return []
             spindle_id = row[0]
 
-            # Получаем ID последней транзакции для этого шпинделя
             cur.execute("SELECT MAX(transaction_id) FROM spindle_geometry WHERE spindle_id = ?", (spindle_id,))
             trans_row = cur.fetchone()
             if not trans_row or trans_row[0] is None:

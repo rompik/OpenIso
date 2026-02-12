@@ -22,7 +22,7 @@ class DrawToolbarWidget(QWidget):
         self.layout.setSpacing(5)
         self.setup_ui()
 
-    def _create_tool_button(self, tooltip, icon_path, size=BUTTON_SIZE):
+    def _create_tool_button(self, tooltip, icon_path, size=BUTTON_SIZE, has_menu=False):
         btn = QPushButton()
         btn.setToolTip(_t(tooltip))
         icon_full_path = os.path.join(self.icons_library_path, icon_path)
@@ -30,15 +30,11 @@ class DrawToolbarWidget(QWidget):
             btn.setIcon(QIcon(icon_full_path))
         btn.setIconSize(QSize(size, size))
         btn.setFixedSize(size, size)
-        btn.setStyleSheet("""
-            QPushButton {
-                padding: 0px;
-            }
-            QPushButton::menu-indicator {
-                image: none;
-                width: 0px;
-            }
-        """)
+        # Use CSS class from style.css
+        if has_menu:
+            btn.setProperty("class", "ToolButtonWithMenu")
+        else:
+            btn.setProperty("class", "ToolButton")
         return btn
 
     def _add_separator(self):
@@ -46,7 +42,7 @@ class DrawToolbarWidget(QWidget):
         line = QFrame()
         line.setFrameShape(QFrame.Shape.HLine)
         line.setFrameShadow(QFrame.Shadow.Sunken)
-        line.setStyleSheet("margin: 2px 0; color: #ccc;")
+        line.setProperty("class", "ToolbarSeparator")
         self.layout.addWidget(line)
 
     def setup_ui(self):
@@ -65,7 +61,7 @@ class DrawToolbarWidget(QWidget):
 
         # 3. Shapes Group
         # Line Tools Button with Menu
-        self.btn_plot_line = self._create_tool_button("Draw Line", ICONS["line"])
+        self.btn_plot_line = self._create_tool_button("Draw Line", ICONS["line"], has_menu=True)
         self.line_menu = QMenu()
 
         # Create line tool actions
@@ -78,20 +74,9 @@ class DrawToolbarWidget(QWidget):
         self.line_menu.addAction(self.action_polyline_orthogonal)
 
         self.btn_plot_line.setMenu(self.line_menu)
-        self.btn_plot_line.setStyleSheet("""
-            QPushButton {
-                padding: 0px;
-            }
-            QPushButton::menu-indicator {
-                subcontrol-origin: padding;
-                subcontrol-position: bottom right;
-                width: 8px;
-                height: 8px;
-            }
-        """)
 
         # Basic Shapes Button with Menu
-        self.btn_plot_shapes = self._create_tool_button("Draw Shape", ICONS["square"])
+        self.btn_plot_shapes = self._create_tool_button("Draw Shape", ICONS["square"], has_menu=True)
         self.shapes_menu = QMenu()
 
         # Create shape tool actions
@@ -106,17 +91,6 @@ class DrawToolbarWidget(QWidget):
         self.shapes_menu.addAction(self.action_triangle)
 
         self.btn_plot_shapes.setMenu(self.shapes_menu)
-        self.btn_plot_shapes.setStyleSheet("""
-            QPushButton {
-                padding: 0px;
-            }
-            QPushButton::menu-indicator {
-                subcontrol-origin: padding;
-                subcontrol-position: bottom right;
-                width: 8px;
-                height: 8px;
-            }
-        """)
 
         self.btn_plot_diamond = self._create_tool_button("Draw Diamond", ICONS["diamond"])
         self.btn_plot_cap = self._create_tool_button("Draw Dish", ICONS["cap"])
@@ -154,9 +128,7 @@ class DrawToolbarWidget(QWidget):
             self.layout.addWidget(btn)
 
         self._add_separator()
-
         self.layout.addWidget(self.btn_fill_color)
-
         self.layout.addStretch()
         self.layout.addWidget(self.btn_clear_sheet)
 

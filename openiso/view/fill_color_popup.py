@@ -22,7 +22,9 @@ class ColorSwatch(QPushButton):
         self.setFixedSize(size, size)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.clicked.connect(lambda: self.colorSelected.emit(self.color))
-        self.setStyleSheet(f"background-color: {color.name()}; border: 1px solid #ccc; border-radius: 2px;")
+        self.setProperty("class", "ColorSwatch")
+        # Dynamic background color - must be inline
+        self.setStyleSheet(f"background-color: {color.name()};")
 
 class FillColorPopup(QWidget):
     colorSelected = pyqtSignal(QColor)
@@ -35,7 +37,7 @@ class FillColorPopup(QWidget):
 
         # Label
         self.lbl_title = QLabel(_t("Fill Color"))
-        self.lbl_title.setStyleSheet("font-weight: bold;")
+        self.lbl_title.setProperty("class", "ColorPopupTitle")
         self.layout.addWidget(self.lbl_title)
 
         # Category/Theme Combo (Mockup)

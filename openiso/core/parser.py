@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTextEdit,
 from PyQt6.QtCore import pyqtSignal, Qt
 
 class CommandParser:
-    """Расширяемый парсер команд (из предыдущего шага)."""
     def __init__(self, canvas_interface):
         self.canvas = canvas_interface
         self.commands = {}

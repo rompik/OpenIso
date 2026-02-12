@@ -33,21 +33,18 @@ class SpindleItem(QPushButton):
         else:
             # Fallback for missing icons
             self.icon_label.setText("❓")
-            self.icon_label.setStyleSheet("font-size: 24pt;")
+            self.icon_label.setProperty("class", "SpindleItemIcon")
         self.icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.name_label = QLabel(name)
         self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.name_label.setStyleSheet("font-size: 8pt;")
+        self.name_label.setProperty("class", "SpindleItemName")
 
         layout.addWidget(self.icon_label)
         layout.addWidget(self.name_label)
 
         self.clicked.connect(lambda: self.spindle_selected.emit(self.spindle_name))
-        self.setStyleSheet("""
-            QPushButton { border: 1px solid transparent; background: transparent; border-radius: 4px; }
-            QPushButton:hover { background-color: #eeeeee; border: 1px solid #ddd; }
-        """)
+        self.setProperty("class", "SpindleItem")
 
 class SpindlePopup(QWidget):
     spindle_selected = pyqtSignal(str)
@@ -61,7 +58,7 @@ class SpindlePopup(QWidget):
 
         # Label
         self.lbl_title = QLabel(_t("Select Spindle"))
-        self.lbl_title.setStyleSheet("font-weight: bold; font-size: 11pt;")
+        self.lbl_title.setProperty("class", "SpindlePopupTitle")
         self.layout.addWidget(self.lbl_title)
 
         # Scroll Area for spindles
@@ -77,7 +74,7 @@ class SpindlePopup(QWidget):
 
         if not spindles:
             no_data = QLabel(_t("No spindles found in database"))
-            no_data.setStyleSheet("color: #888; padding: 20px;")
+            no_data.setProperty("class", "SpindleNoData")
             no_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid.addWidget(no_data, 0, 0)
         else:
