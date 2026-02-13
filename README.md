@@ -8,7 +8,7 @@
 
 
 <p align="center">
-  <img src="data/screenshots/openiso_en_01.png" alt="Main UI">
+  <img src="data/screenshots/en/openiso_01.png" alt="Main UI">
 </p>
 
 
