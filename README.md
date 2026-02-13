@@ -1,5 +1,5 @@
-<p align="center">OpenIso (<a href="/docs/ru/README.md"><img src="" alt="Russian"></a>
-)
+<p align="center">OpenIso ([![Russian](https://img.shields.io/badge/lang-ru-blue)](https://github.com/rompik/OpenIso/blob/main/docs/ru/README.md))</a>
+
 </p>
 
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
