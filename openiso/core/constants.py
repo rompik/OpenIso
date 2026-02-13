@@ -45,7 +45,7 @@ PREVIEW_WIDTH = 300
 PREVIEW_HEIGHT = 300
 
 # Isometric View Settings
-DEFAULT_ISO_VIEW = IsometricView.NE
+DEFAULT_ISO_VIEW = IsometricView.NW
 ISO_VIEW_NAMES = {
     IsometricView.NE: "North-East (NE)",
     IsometricView.NW: "North-West (NW)",
