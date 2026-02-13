@@ -1,29 +1,24 @@
-<p align="center"># OpenIso</p>
-
-<p align="center"> <a href="README.md">
-  <img src="" alt="English"></a>
-  <a href="README.ru.md">
-  <img src="" alt="Russian"></a>
+<p align="center">OpenIso (<a href="/docs/ru/README.md"><img src="" alt="Russian"></a>
+)
 </p>
 
 <p align="center">
-  <img src="data/screenshots/openiso_01.png" width="600" alt="Main UI">
+  <img src="data/screenshots/openiso_01.png" alt="Main UI">
 </p>
 
+<p align="center>
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
 [![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
 [![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+</p>
+
+
 **OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (SKEYs)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
-
-
-
-
-
-## ✨ Features
+## Features
 
 * **Format Interoperability:** Import and view symbols from legacy **ASCII (Intergraph)** and **IDF (AVEVA)** files.
 * **Precision Connectors:** Define critical piping points: `Arrive`, `Leave`, `Tee`, and `Spindle`.
@@ -35,7 +30,7 @@
 
 ---
 
-## 🛠️ Supported Symbol Keys (SKEYs)
+## Supported Symbol Keys (SKEYs)
 
 OpenIso allows you to define and edit standard SKEY types used in isometric generation:
 
@@ -49,7 +44,7 @@ OpenIso allows you to define and edit standard SKEY types used in isometric gene
 
 ---
 
-## 🧩 Symbol Anatomy
+## Symbol Anatomy
 
 OpenIso focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
 
