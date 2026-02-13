@@ -24,7 +24,7 @@ def _get_version():
         with open(version_file, 'r') as f:
             return f.read().strip()
     except Exception:
-        return '0.5.0'
+        return '0.0.0'
 
 __version__ = _get_version()
 __app_id__ = 'io.github.rompik.OpenIso'

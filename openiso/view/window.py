@@ -46,6 +46,7 @@ from openiso.view.help_window import HelpWindow
 from openiso.view.about_dialog import AboutDialog
 from openiso.view.terminal import TerminalWidget
 from openiso.view.fill_color_popup import create_fill_color_menu
+from openiso import __version__
 from openiso.view.spindle_popup import create_spindle_menu
 from openiso.view.connection_items import create_connection_menu
 from openiso.core.parser import CommandParser
@@ -289,7 +290,9 @@ class SkeyEditor(QMainWindow):
         )
         self.hbox_lay_editor.addWidget(self.draw_toolbar_widget)
         self.hbox_lay_editor.addWidget(self.view_editor, stretch=1)
-        self.vbox_lay_editor.addWidget(self.terminal_widget)
+
+        if __version__ > "0.7.0":
+            self.vbox_lay_editor.addWidget(self.terminal_widget)
 
         self.vbox_lay_right = QVBoxLayout()
         self.vbox_lay_right.addWidget(self.properties_widget)
