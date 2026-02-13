@@ -1,19 +1,14 @@
 # OpenIso
 <p align="left"> <a href="README.md"><img src="" alt="English"></a> <a href="README.ru.md"><img src="" alt="Russian"></a> </p>
 
----
-
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
 [![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
 [![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
----
-
 **OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (SKEYs)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
----
 
 ## 🖼️ Screenshots
 
@@ -21,7 +16,7 @@
   <img src="data/screenshots/openiso_01.png" width="600" alt="Main UI">
 </p>
 
----
+
 
 ## ✨ Features
 
