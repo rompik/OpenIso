@@ -69,7 +69,7 @@ class SpindlePopup(QWidget):
 
         self.scroll_widget = QWidget()
         self.grid = QGridLayout(self.scroll_widget)
-        self.grid.setSpacing(10)
+        self.grid.setSpacing(5)
         self.grid.setContentsMargins(5, 5, 5, 5)
 
         if not spindles:

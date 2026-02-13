@@ -145,21 +145,47 @@ class SkeyEditor(QMainWindow):
         """Activates the tool to draw a triangle on the canvas."""
         self._set_draw_action("draw_triangle")
 
-    def _on_draw_polyline_clicked(self):
-        """Activates the tool to draw a polyline on the canvas."""
-        self._set_draw_action("draw_polyline")
+    def _on_line_tool_selected(self, category, tool_name):
+        """Handle line tool selection from grouped popup menu.
 
-    def _on_draw_polyline_orthogonal_clicked(self):
-        """Activates the tool to draw an orthogonal polyline on the canvas."""
-        self._set_draw_action("draw_polyline_orthogonal")
+        Args:
+            category: Group name (e.g., "Lines")
+            tool_name: Selected tool name (e.g., "Line", "Polyline", etc.)
+        """
+        tool_map = {
+            "Line": self._on_draw_line_clicked,
+            "Polyline": self._on_draw_polyline_clicked,
+            "Orthogonal Polyline": self._on_draw_polyline_orthogonal_clicked
+        }
 
-    def _on_draw_cap_clicked(self):
-        """Activates the tool to draw a pipe cap symbol on the canvas."""
-        self._set_draw_action("draw_cap")
+        handler = tool_map.get(tool_name)
+        if handler:
+            handler()
+        else:
+            print(f"[warning] Unknown line tool: {tool_name}")
 
-    def _on_draw_hexagon_clicked(self):
-        """Activates the tool to draw a hexagon on the canvas."""
-        self._set_draw_action("draw_hexagon")
+    def _on_shape_tool_selected(self, category, tool_name):
+        """Handle shape tool selection from grouped popup menu.
+
+        Args:
+            category: Group name (e.g., "Basic Shapes", "Special Shapes")
+            tool_name: Selected tool name (e.g., "Square", "Circle", etc.)
+        """
+        tool_map = {
+            "Square": self._on_draw_square_clicked,
+            "Rectangle": self._on_draw_rect_clicked,
+            "Circle": self._on_draw_circle_clicked,
+            "Triangle": self._on_draw_triangle_clicked,
+            "Diamond": self._on_draw_diamond_clicked,
+            "Cap": self._on_draw_cap_clicked,
+            "Hexagon": self._on_draw_hexagon_clicked
+        }
+
+        handler = tool_map.get(tool_name)
+        if handler:
+            handler()
+        else:
+            print(f"[warning] Unknown shape tool: {tool_name}")
 
     def _on_fill_color_selected(self, color):
         """Applies the selected fill color to all chosen closed primitives."""
@@ -351,21 +377,11 @@ class SkeyEditor(QMainWindow):
             self._on_spindle_from_popup_selected
         ))
 
-        # Line tools menu connections
-        self.draw_toolbar_widget.action_line.triggered.connect(self._on_draw_line_clicked)
-        self.draw_toolbar_widget.action_polyline.triggered.connect(self._on_draw_polyline_clicked)
-        self.draw_toolbar_widget.action_polyline_orthogonal.triggered.connect(self._on_draw_polyline_orthogonal_clicked)
+        # Line tools menu - setup with grouped popup
+        self.draw_toolbar_widget.setup_line_menu(self._on_line_tool_selected)
 
-        # Basic shapes menu connections
-        self.draw_toolbar_widget.action_square.triggered.connect(self._on_draw_square_clicked)
-        self.draw_toolbar_widget.action_rectangle.triggered.connect(self._on_draw_rect_clicked)
-        self.draw_toolbar_widget.action_circle.triggered.connect(self._on_draw_circle_clicked)
-        self.draw_toolbar_widget.action_triangle.triggered.connect(self._on_draw_triangle_clicked)
-
-        # Other shape buttons
-        self.draw_toolbar_widget.btn_plot_diamond.clicked.connect(self._on_draw_diamond_clicked)
-        self.draw_toolbar_widget.btn_plot_cap.clicked.connect(self._on_draw_cap_clicked)
-        self.draw_toolbar_widget.btn_plot_hexagon.clicked.connect(self._on_draw_hexagon_clicked)
+        # Shape tools menu - setup with grouped popup
+        self.draw_toolbar_widget.setup_shapes_menu(self._on_shape_tool_selected)
 
         self.draw_toolbar_widget.btn_fill_color.setMenu(create_fill_color_menu(
             self.draw_toolbar_widget.btn_fill_color, self._on_fill_color_selected

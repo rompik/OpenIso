@@ -112,9 +112,9 @@ GPL_LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0"
 ICONS = {
     # Common/UI Icons
     "about": "common/about.svg",
-    "clear_sheet": "common/brush-cleaning.svg",
+    "clear_sheet": "common/clear_sheet.svg",
     "export": "common/export.svg",
-    "fill_colors": "common/fill_colors.svg",
+    "fill_colors": "common/fill.svg",
     "filter_clear": "common/filter_clear.svg",
     "help": "common/help.svg",
     "import": "common/import.svg",
@@ -141,6 +141,8 @@ ICONS = {
     "circle": "primitives/circle.svg",
     "diamond": "primitives/diamond.svg",
     "hexagon": "primitives/hexagon.svg",
+    "menu_line": "primitives/menu_line.svg",
+    "menu_primitive": "primitives/menu_primitive.svg",
     "line": "primitives/line.svg",
     "polyline": "primitives/polyline.svg",
     "polyline_orthogonal": "primitives/polyline_orthogonal.svg",

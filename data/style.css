@@ -169,6 +169,23 @@ QTextBrowser {
     padding: 0px;
 }
 
+#LineToolButton {
+    padding-left: 1px;
+    padding-top: 1px;
+}
+
+#LineToolButton::menu-indicator {
+    image: none;
+    width: 0px;
+    height: 0px;
+}
+
+#ShapesToolButton::menu-indicator {
+    image: none;
+    width: 0px;
+    height: 0px;
+}
+
 .ToolButtonWithMenu::menu-indicator {
     subcontrol-origin: padding;
     subcontrol-position: bottom right;
@@ -247,6 +264,27 @@ QTextBrowser {
 .SpindleNoData {
     color: #888;
     padding: 20px;
+}
+
+/* Base Popup Items Styles */
+.BasePopupItem {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.BasePopupItem:hover {
+    background-color: #eeeeee;
+    border: 1px solid #ddd;
+}
+
+.BasePopupItemIcon {
+    background: transparent;
+}
+
+.BasePopupItemName {
+    font-size: 10px;
+    background: transparent;
 }
 
 /* Fill Color Popup Styles */

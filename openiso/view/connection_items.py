@@ -27,6 +27,7 @@ CONNECTION_TYPES = [
 ]
 
 class ConnectionItem(QPushButton):
+    """Individual connection type button item."""
     connection_selected = pyqtSignal(str)
 
     def __init__(self, name, description="", size=48, icons_path=None, parent=None):
@@ -66,70 +67,103 @@ class ConnectionItem(QPushButton):
         self.setProperty("class", "ConnectionItem")
 
 class ConnectionPopup(QWidget):
+    """Popup for selecting connection type with grouped point types.
+
+    This popup organizes connection types into groups by point type
+    (Arrive, Leave, Tee) and emits the selected connection type along
+    with the action name associated with that point type.
+
+    Signal: connection_selected(connection_type: str, action_name: str)
+    """
     # Emits (connection_type, action_name)
     connection_selected = pyqtSignal(str, str)
 
+    # Define point types and their associated actions
+    POINT_DEFINITIONS = [
+        (_t("Arrive Point"), "_on_draw_arrive_point_clicked"),
+        (_t("Leave Point"), "_on_draw_leave_point_clicked"),
+        (_t("Additional Point (Tee)"), "_on_draw_tee_point_clicked"),
+    ]
+
     def __init__(self, title=_t("Select Connection Point Type"), icons_path=None, parent=None):
         super().__init__(parent)
+        self.icons_path = icons_path
         self.setFixedWidth(380)
+
+        self._setup_ui(title)
+
+    def _setup_ui(self, title):
+        """Initialize the user interface with title and scrollable sections."""
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(10, 10, 10, 10)
         self.main_layout.setSpacing(10)
 
         # Title
-        self.lbl_title = QLabel(title)
-        self.lbl_title.setProperty("class", "ConnectionPopupTitle")
-        self.main_layout.addWidget(self.lbl_title)
+        lbl_title = QLabel(title)
+        lbl_title.setProperty("class", "ConnectionPopupTitle")
+        self.main_layout.addWidget(lbl_title)
 
         # Scroll Area
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setFrameShape(QFrame.Shape.NoFrame)
-        self.scroll_area.setMaximumHeight(600)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        scroll_area.setMaximumHeight(600)
 
-        self.scroll_content = QWidget()
-        self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setSpacing(15)
-        self.scroll_layout.setContentsMargins(0, 0, 5, 0)
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.setSpacing(15)
+        scroll_layout.setContentsMargins(0, 0, 5, 0)
 
-        # Define points to display
-        points = [
-            (_t("Arrive Point"), "_on_draw_arrive_point_clicked"),
-            (_t("Leave Point"), "_on_draw_leave_point_clicked"),
-            (_t("Additional Point (Tee)"), "_on_draw_tee_point_clicked"),
-        ]
+        # Add point type sections
+        for point_title, action in self.POINT_DEFINITIONS:
+            section = self._create_point_section(point_title, action)
+            scroll_layout.addWidget(section)
 
-        for point_title, action in points:
-            group_box = QFrame()
-            group_box.setProperty("class", "ConnectionGroupBox")
-            group_layout = QVBoxLayout(group_box)
+        scroll_area.setWidget(scroll_content)
+        self.main_layout.addWidget(scroll_area)
 
-            group_label = QLabel(point_title)
-            group_label.setProperty("class", "ConnectionGroupLabel")
-            group_layout.addWidget(group_label)
+    def _create_point_section(self, point_title, action):
+        """Create a section frame for a point type with connection items."""
+        group_box = QFrame()
+        group_box.setProperty("class", "ConnectionGroupBox")
+        group_layout = QVBoxLayout(group_box)
 
-            grid = QGridLayout()
-            grid.setSpacing(8)
-            cols = 5
-            for i, (name, description) in enumerate(CONNECTION_TYPES):
-                r, c = divmod(i, cols)
-                item = ConnectionItem(name, description, size=40, icons_path=icons_path)
+        # Section title
+        group_label = QLabel(point_title)
+        group_label.setProperty("class", "ConnectionGroupLabel")
+        group_layout.addWidget(group_label)
 
-                # Use a specific slot method logic with captured action to avoid lambda issues
-                def make_emit_handler(current_action):
-                    return lambda c_type: self.connection_selected.emit(c_type, current_action)
+        # Grid of connection items
+        grid = QGridLayout()
+        grid.setSpacing(8)
+        cols = 5
 
-                item.connection_selected.connect(make_emit_handler(action))
-                grid.addWidget(item, r, c)
+        for i, (name, description) in enumerate(CONNECTION_TYPES):
+            row, col = divmod(i, cols)
+            item = ConnectionItem(name, description, size=40, icons_path=self.icons_path)
 
-            group_layout.addLayout(grid)
-            self.scroll_layout.addWidget(group_box)
+            # Connect signal with action captured in closure
+            item.connection_selected.connect(
+                lambda conn_type, current_action=action: self.connection_selected.emit(conn_type, current_action)
+            )
+            grid.addWidget(item, row, col)
 
-        self.scroll_area.setWidget(self.scroll_content)
-        self.main_layout.addWidget(self.scroll_area)
+        group_layout.addLayout(grid)
+        return group_box
+
 
 def create_connection_menu(parent_button, title, callback, icons_path=None):
-    """Utility to create a QMenu with the ConnectionPopup encapsulated."""
+    """Create a QMenu with the ConnectionPopup encapsulated.
+
+    Args:
+        parent_button: The parent widget that owns the menu
+        title: Title text for the popup
+        callback: Function to call when connection is selected, signature: callback(conn_type, action_name)
+        icons_path: Path to the icons directory
+
+    Returns:
+        QMenu: A menu widget containing the connection popup
+    """
     menu = QMenu(parent_button)
     popup = ConnectionPopup(title=title, icons_path=icons_path)
 
