@@ -1,6 +1,4 @@
-<p align="center">OpenIso ([![Russian](https://img.shields.io/badge/lang-ru-blue)](https://github.com/rompik/OpenIso/blob/main/docs/ru/README.md))</a>
-
-</p>
+<p align="center">OpenIso</p>
 
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
@@ -10,7 +8,7 @@
 
 
 <p align="center">
-  <img src="data/screenshots/openiso_01.png" alt="Main UI">
+  <img src="data/screenshots/openiso_en_01.png" alt="Main UI">
 </p>
 
 
