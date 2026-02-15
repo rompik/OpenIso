@@ -767,6 +767,22 @@ class SkeyEditor(QMainWindow):
         """Activates the tool to draw a straight line on the canvas."""
         self._set_draw_action("draw_line")
 
+    def _on_draw_polyline_clicked(self):
+        """Activates the polyline tool (fallbacks to line for now)."""
+        self.status_bar_widget.showMessage(
+            _t("Polyline tool is not available yet; using Line."),
+            3000
+        )
+        self._set_draw_action("draw_line")
+
+    def _on_draw_polyline_orthogonal_clicked(self):
+        """Activates the orthogonal polyline tool (fallbacks to line for now)."""
+        self.status_bar_widget.showMessage(
+            _t("Orthogonal polyline tool is not available yet; using Line."),
+            3000
+        )
+        self._set_draw_action("draw_line")
+
     def _parse_geometry_coordinate(self, item, index):
         """Extracts a numeric coordinate value from a formatted geometry parameter string."""
         return round(float(item.split(":")[1].split(" ")[index].split("=")[1]), 3) * 100.0

@@ -30,10 +30,6 @@ class SpindleItem(QPushButton):
         if os.path.exists(icon_path):
             pixmap = QPixmap(icon_path).scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
             self.icon_label.setPixmap(pixmap)
-        else:
-            # Fallback for missing icons
-            self.icon_label.setText("❓")
-            self.icon_label.setProperty("class", "SpindleItemIcon")
         self.icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.name_label = QLabel(name)
