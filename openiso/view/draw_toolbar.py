@@ -7,7 +7,7 @@ from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon, QAction
 from openiso.core.constants import BUTTON_SIZE, ICONS
 from openiso.core.i18n import setup_i18n
-from openiso.view.base_popup import GroupedPopupMenu
+from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
 
 _t = setup_i18n()
 
@@ -125,7 +125,7 @@ class DrawToolbarWidget(QWidget):
                      signature: callback(category, tool_name)
         """
         self.btn_plot_line.setMenu(
-            GroupedPopupMenu.create_menu(
+            BasePopupMenuGrouped.create_menu(
                 self.btn_plot_line,
                 _t("Select Line Tool"),
                 self.line_groups,
@@ -142,7 +142,7 @@ class DrawToolbarWidget(QWidget):
                      signature: callback(category, tool_name)
         """
         self.btn_plot_shapes.setMenu(
-            GroupedPopupMenu.create_menu(
+            BasePopupMenuGrouped.create_menu(
                 self.btn_plot_shapes,
                 _t("Select Primitive Tool"),
                 self.shapes_groups,

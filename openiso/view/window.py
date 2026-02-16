@@ -46,9 +46,8 @@ from openiso.view.help_window import HelpWindow
 from openiso.view.about_dialog import AboutDialog
 from openiso.view.terminal import TerminalWidget
 from openiso.view.fill_color_popup import create_fill_color_menu
+from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
 from openiso import __version__
-from openiso.view.spindle_popup import create_spindle_menu
-from openiso.view.connection_items import create_connection_menu
 from openiso.core.parser import CommandParser
 
 # Initialize translations
@@ -83,7 +82,7 @@ class SkeyEditor(QMainWindow):
             print(f"[error] Skey not found in repository: {skey_name}")
             return
 
-        print(f"[debug] Loaded SkeyData for: {skey_data.name}, geometry count: {len(skey_data.geometry)}")
+        #print(f"[debug] Loaded SkeyData for: {skey_data.name}, geometry count: {len(skey_data.geometry)}")
 
         # Clear the scene
         self.scene.clear_symbol_drawlist()
@@ -359,23 +358,64 @@ class SkeyEditor(QMainWindow):
         self.draw_toolbar_widget.btn_rotate.clicked.connect(self._on_rotate_tool_clicked)
         self.draw_toolbar_widget.btn_scale.clicked.connect(self._on_scale_tool_clicked)
 
-        # Setup Connection Points with selection menu
-        self.draw_toolbar_widget.btn_plot_connections.setMenu(create_connection_menu(
-            self.draw_toolbar_widget.btn_plot_connections,
-            _t("Select Connection Point Type"),
-            lambda conn_type, action: self._on_connection_popup_selected(conn_type, action),
-            self.icons_library_path
-        ))
+        # Setup Connection Points with selection menu using BasePopupMenuGrouped
+        connection_types = [
+            ("BW", _t("Butt Weld")),
+            ("SW", _t("Socket Weld")),
+            ("FL", _t("Flanged")),
+            ("THD", _t("Threaded")),
+            ("PL", _t("Plain")),
+            ("CP", _t("Compression")),
+            ("SC", _t("Screwed")),
+            ("PE", _t("Plain End")),
+            ("BE", _t("Beveled End")),
+            ("TE", _t("Threaded End")),
+        ]
 
-        # Setup Spindle Point with a selection menu
+        point_definitions = [
+            (_t("Arrive Point"), "_on_draw_arrive_point_clicked"),
+            (_t("Leave Point"), "_on_draw_leave_point_clicked"),
+            (_t("Additional Point (Tee)"), "_on_draw_tee_point_clicked"),
+        ]
+
+        # Build connection groups dict
+        connection_groups = {
+            title: {code: f"connections/{code.lower()}.svg" for code, _ in connection_types}
+            for title, _ in point_definitions
+        }
+        action_by_group = {title: action for title, action in point_definitions}
+
+        self.draw_toolbar_widget.btn_plot_connections.setMenu(
+            BasePopupMenuGrouped.create_menu(
+                self.draw_toolbar_widget.btn_plot_connections,
+                _t("Select Connection Point Type"),
+                connection_groups,
+                self.icons_library_path,
+                lambda group_title, code: self._on_connection_popup_selected(code, action_by_group[group_title])
+            )
+        )
+
+        # Setup Spindle Point with a selection menu using BasePopupMenuGrouped
         all_spindles = self.skey_service.get_all_spindles()
         self.properties_widget.update_spindles(all_spindles)
-        self.draw_toolbar_widget.btn_plot_point_spindle.setMenu(create_spindle_menu(
-            self.draw_toolbar_widget.btn_plot_point_spindle,
-            all_spindles,
-            self.icons_library_path,
-            self._on_spindle_from_popup_selected
-        ))
+
+        # Build spindle groups dict from group_key/subgroup_key
+        spindle_groups = {}
+        for spindle in all_spindles:
+            group = spindle.group_key
+            subgroup = spindle.subgroup_key
+            title = f"{group}/{subgroup}"
+            spindle_groups.setdefault(title, {})[spindle.name] = f"spindles/{spindle.name}.svg"
+
+        self.draw_toolbar_widget.btn_plot_point_spindle.setMenu(
+            BasePopupMenuGrouped.create_menu(
+                self.draw_toolbar_widget.btn_plot_point_spindle,
+                _t("Select Spindle"),
+                spindle_groups,
+                self.icons_library_path,
+                lambda _group, name: self._on_spindle_from_popup_selected(name)
+            )
+        )
 
         # Line tools menu - setup with grouped popup
         self.draw_toolbar_widget.setup_line_menu(self._on_line_tool_selected)

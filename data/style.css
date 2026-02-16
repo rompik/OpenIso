@@ -155,6 +155,8 @@ QTextBrowser {
     background-color: white;
 }
 
+
+
 /* Draw Toolbar Styles */
 .ToolButton {
     padding: 0px;
@@ -280,10 +282,50 @@ QTextBrowser {
 
 .BasePopupItemIcon {
     background: transparent;
+    font-size: 24pt;
 }
 
 .BasePopupItemName {
-    font-size: 10px;
+    font-size: 12px;
+    background: transparent;
+}
+
+/* Base Menu Popup Items Styles */
+.BaseMenuPopupItem {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.BaseMenuPopupItem:hover {
+    background-color: #eeeeee;
+    border: 1px solid #ddd;
+}
+
+.BaseMenuPopupItemIcon {
+    background: transparent;
+}
+
+/* Base Popup Menu Grouped Styles */
+.BasePopupMenuTitle {
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+
+.BasePopupMenuSection {
+    background-color: #f8f8f8;
+    border-radius: 5px;
+}
+
+.BasePopupMenuSectionTitle {
+    font-weight: bold;
+    color: #555;
+    background: transparent;
+    padding-left: 5px;
+}
+
+.BasePopupMenuGrid {
     background: transparent;
 }
 

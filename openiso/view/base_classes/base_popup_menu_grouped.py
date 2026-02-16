@@ -16,14 +16,14 @@ class BasePopupMenuGrouped(QWidget):
 
     def __init__(self, title, groups_dict, icons_path, columns=5, parent=None):
         super().__init__(parent)
-        self.setFixedWidth(350)
+        #self.setFixedWidth(400)
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(10, 10, 10, 10)
 
         # Main Title
         lbl_main = QLabel(title)
-        lbl_main.setStyleSheet("font-weight: bold; font-size: 16px; margin-bottom: 10px;")
+        lbl_main.setProperty("class", "BasePopupMenuTitle")
         main_layout.addWidget(lbl_main)
 
         # Scroll Area
@@ -34,7 +34,8 @@ class BasePopupMenuGrouped(QWidget):
 
         container = QWidget()
         self.sections_layout = QVBoxLayout(container)
-        self.sections_layout.setSpacing(15)
+        self.sections_layout.setSpacing(5)
+        self.sections_layout.setContentsMargins(0, 0, 0, 0)
 
         # Create sections based on the dictionary
         for group_name, items in groups_dict.items():
@@ -46,17 +47,17 @@ class BasePopupMenuGrouped(QWidget):
     def _create_section(self, name, items, icons_path, columns):
         """Creates a gray-background frame for a group of items."""
         frame = QFrame()
-        frame.setStyleSheet("QFrame { background-color: #f8f8f8; border-radius: 5px; }")
+        frame.setProperty("class", "BasePopupMenuSection")
 
         layout = QVBoxLayout(frame)
 
         # Section Title (e.g., 'Arrive Point')
         title = QLabel(name)
-        title.setStyleSheet("font-weight: bold; color: #555; background: transparent; padding-left: 5px;")
+        title.setProperty("class", "BasePopupMenuSectionTitle")
         layout.addWidget(title)
 
         grid_widget = QWidget()
-        grid_widget.setStyleSheet("background: transparent;")
+        grid_widget.setProperty("class", "BasePopupMenuGrid")
         grid = QGridLayout(grid_widget)
         grid.setContentsMargins(0, 5, 0, 5)
 
