@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
@@ -11,7 +11,7 @@ from PyQt6.QtGui import QPixmap, QDesktopServices
 from PyQt6.QtCore import Qt, QUrl
 from openiso.core.i18n import setup_i18n
 from openiso.core.constants import (
-    REPO_URL, ISSUES_URL, NEW_ISSUE_URL, README_URL, GPL_LICENSE_URL
+    REPO_URL, ISSUES_URL, NEW_ISSUE_URL, README_URL, MIT_LICENSE_URL
 )
 from openiso import __version__
 
@@ -211,7 +211,7 @@ class AboutDialog(QDialog):
         l_layout.addWidget(cp)
 
         license_text = self._t("This application is distributed without any warranties. More details in {link}.").format(
-            link=f'<a href="{GPL_LICENSE_URL}" style="color: #c01c28;">GNU General Public License, {self._t("version 3 or later")}</a>'
+            link=f'<a href="{MIT_LICENSE_URL}" style="color: #c01c28;">MIT License</a>'
         )
         desc = QLabel(license_text)
         desc.setWordWrap(True)

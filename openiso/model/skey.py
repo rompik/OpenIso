@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 """
 SkeyData and SkeyGroup models for Skey Library
 """

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 """
@@ -21,8 +21,5 @@ Submodules:
     editor_main: Main editor window
     window: Module aggregator (main entry point)
 """
-
-# Note: Imports will be added here as modules are created and refactored
-# from window.py
 
 __all__ = []

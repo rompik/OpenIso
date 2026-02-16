@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 import os
 import glob
 import subprocess

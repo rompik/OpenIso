@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 """
 Importers for Skey files - GUI-independent
 """

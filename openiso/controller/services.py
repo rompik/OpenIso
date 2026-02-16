@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 from typing import Optional
 from openiso.model.skey import SkeyGroup, SkeyData
 from openiso.controller.repository import SkeyRepository

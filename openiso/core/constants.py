@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 import os
 from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
@@ -106,7 +109,7 @@ REPO_URL = "https://github.com/rompik/OpenIso"
 ISSUES_URL = f"{REPO_URL}/issues"
 NEW_ISSUE_URL = f"{REPO_URL}/issues/new"
 README_URL = f"{REPO_URL}#readme"
-GPL_LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0"
+MIT_LICENSE_URL = "https://opensource.org/licenses/MIT"
 
 # Icon paths configuration
 ICONS = {

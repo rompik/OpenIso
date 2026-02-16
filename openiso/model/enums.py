@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
+
 """
 Enums for Skey Library models (Orientation, FlowArrow, Dimensioned)
 """
