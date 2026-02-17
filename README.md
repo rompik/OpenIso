@@ -63,9 +63,9 @@ OpenIso focuses on the logical structure of a piping component. Each symbol is d
 
 ## Requirements
 
-OpenIso requires Python 3.8 or higher and the following Python modules:
+OpenIso requires Python 3.10 or higher and the following Python modules:
 
-* **PyQt6** (≥6.0.0) – Modern Qt bindings for the graphical user interface
+* **PyQt6** (≥6.0.0) – Qt bindings for the graphical user interface
 * **markdown** (≥3.0.0) – Markdown parser for documentation rendering
 * **pyinstaller** (≥5.0.0) – Package Python applications into standalone executables
 
