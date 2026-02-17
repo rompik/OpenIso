@@ -30,7 +30,7 @@ class PropertiesWidget(QGroupBox):
     def setup_ui(self):
         self.lbl_skey_code = QLabel(_t("Code"))
         self.txt_skey = QLineEdit("")
-        self.lbl_alias_code = QLabel(_t("Alias Code"))
+        self.lbl_alias_code = QLabel(_t("Isogen Code"))
         self.txt_alias_code = QLineEdit("")
         self.lbl_skey_group = QLabel(_t("Group"))
         self.cb_skey_group = QComboBox()
@@ -69,10 +69,10 @@ class PropertiesWidget(QGroupBox):
         for i, (icon_name, text) in enumerate(orientations):
             container = QVBoxLayout()
             container.setSpacing(6)
-            container.setContentsMargins(0, 5, 0, 5)
+            container.setContentsMargins(0, 0, 0, 0)
 
             icon_label = QLabel()
-            icon_label.setFixedSize(56, 56)
+            icon_label.setFixedSize(52, 52)
             icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             icon_label.setToolTip(text)
 
@@ -80,8 +80,6 @@ class PropertiesWidget(QGroupBox):
             icon_path = os.path.join(self.icons_library_path, 'common', f'orientation_{icon_name}.svg')
             if os.path.exists(icon_path):
                 icon_label.setPixmap(QPixmap(icon_path).scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
-            else:
-                icon_label.setText("🖼️") # Placeholder
 
             radio = QRadioButton()
             radio.setToolTip(text)
@@ -217,9 +215,50 @@ class PropertiesWidget(QGroupBox):
         if model:
             model.sort(0, Qt.SortOrder.AscendingOrder)
 
+    def _extract_connection_types(self, geometry):
+        """Extract connection type codes from geometry items."""
+        if not geometry:
+            return []
+
+        types = []
+        seen = set()
+        for item_str in geometry:
+            if not isinstance(item_str, str):
+                continue
+            parts = item_str.split(":", 1)
+            if len(parts) < 2:
+                continue
+            item_type = parts[0].strip()
+            if item_type not in ("ArrivePoint", "LeavePoint", "TeePoint"):
+                continue
+
+            params = parts[1].strip().split()
+            for param in params:
+                if param.startswith("type="):
+                    value = param.split("=", 1)[1].strip()
+                    if value and value not in seen:
+                        seen.add(value)
+                        types.append(value)
+                    break
+
+        return types
+
+    def _generate_skey_code(self, skey_data):
+        """Builds a skey code from group, subgroup, name, and connection types."""
+        group_key = skey_data.group_key or ""
+        subgroup_key = skey_data.subgroup_key or ""
+        name = skey_data.name or ""
+
+        connection_types = self._extract_connection_types(getattr(skey_data, "geometry", None))
+        if connection_types:
+            types_part = ",".join(connection_types)
+            return f"{group_key}-{subgroup_key}-{name}[{types_part}]"
+
+        return f"{group_key}-{subgroup_key}-{name}"
+
     def load_skey_data(self, skey_data):
-        self.txt_skey.setText(skey_data.name)
-        self.txt_alias_code.setText(getattr(skey_data, "alias_code", ""))
+        self.txt_skey.setText(self._generate_skey_code(skey_data))
+        self.txt_alias_code.setText(skey_data.name)
         self.cb_skey_group.setCurrentText(_t(skey_data.group_key))
         # Use full path for subgroup translation
         subgroup_path = f"{skey_data.group_key}.{skey_data.subgroup_key}"

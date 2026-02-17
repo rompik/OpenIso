@@ -155,6 +155,18 @@ class SkeyEditor(QMainWindow):
         """Activates the tool to draw a hexagon on the canvas."""
         self._set_draw_action("draw_hexagon")
 
+    def _on_draw_pentagon_clicked(self):
+        """Activates the tool to draw a pentagon on the canvas."""
+        self._set_draw_action("draw_pentagon")
+
+    def _on_draw_octagon_clicked(self):
+        """Activates the tool to draw an octagon on the canvas."""
+        self._set_draw_action("draw_octagon")
+
+    def _on_draw_dodecagon_clicked(self):
+        """Activates the tool to draw a dodecagon on the canvas."""
+        self._set_draw_action("draw_dodecagon")
+
     def _on_line_tool_selected(self, category, tool_name):
         """Handle line tool selection from grouped popup menu.
 
@@ -188,7 +200,10 @@ class SkeyEditor(QMainWindow):
             "Triangle": self._on_draw_triangle_clicked,
             "Diamond": self._on_draw_diamond_clicked,
             "Cap": self._on_draw_cap_clicked,
-            "Hexagon": self._on_draw_hexagon_clicked
+            "Hexagon": self._on_draw_hexagon_clicked,
+            "Pentagon": self._on_draw_pentagon_clicked,
+            "Octagon": self._on_draw_octagon_clicked,
+            "Dodecagon": self._on_draw_dodecagon_clicked
         }
 
         handler = tool_map.get(tool_name)
@@ -896,20 +911,20 @@ class SkeyEditor(QMainWindow):
         self._set_draw_action("draw_line")
 
     def _on_draw_polyline_clicked(self):
-        """Activates the polyline tool (fallbacks to line for now)."""
+        """Activates the polyline tool."""
         self.status_bar_widget.showMessage(
-            _t("Polyline tool is not available yet; using Line."),
+            _t("Polyline: Click to add points, right-click or Enter to finish."),
             3000
         )
-        self._set_draw_action("draw_line")
+        self._set_draw_action("draw_polyline")
 
     def _on_draw_polyline_orthogonal_clicked(self):
-        """Activates the orthogonal polyline tool (fallbacks to line for now)."""
+        """Activates the orthogonal polyline tool."""
         self.status_bar_widget.showMessage(
-            _t("Orthogonal polyline tool is not available yet; using Line."),
+            _t("Orthogonal Polyline: Click to add points, right-click or Enter to finish."),
             3000
         )
-        self._set_draw_action("draw_line")
+        self._set_draw_action("draw_polyline_orthogonal")
 
     def _parse_geometry_coordinate(self, item, index):
         """Extracts a numeric coordinate value from a formatted geometry parameter string."""

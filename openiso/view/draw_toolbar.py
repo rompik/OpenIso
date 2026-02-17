@@ -87,9 +87,12 @@ class DrawToolbarWidget(QWidget):
                 "Triangle": ICONS["triangle"]
             },
             _t("Special Shapes"): {
-                "Diamond": ICONS["diamond"],
                 "Cap": ICONS["cap"],
-                "Hexagon": ICONS["hexagon"]
+                "Diamond": ICONS["diamond"],
+                "Pentagon": ICONS["pentagon"],
+                "Hexagon": ICONS["hexagon"],
+                "Octagon": ICONS["octagon"],
+                "Dodecagon": ICONS["dodecagon"]
             }
         }
 

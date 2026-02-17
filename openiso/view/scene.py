@@ -106,9 +106,15 @@ class SheetLayout(QGraphicsScene):
         self.primitives = {
             "draw_line": Primitive(2, self.draw_line),
             "draw_rect": Primitive(2, self.draw_rect),
+            "draw_square": Primitive(2, self.draw_square),
+            "draw_circle": Primitive(2, self.draw_circle),
             "draw_triangle": Primitive(3, self.draw_triangle),
+            "draw_diamond": Primitive(2, self.draw_diamond),
             "draw_cap": Primitive(2, self.draw_cap),
             "draw_hexagon": Primitive(2, self.draw_hexagon),
+            "draw_pentagon": Primitive(2, self.draw_pentagon),
+            "draw_octagon": Primitive(2, self.draw_octagon),
+            "draw_dodecagon": Primitive(2, self.draw_dodecagon),
             "draw_arrive_point": Primitive(1, self.draw_arrive_point),
             "draw_leave_point": Primitive(1, self.draw_leave_point),
             "draw_tee_point": Primitive(1, self.draw_tee_point),
@@ -347,6 +353,20 @@ class SheetLayout(QGraphicsScene):
                     self.removeItem(item)
             self.symbol_drawlist_temp.clear()
             self.cursor_coordinates.clear()
+        elif event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            # Finish polyline on Enter
+            if self.current_action in ["draw_polyline", "draw_polyline_orthogonal"]:
+                if len(self.cursor_coordinates) >= 2:
+                    if self.current_action == "draw_polyline":
+                        self.draw_polyline(list(self.cursor_coordinates))
+                    else:
+                        self.draw_polyline_orthogonal(list(self.cursor_coordinates))
+
+                    self.cursor_coordinates.clear()
+                    self._clear_temp_preview()
+                    self.current_action = None
+                    while QApplication.overrideCursor() is not None:
+                        QApplication.restoreOverrideCursor()
 
     def undo(self):
         if not self.undo_stack:
@@ -442,9 +462,19 @@ class SheetLayout(QGraphicsScene):
                 super().mousePressEvent(mouse_event)
                 return
 
+            # Polyline handling (multi-point, finish on right-click)
+            if action in ["draw_polyline", "draw_polyline_orthogonal"]:
+                self.cursor_coordinates.append(self.cursor_position)
+                return
+
             # Universal primitive handling
             if action in self.primitives:
                 primitive = self.primitives[action]
+                # Single-point primitives should finalize immediately
+                if primitive.points_required == 1:
+                    self.cursor_coordinates = [self.cursor_position]
+                    self._finalize_primitive(primitive.draw_func)
+                    return
 
                 # Add point
                 self.cursor_coordinates.append(self.cursor_position)
@@ -452,6 +482,23 @@ class SheetLayout(QGraphicsScene):
                 # If enough points collected — draw
                 if len(self.cursor_coordinates) == primitive.points_required:
                     self._finalize_primitive(primitive.draw_func)
+                return
+
+        # Right button - finish polyline
+        if btn == Qt.MouseButton.RightButton:
+            if action in ["draw_polyline", "draw_polyline_orthogonal"]:
+                if len(self.cursor_coordinates) >= 2:
+                    if action == "draw_polyline":
+                        self.draw_polyline(list(self.cursor_coordinates))
+                    else:
+                        self.draw_polyline_orthogonal(list(self.cursor_coordinates))
+
+                    # Reset state
+                    self.cursor_coordinates.clear()
+                    self._clear_temp_preview()
+                    self.current_action = None
+                    while QApplication.overrideCursor() is not None:
+                        QApplication.restoreOverrideCursor()
                 return
 
         # Fallback to default behavior
@@ -539,12 +586,47 @@ class SheetLayout(QGraphicsScene):
         if action == "draw_line":
             item = QGraphicsLineItem(p0.x(), p0.y(), p1.x(), p1.y())
 
+
+
         elif action == "draw_rect":
             x1, y1 = p0.x(), p0.y()
             x2, y2 = p1.x(), p1.y()
             x, y = min(x1, x2), min(y1, y2)
             w, h = abs(x2 - x1), abs(y2 - y1)
             item = QGraphicsRectItem(x, y, w, h)
+
+        elif action == "draw_square":
+            x1, y1 = p0.x(), p0.y()
+            x2, y2 = p1.x(), p1.y()
+            width = abs(x2 - x1)
+            height = abs(y2 - y1)
+            size = max(width, height)
+            if x2 < x1:
+                x = x1 - size
+            else:
+                x = x1
+            if y2 < y1:
+                y = y1 - size
+            else:
+                y = y1
+            item = QGraphicsRectItem(x, y, size, size)
+
+        elif action == "draw_circle":
+            cx, cy = p0.x(), p0.y()
+            dx, dy = p1.x() - cx, p1.y() - cy
+            radius = (dx * dx + dy * dy) ** 0.5
+            item = QGraphicsEllipseItem(cx - radius, cy - radius, radius * 2, radius * 2)
+
+        elif action == "draw_diamond":
+            cx, cy = p0.x(), p0.y()
+            dx, dy = p1.x() - cx, p1.y() - cy
+            radius = (dx * dx + dy * dy) ** 0.5
+            polygon = QPolygonF()
+            polygon.append(QPointF(cx, cy - radius))
+            polygon.append(QPointF(cx + radius, cy))
+            polygon.append(QPointF(cx, cy + radius))
+            polygon.append(QPointF(cx - radius, cy))
+            item = QGraphicsPolygonItem(polygon)
 
         elif action == "draw_cap":
             item = QGraphicsPathItem(self._create_arc_path(p0.x(), p0.y(), p1.x(), p1.y()))
@@ -555,37 +637,114 @@ class SheetLayout(QGraphicsScene):
             radius = (dx * dx + dy * dy) ** 0.5
             item = QGraphicsPolygonItem(self._create_hexagon_polygon(cx, cy, radius))
 
+        elif action == "draw_pentagon":
+            cx, cy = p0.x(), p0.y()
+            dx, dy = p1.x() - cx, p1.y() - cy
+            radius = (dx * dx + dy * dy) ** 0.5
+            item = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 5))
+
+        elif action == "draw_octagon":
+            cx, cy = p0.x(), p0.y()
+            dx, dy = p1.x() - cx, p1.y() - cy
+            radius = (dx * dx + dy * dy) ** 0.5
+            item = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 8))
+
+        elif action == "draw_dodecagon":
+            cx, cy = p0.x(), p0.y()
+            dx, dy = p1.x() - cx, p1.y() - cy
+            radius = (dx * dx + dy * dy) ** 0.5
+            item = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 12))
+
+        else:
+            return  # Unknown action, don't create any preview
+
         item.setPen(self._create_pen())
         self.addItem(item)
         self.symbol_drawlist_temp.append(item)
-
 
     def _preview_triangle(self):
         if len(self.cursor_coordinates) == 0:
             return
 
-        if len(self.cursor_coordinates) == 1:
-            self.cursor_coordinates.append(self.cursor_position)
-        elif len(self.cursor_coordinates) == 2:
-            if len(self.cursor_coordinates) < 3:
-                self.cursor_coordinates.append(self.cursor_position)
-            else:
-                self.cursor_coordinates[2] = self.cursor_position
-
         self._clear_temp_preview()
 
+        # Build preview polygon from existing points + current cursor position
         polygon = QPolygonF()
         for point in self.cursor_coordinates:
             polygon.append(point)
+        polygon.append(self.cursor_position)  # Add preview point without modifying cursor_coordinates
 
         self.triangle = QGraphicsPolygonItem(polygon)
         self.triangle.setPen(self._create_pen())
         self.addItem(self.triangle)
         self.symbol_drawlist_temp.append(self.triangle)
 
+    def _preview_polyline(self, action):
+        """Preview polyline as it's being drawn"""
+        if len(self.cursor_coordinates) == 0:
+            return
+
+        self._clear_temp_preview()
+
+        if action == "draw_polyline":
+            # Regular polyline - connect points directly
+            path = QPainterPath()
+            path.moveTo(self.cursor_coordinates[0])
+            for point in self.cursor_coordinates[1:]:
+                path.lineTo(point)
+            path.lineTo(self.cursor_position)  # Preview next segment
+
+            preview = QGraphicsPathItem(path)
+            preview.setPen(self._create_pen())
+            self.addItem(preview)
+            self.symbol_drawlist_temp.append(preview)
+
+        elif action == "draw_polyline_orthogonal":
+            # Orthogonal polyline - right angles only
+            path = QPainterPath()
+            path.moveTo(self.cursor_coordinates[0])
+
+            # Draw existing segments
+            for i in range(1, len(self.cursor_coordinates)):
+                prev_pt = self.cursor_coordinates[i - 1]
+                curr_pt = self.cursor_coordinates[i]
+
+                dx = abs(curr_pt.x() - prev_pt.x())
+                dy = abs(curr_pt.y() - prev_pt.y())
+
+                if dx >= dy:
+                    path.lineTo(curr_pt.x(), prev_pt.y())
+                    path.lineTo(curr_pt.x(), curr_pt.y())
+                else:
+                    path.lineTo(prev_pt.x(), curr_pt.y())
+                    path.lineTo(curr_pt.x(), curr_pt.y())
+
+            # Preview next segment
+            if len(self.cursor_coordinates) > 0:
+                last_pt = self.cursor_coordinates[-1]
+                dx = abs(self.cursor_position.x() - last_pt.x())
+                dy = abs(self.cursor_position.y() - last_pt.y())
+
+                if dx >= dy:
+                    path.lineTo(self.cursor_position.x(), last_pt.y())
+                    path.lineTo(self.cursor_position.x(), self.cursor_position.y())
+                else:
+                    path.lineTo(last_pt.x(), self.cursor_position.y())
+                    path.lineTo(self.cursor_position.x(), self.cursor_position.y())
+
+            preview = QGraphicsPathItem(path)
+            preview.setPen(self._create_pen())
+            self.addItem(preview)
+            self.symbol_drawlist_temp.append(preview)
+
     def mouseMoveEvent(self, mouse_event):
         self.cursor_position = self.snap_to_grid(mouse_event.scenePos())
         action = self.current_action
+
+        # Preview polyline
+        if action in ["draw_polyline", "draw_polyline_orthogonal"]:
+            self._preview_polyline(action)
+            return
 
         if action not in self.primitives:
             super().mouseMoveEvent(mouse_event)
@@ -737,6 +896,50 @@ class SheetLayout(QGraphicsScene):
         line.setPen(self._create_pen())
         self._finalize_item(line)
 
+    def draw_polyline(self, positions):
+        """Draw a polyline from multiple points"""
+        if len(positions) < 2:
+            return
+
+        path = QPainterPath()
+        path.moveTo(positions[0])
+        for point in positions[1:]:
+            path.lineTo(point)
+
+        polyline = QGraphicsPathItem(path)
+        polyline.setPen(self._create_pen())
+        self._finalize_item(polyline)
+
+    def draw_polyline_orthogonal(self, positions):
+        """Draw an orthogonal (right-angle) polyline from multiple points"""
+        if len(positions) < 2:
+            return
+
+        path = QPainterPath()
+        path.moveTo(positions[0])
+
+        for i in range(1, len(positions)):
+            prev_pt = positions[i - 1]
+            curr_pt = positions[i]
+
+            # Calculate whether to go horizontal or vertical first
+            dx = abs(curr_pt.x() - prev_pt.x())
+            dy = abs(curr_pt.y() - prev_pt.y())
+
+            # Go in the direction of larger change first
+            if dx >= dy:
+                # Horizontal then vertical
+                path.lineTo(curr_pt.x(), prev_pt.y())
+                path.lineTo(curr_pt.x(), curr_pt.y())
+            else:
+                # Vertical then horizontal
+                path.lineTo(prev_pt.x(), curr_pt.y())
+                path.lineTo(curr_pt.x(), curr_pt.y())
+
+        polyline = QGraphicsPathItem(path)
+        polyline.setPen(self._create_pen())
+        self._finalize_item(polyline)
+
     def draw_rect(self, positions):
         p0, p1 = positions[0], positions[1]
         x1, y1 = p0.x(), p0.y()
@@ -799,3 +1002,98 @@ class SheetLayout(QGraphicsScene):
         hexagon = QGraphicsPolygonItem(self._create_hexagon_polygon(cx, cy, radius))
         hexagon.setPen(self._create_pen())
         self._finalize_item(hexagon)
+
+    def _create_polygon(self, cx, cy, radius, sides):
+        """Create regular polygon from center, radius and number of sides"""
+        polygon = QPolygonF()
+        for i in range(sides):
+            angle = 2 * math.pi / sides * i - math.pi / 2  # Start from top
+            polygon.append(QPointF(cx + radius * math.cos(angle), cy + radius * math.sin(angle)))
+        return polygon
+
+    def draw_square(self, positions):
+        """Draw a square with equal width and height"""
+        p0, p1 = positions[0], positions[1]
+        x1, y1 = p0.x(), p0.y()
+        x2, y2 = p1.x(), p1.y()
+
+        # Calculate size based on maximum dimension
+        width = abs(x2 - x1)
+        height = abs(y2 - y1)
+        size = max(width, height)
+
+        # Determine position maintaining direction
+        if x2 < x1:
+            x = x1 - size
+        else:
+            x = x1
+        if y2 < y1:
+            y = y1 - size
+        else:
+            y = y1
+
+        square = QGraphicsRectItem(x, y, size, size)
+        square.setPen(self._create_pen())
+        self._finalize_item(square)
+
+    def draw_circle(self, positions):
+        """Draw a circle from center and radius point"""
+        p0, p1 = positions[0], positions[1]
+        cx, cy = p0.x(), p0.y()
+        dx, dy = p1.x() - cx, p1.y() - cy
+        radius = (dx * dx + dy * dy) ** 0.5
+
+        circle = QGraphicsEllipseItem(cx - radius, cy - radius, radius * 2, radius * 2)
+        circle.setPen(self._create_pen())
+        self._finalize_item(circle)
+
+    def draw_diamond(self, positions):
+        """Draw a diamond (square rotated 45 degrees)"""
+        p0, p1 = positions[0], positions[1]
+        cx, cy = p0.x(), p0.y()
+        dx, dy = p1.x() - cx, p1.y() - cy
+        radius = (dx * dx + dy * dy) ** 0.5
+
+        # Create diamond with 4 points at cardinal directions
+        polygon = QPolygonF()
+        polygon.append(QPointF(cx, cy - radius))  # Top
+        polygon.append(QPointF(cx + radius, cy))  # Right
+        polygon.append(QPointF(cx, cy + radius))  # Bottom
+        polygon.append(QPointF(cx - radius, cy))  # Left
+
+        diamond = QGraphicsPolygonItem(polygon)
+        diamond.setPen(self._create_pen())
+        self._finalize_item(diamond)
+
+    def draw_pentagon(self, positions):
+        """Draw a regular pentagon"""
+        p0, p1 = positions[0], positions[1]
+        cx, cy = p0.x(), p0.y()
+        dx, dy = p1.x() - cx, p1.y() - cy
+        radius = (dx * dx + dy * dy) ** 0.5
+
+        pentagon = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 5))
+        pentagon.setPen(self._create_pen())
+        self._finalize_item(pentagon)
+
+    def draw_octagon(self, positions):
+        """Draw a regular octagon"""
+        p0, p1 = positions[0], positions[1]
+        cx, cy = p0.x(), p0.y()
+        dx, dy = p1.x() - cx, p1.y() - cy
+        radius = (dx * dx + dy * dy) ** 0.5
+
+        octagon = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 8))
+        octagon.setPen(self._create_pen())
+        self._finalize_item(octagon)
+
+    def draw_dodecagon(self, positions):
+        """Draw a regular dodecagon (12-sided polygon)"""
+        p0, p1 = positions[0], positions[1]
+        cx, cy = p0.x(), p0.y()
+        dx, dy = p1.x() - cx, p1.y() - cy
+        radius = (dx * dx + dy * dy) ** 0.5
+
+        dodecagon = QGraphicsPolygonItem(self._create_polygon(cx, cy, radius, 12))
+        dodecagon.setPen(self._create_pen())
+        self._finalize_item(dodecagon)

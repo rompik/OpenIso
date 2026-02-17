@@ -154,6 +154,10 @@ ICONS = {
     "spline": "primitives/spline.svg",
     "square": "primitives/square.svg",
     "triangle": "primitives/triangle.svg",
+    "pentagon": "primitives/pentagon.svg",
+    "octagon": "primitives/octagon.svg",
+    "dodecagon": "primitives/dodecagon.svg",
+
 }
 
 # Geometry type codes (for ASCII import)
