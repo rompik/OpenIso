@@ -44,6 +44,7 @@ from openiso.view.draw_toolbar import DrawToolbarWidget
 from openiso.view.settings_dialog import SettingsDialog
 from openiso.view.help_window import HelpWindow
 from openiso.view.about_dialog import AboutDialog
+from openiso.view.keyboard_shortcuts_dialog import KeyboardShortcutsDialog
 from openiso.view.terminal import TerminalWidget
 from openiso.view.fill_color_popup import create_fill_color_menu
 from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
@@ -109,6 +110,8 @@ class SkeyEditor(QMainWindow):
 
         group_key = self.properties_widget.cb_skey_group.currentData() or self.properties_widget.cb_skey_group.currentText()
         if not group_key:
+            self.properties_widget.cb_skey_subgroup.clear()
+            self.properties_widget.cb_skey_subgroup.addItem("", "")
             return
 
         # Update subgroup combobox
@@ -143,6 +146,14 @@ class SkeyEditor(QMainWindow):
     def _on_draw_triangle_clicked(self):
         """Activates the tool to draw a triangle on the canvas."""
         self._set_draw_action("draw_triangle")
+
+    def _on_draw_cap_clicked(self):
+        """Activates the tool to draw a cap on the canvas."""
+        self._set_draw_action("draw_cap")
+
+    def _on_draw_hexagon_clicked(self):
+        """Activates the tool to draw a hexagon on the canvas."""
+        self._set_draw_action("draw_hexagon")
 
     def _on_line_tool_selected(self, category, tool_name):
         """Handle line tool selection from grouped popup menu.
@@ -316,7 +327,7 @@ class SkeyEditor(QMainWindow):
         self.hbox_lay_editor.addWidget(self.draw_toolbar_widget)
         self.hbox_lay_editor.addWidget(self.view_editor, stretch=1)
 
-        if __version__ > "0.7.0":
+        if __version__ > "0.9.0":
             self.vbox_lay_editor.addWidget(self.terminal_widget)
 
         self.vbox_lay_right = QVBoxLayout()
@@ -335,7 +346,6 @@ class SkeyEditor(QMainWindow):
         self.vbox_lay_main.addWidget(self.menu_toolbar_widget)
         self.vbox_lay_main.addLayout(self.hbox_lay_main)
 
-
         central_widget = QWidget()
         central_widget.setLayout(self.vbox_lay_main)
         self.setCentralWidget(central_widget)
@@ -348,6 +358,7 @@ class SkeyEditor(QMainWindow):
 
         # --- Signal connections ---
         self.menu_toolbar_widget.btn_settings.clicked.connect(self._on_settings_clicked)
+        self.menu_toolbar_widget.btn_keyboard_shortcuts.clicked.connect(self._on_keyboard_shortcuts_clicked)
         self.menu_toolbar_widget.btn_help.clicked.connect(self._on_help_clicked)
         self.menu_toolbar_widget.btn_about.clicked.connect(self._on_about_clicked)
 
@@ -495,6 +506,11 @@ class SkeyEditor(QMainWindow):
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
+
+    def _on_keyboard_shortcuts_clicked(self):
+        """Displays keyboard shortcuts dialog."""
+        dialog = KeyboardShortcutsDialog(self)
+        dialog.exec()
 
     def _on_about_clicked(self):
         """Displays information about the application."""
@@ -753,8 +769,79 @@ class SkeyEditor(QMainWindow):
             self.scale_element(scale)
 
     def keyPressEvent(self, event):
-        """Overrides the default handler to process keyboard events, such as using Escape to cancel a tool."""
-        if event.key() == Qt.Key.Key_Escape:
+        """Handles keyboard shortcuts and events."""
+        # Get keyboard modifiers
+        modifiers = event.modifiers()
+        key = event.key()
+        text = event.text()
+
+        # File Operations
+        if modifiers == Qt.KeyboardModifier.ControlModifier:
+            if text == 'i':  # Ctrl+I - Import File
+                self.import_external_file()
+                return
+            elif text == 'e':  # Ctrl+E - Export File
+                self.export_to_file()
+                return
+            elif text == 's':  # Ctrl+S - Save
+                self.save_current_skey()
+                return
+            elif text == 'p':  # Ctrl+P - Print
+                self.print_symbol()
+                return
+            elif text == 'z':  # Ctrl+Z - Undo
+                self.undo_last_action()
+                return
+            elif text == 'y':  # Ctrl+Y - Redo
+                self.redo_next_action()
+                return
+            elif text == 'a':  # Ctrl+A - Select All
+                self.select_all_items()
+                return
+            elif text == ',':  # Ctrl+, - Settings
+                self._on_settings_clicked()
+                return
+            elif text == 'h':  # Ctrl+H - About
+                self._on_about_clicked()
+                return
+            elif key == Qt.Key.Key_Plus or text == '+':  # Ctrl++ - Zoom In
+                self.zoom_in()
+                return
+            elif key == Qt.Key.Key_Minus or text == '-':  # Ctrl+- - Zoom Out
+                self.zoom_out()
+                return
+
+        # Drawing Tools (single key shortcuts)
+        elif modifiers == Qt.KeyboardModifier.NoModifier:
+            if text.lower() == 'l':  # L - Line Tool
+                self._on_draw_line_clicked()
+                return
+            elif text.lower() == 'p':  # P - Polyline Tool
+                self._on_draw_polyline_clicked()
+                return
+            elif text.lower() == 'r':  # R - Rectangle Tool
+                self._on_draw_rect_clicked()
+                return
+            elif text.lower() == 'c':  # C - Circle Tool
+                self._on_draw_circle_clicked()
+                return
+            elif text.lower() == 'f':  # F - Fit to View
+                self.fit_to_view()
+                return
+            elif key == Qt.Key.Key_Home:  # Home - Reset View
+                self.reset_view()
+                return
+            elif key == Qt.Key.Key_Delete:  # Delete - Clear Sheet
+                self.clear_canvas()
+                return
+
+        # Function Keys
+        if key == Qt.Key.Key_F1:  # F1 - Help
+            self._on_help_clicked()
+            return
+
+        # Escape key - Cancel current action
+        if key == Qt.Key.Key_Escape:
             if hasattr(self.scene, 'selected_for_highlight'):
                 for item in self.scene.selected_for_highlight:
                     if hasattr(item, '_original_pen'):
@@ -771,6 +858,7 @@ class SkeyEditor(QMainWindow):
             QApplication.restoreOverrideCursor()
             self.scene.current_action = ""
             return
+
         QMainWindow.keyPressEvent(self, event)
 
     def _on_focus_item_changed(self, newItem, _oldItem, reason):
@@ -1086,6 +1174,7 @@ class SkeyEditor(QMainWindow):
 
         # Update group combobox
         self.properties_widget.cb_skey_group.clear()
+        self.properties_widget.cb_skey_group.addItem("", "")
         groups = self.skey_service.groups
         for group in groups.get_groups():
             self.properties_widget.cb_skey_group.addItem(_t(group), group)
@@ -1093,8 +1182,9 @@ class SkeyEditor(QMainWindow):
         model = self.properties_widget.cb_skey_group.model()
         if model:
             model.sort(0)
-        self.properties_widget.cb_skey_group.setCurrentText(_t("Unknown"))
-        self.properties_widget.cb_skey_subgroup.setCurrentText(_t("Unknown"))
+        self.properties_widget.cb_skey_group.setCurrentIndex(0)
+        self.properties_widget.cb_skey_subgroup.clear()
+        self.properties_widget.cb_skey_subgroup.addItem("", "")
 
         # Build tree using helper method
         self.tree_skeys.build_tree(groups, expanded=False)
@@ -1412,6 +1502,27 @@ class SkeyEditor(QMainWindow):
             return msg
         except ValueError:
             return "Ошибка: Некорректный коэффициент масштабирования"
+
+    def zoom_in(self):
+        """Zooms in on the view by 20%."""
+        self.view_editor.scale(1.2, 1.2)
+        self.status_bar_widget.showMessage(_t("Zoomed in"), 1500)
+
+    def zoom_out(self):
+        """Zooms out on the view by 20%."""
+        self.view_editor.scale(1/1.2, 1/1.2)
+        self.status_bar_widget.showMessage(_t("Zoomed out"), 1500)
+
+    def fit_to_view(self):
+        """Fits the entire scene to the view."""
+        self.view_editor.fitInView(self.scene.itemsBoundingRect(), Qt.AspectRatioMode.KeepAspectRatio)
+        self.status_bar_widget.showMessage(_t("Fitted to view"), 1500)
+
+    def reset_view(self):
+        """Resets the view to the default zoom and position."""
+        self.view_editor.resetTransform()
+        self.view_editor.fitInView(self.scene.itemsBoundingRect(), Qt.AspectRatioMode.KeepAspectRatio)
+        self.status_bar_widget.showMessage(_t("View reset"), 1500)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

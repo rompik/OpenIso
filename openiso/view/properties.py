@@ -30,6 +30,8 @@ class PropertiesWidget(QGroupBox):
     def setup_ui(self):
         self.lbl_skey_code = QLabel(_t("Code"))
         self.txt_skey = QLineEdit("")
+        self.lbl_alias_code = QLabel(_t("Alias Code"))
+        self.txt_alias_code = QLineEdit("")
         self.lbl_skey_group = QLabel(_t("Group"))
         self.cb_skey_group = QComboBox()
         self.cb_skey_group.setDuplicatesEnabled(False)
@@ -113,31 +115,35 @@ class PropertiesWidget(QGroupBox):
         # Add to grid
         self.grid_properties.addWidget(self.lbl_skey_code, 0, 0)
         self.grid_properties.addWidget(self.txt_skey, 0, 1)
-        self.grid_properties.addWidget(self.lbl_skey_group, 1, 0)
-        self.grid_properties.addWidget(self.cb_skey_group, 1, 1)
-        self.grid_properties.addWidget(self.lbl_skey_subgroup, 2, 0)
-        self.grid_properties.addWidget(self.cb_skey_subgroup, 2, 1)
-        self.grid_properties.addWidget(self.lbl_spindle, 3, 0)
-        self.grid_properties.addWidget(self.cb_spindle_skey, 3, 1)
+        self.grid_properties.addWidget(self.lbl_alias_code, 1, 0)
+        self.grid_properties.addWidget(self.txt_alias_code, 1, 1)
+        self.grid_properties.addWidget(self.lbl_skey_group, 2, 0)
+        self.grid_properties.addWidget(self.cb_skey_group, 2, 1)
+        self.grid_properties.addWidget(self.lbl_skey_subgroup, 3, 0)
+        self.grid_properties.addWidget(self.cb_skey_subgroup, 3, 1)
+        self.grid_properties.addWidget(self.lbl_spindle, 4, 0)
+        self.grid_properties.addWidget(self.cb_spindle_skey, 4, 1)
 
-        self.grid_properties.addWidget(self.group_description, 4, 0, 1, 2)
-        self.grid_properties.addWidget(self.group_orientation, 5, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_description, 5, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_orientation, 6, 0, 1, 2)
 
-        self.grid_properties.addWidget(self.chk_flow_arrow, 6, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_dimensioned, 7, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_tracing, 8, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_insulation, 9, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_arrow, 7, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_dimensioned, 8, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_tracing, 9, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_insulation, 10, 0, 1, 2)
         #self.grid_properties.addWidget(self.lbl_geometry, 10, 0)
         #self.grid_properties.addWidget(self.lst_geometry, 11, 0, 1, 2)
         #self.grid_properties.setRowStretch(10, 1)
-        self.grid_properties.addWidget(self.btn_save, 11, 0, 1, 2)
+        self.grid_properties.addWidget(self.btn_save, 12, 0, 1, 2)
 
     def clear_fields(self):
         """Clears all input fields in the properties widget."""
         self.txt_skey.clear()
+        self.txt_alias_code.clear()
         # Keep current items in group combo but deselect
-        self.cb_skey_group.setCurrentIndex(-1)
+        self.cb_skey_group.setCurrentIndex(0)
         self.cb_skey_subgroup.clear()
+        self.cb_skey_subgroup.addItem("", "")
         self.cb_spindle_skey.setCurrentIndex(0)
         self.txt_skey_desc.setPlainText("")
         self.radio_orientations[0].setChecked(True)
@@ -151,6 +157,7 @@ class PropertiesWidget(QGroupBox):
         """Redraws and re-translates all static UI elements."""
         self.setTitle(_t("Properties"))
         self.lbl_skey_code.setText(_t("Code"))
+        self.lbl_alias_code.setText(_t("Alias Code"))
         self.lbl_skey_group.setText(_t("Group"))
         self.lbl_skey_subgroup.setText(_t("Subgroup"))
         self.lbl_spindle.setText(_t("Spindle"))
@@ -212,6 +219,7 @@ class PropertiesWidget(QGroupBox):
 
     def load_skey_data(self, skey_data):
         self.txt_skey.setText(skey_data.name)
+        self.txt_alias_code.setText(getattr(skey_data, "alias_code", ""))
         self.cb_skey_group.setCurrentText(_t(skey_data.group_key))
         # Use full path for subgroup translation
         subgroup_path = f"{skey_data.group_key}.{skey_data.subgroup_key}"

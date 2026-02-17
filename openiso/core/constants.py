@@ -121,6 +121,7 @@ ICONS = {
     "filter_clear": "common/filter_clear.svg",
     "help": "common/help.svg",
     "import": "common/import.svg",
+    "keyboard": "common/keyboard.svg",
     "move": "common/move.svg",
     "print": "common/printer.svg",
     "redo": "common/128x128_redo.png",

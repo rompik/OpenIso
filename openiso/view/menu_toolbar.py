@@ -51,6 +51,7 @@ class MenuToolbarWidget(QWidget):
 
         # System operations
         self.btn_settings = self._create_tool_button("Settings", icon_path=ICONS["settings"], text="")
+        self.btn_keyboard_shortcuts = self._create_tool_button("Keyboard Shortcuts", icon_path=ICONS["keyboard"], text="")
         self.btn_help = self._create_tool_button("Help", icon_path=ICONS["help"], text="")
         self.btn_about = self._create_tool_button("About", icon_path=ICONS["about"], text="")
 
@@ -65,6 +66,7 @@ class MenuToolbarWidget(QWidget):
         self.layout.addStretch()
 
         self.layout.addWidget(self.btn_settings)
+        self.layout.addWidget(self.btn_keyboard_shortcuts)
         self.layout.addWidget(self.btn_help)
         self.layout.addWidget(self.btn_about)
 
@@ -76,5 +78,6 @@ class MenuToolbarWidget(QWidget):
         self.btn_import_from_ascii.setToolTip(_t("Import of Skeys from ASCII file ( Intergraph )"))
         self.btn_import_from_idf.setToolTip(_t("Import Skeys from IDF file ( AVEVA )"))
         self.btn_settings.setToolTip(_t("Settings"))
+        self.btn_keyboard_shortcuts.setToolTip(_t("Keyboard Shortcuts"))
         self.btn_help.setToolTip(_t("Help"))
         self.btn_about.setToolTip(_t("About"))
