@@ -47,7 +47,7 @@ OpenIso allows you to define and edit standard SKEY types used in isometric gene
 OpenIso focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
 
 <p align="center">
-  <img src="data/icons/skeys/structure.svg" width="500" alt="SKEY Structure Diagram">
+  <img src="docs/en/images/skey_structure.svg" width="500" alt="SKEY Structure Diagram">
 </p>
 
 * **Arrive & Leave:** Define the primary flow path through the component.

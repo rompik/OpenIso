@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 5798 3829" fill="none" stroke-linejoin="round" stroke-width="4">
+  <style>
+    text {
+      font-family: "Liberation Sans", "Arial", sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  </style>
+  <circle cx="1244.76" cy="1969.03" r="133" fill="#3465A4" stroke="none"/>
+  <line x1="45.76" y1="1966.03" x2="1245.76" y2="1965.03" stroke="#3465A4" style="stroke-width: 10px;"/>
+  <line x1="1242.76" y1="1192.03" x2="1242.76" y2="2712.03" stroke="#3465A4" style="stroke-width: 10px;"/>
+  <text x="178.099" y="1586.06" font-size="220" fill="#3F51B5" style="white-space: pre; font-size: 220px;">ARRIVE</text>
+  <text x="248.964" y="1850.91" font-size="220" fill="#3F51B5" style="white-space: pre; font-size: 220px;">POINT</text>
+  <path d="M 2837 1953 L 1437 1203 L 1437 2703 Z" stroke="#000" style="stroke-width: 10px;"/>
+  <path d="M 2943 1953 L 4338 1203 L 4338 2703 Z" stroke="#000" style="stroke-width: 10px;"/>
+  <circle cx="2881" cy="1933" r="133" fill="#7E57C2" stroke="none"/>
+  <line x1="2883" y1="447" x2="2883" y2="1947" stroke="#7E57C2" style="stroke-width: 10px;"/>
+  <rect x="2376" y="27" width="1000" height="500" fill="#FAFAFA" stroke="#7E57C2" style="stroke-width: 10px;"/>
+  <text x="2028.2" y="2599.85" font-size="220" fill="#7E57C2" style="white-space: pre; font-size: 220px; transform-box: fill-box; transform-origin: 47.0859% 56.0363%;">SPINDLE POINT</text>
+  <circle cx="4521.11" cy="1972.89" r="133" fill="#EF5350" stroke="none"/>
+  <line x1="4539.11" y1="1969.89" x2="5739.11" y2="1970.89" stroke="#EF5350" style="stroke-width: 10px;"/>
+  <line x1="4523.11" y1="1195.89" x2="4523.11" y2="2715.89" stroke="#EF5350" style="stroke-width: 10px;"/>
+  <text x="4773.26" y="1570.85" font-size="220" fill="#EF5350" style="white-space: pre; font-size: 220px;">LEAVE</text>
+  <text x="4808.02" y="1857.27" font-size="220" fill="#EF5350" style="white-space: pre; font-size: 220px;">POINT</text>
+  <line x1="1915.72" y1="3137.72" x2="3528.72" y2="3137.72" stroke="#000" style="stroke-width: 10px;"/>
+  <polygon points="3515.72 3037.72 3915.72 3137.72 3515.72 3237.72" fill="#000"/>
+  <text x="1997.04" y="3469.57" font-size="200" fill="#6C757D" style="white-space: pre; font-size: 200px;">FLOW DIRECTION</text>
+</svg>
