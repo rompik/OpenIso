@@ -1,4 +1,5 @@
-<p align="center">OpenIso</p>
+<h1 align="center">🎯 OpenIso</h1>
+<p align="center"><em>Lightweight Isometric Piping Symbol Editor</em></p>
 
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
@@ -12,8 +13,6 @@
 </p>
 
 
-
-
 **OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (SKEYs)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
 ## Features
@@ -25,6 +24,13 @@
     * Hatching and Solid Color Fills.
 * **Modern Export:** Save symbols in **ASCII** format for integration with modern piping tools.
 * **Globalized:** Full localization support via Crowdin.
+
+---
+
+## Documentation
+
+* 📖 **[English Documentation](docs/en/INDEX.MD)** – Complete guide to using OpenIso, installation instructions, tutorials, and more.
+* 📖 **[Russian Documentation](docs/ru/INDEX.MD)** – Полное руководство по использованию OpenIso, инструкции по установке и многое другое.
 
 ---
 
@@ -54,28 +60,20 @@ OpenIso focuses on the logical structure of a piping component. Each symbol is d
 * **Spindle:** The orientation point for valve handles or actuators.
 * **Tee:** (Not shown) Used for branching components.
 
-## Running
-### Requirements
 
+## Requirements
+
+OpenIso requires Python 3.8 or higher and the following Python modules:
+
+* **PyQt6** (≥6.0.0) – Modern Qt bindings for the graphical user interface
+* **markdown** (≥3.0.0) – Markdown parser for documentation rendering
+* **pyinstaller** (≥5.0.0) – Package Python applications into standalone executables
+
+
+## Running
 ```bash
 cd OpenIso
 pip install -r requirements.txt
 python -m openiso
 ```
 
-## Contribution
-
-
-## 🚀 Installation
-
-### Windows
-1. Go to the [Releases](https://github.com/rompik/OpenIso/releases) page.
-2. Download `OpenIso-Windows-x64.zip`.
-3. Extract and run `OpenIso.exe`.
-
-### Linux
-1. Download the latest `.AppImage` or `.tar.gz` from the Releases page.
-2. Make it executable:
-   ```bash
-   chmod +x OpenIso.AppImage
-   ./OpenIso.AppImage
