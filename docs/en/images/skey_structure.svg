@@ -14,7 +14,7 @@
   </style>
 
   <!-- ARRIVE POINT -->
-  <circle cx="1245" cy="1933" r="133" fill="none" stroke="#3465A4" stroke-width="10"/>
+  <circle cx="1245" cy="1933" r="75" fill="none" stroke="#3465A4" stroke-width="10"/>
   <line x1="46" y1="1933" x2="1246" y2="1933" stroke="#3465A4" stroke-width="10"/>
   <line x1="1243" y1="1192" x2="1243" y2="2712" stroke="#3465A4" stroke-width="10"/>
 
@@ -25,7 +25,7 @@
   <path d="M 2881 1933 L 1437 1203 L 1437 2703 Z" stroke="#000" stroke-width="10"/>
 
   <!-- SPINDLE POINT -->
-  <circle cx="2881" cy="1933" r="133" fill="none" stroke="#7E57C2" stroke-width="10"/>
+  <circle cx="2881" cy="1933" r="75" fill="none" stroke="#7E57C2" stroke-width="10"/>
   <line x1="2883" y1="527" x2="2883" y2="1947" stroke="#7E57C2" stroke-width="10"/>
 
   <!-- RECTANGLE WITHOUT FILL -->
@@ -37,7 +37,7 @@
   <path d="M 2881 1933 L 4325 1203 L 4325 2703 Z" stroke="#000" stroke-width="10"/>
 
   <!-- LEAVE POINT -->
-  <circle cx="4521" cy="1933" r="133" fill="none" stroke="#EF5350" stroke-width="10"/>
+  <circle cx="4521" cy="1933" r="75" fill="none" stroke="#EF5350" stroke-width="10"/>
   <line x1="4521" y1="1196" x2="4521" y2="2716" stroke="#EF5350" stroke-width="10"/>
   <line x1="4540" y1="1933" x2="5740" y2="1933" stroke="#EF5350" stroke-width="10"/>
 
