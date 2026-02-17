@@ -47,6 +47,7 @@ from openiso.view.about_dialog import AboutDialog
 from openiso.view.keyboard_shortcuts_dialog import KeyboardShortcutsDialog
 from openiso.view.terminal import TerminalWidget
 from openiso.view.fill_color_popup import create_fill_color_menu
+from openiso.view.hatch_popup import create_hatch_menu
 from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
 from openiso import __version__
 from openiso.core.parser import CommandParser
@@ -224,6 +225,124 @@ class SkeyEditor(QMainWindow):
                 item.setBrush(QBrush(color, Qt.BrushStyle.SolidPattern))
 
         self.status_bar_widget.showMessage(_t("Fill color applied"), 3000)
+
+    def _on_hatch_selected(self, name, angle_or_pattern, spacing):
+        """Applies the selected hatch pattern to all chosen closed primitives."""
+        selected_items = self.scene.selectedItems()
+        if not selected_items:
+            self.status_bar_widget.showMessage(_t("No items selected for hatching"), 3000)
+            return
+
+        if name == "None":
+            # Clear hatching (set to no brush)
+            for item in selected_items:
+                if isinstance(item, (QGraphicsRectItem, QGraphicsPolygonItem, QGraphicsPathItem)):
+                    item.setBrush(QBrush(Qt.BrushStyle.NoBrush))
+            self.status_bar_widget.showMessage(_t("Hatch cleared"), 3000)
+            return
+
+        # Apply hatch pattern
+        for item in selected_items:
+            if isinstance(item, (QGraphicsRectItem, QGraphicsPolygonItem, QGraphicsPathItem)):
+                brush = self._create_hatch_brush(angle_or_pattern, spacing)
+                item.setBrush(brush)
+
+        self.status_bar_widget.showMessage(_t(f"Hatch pattern '{name}' applied"), 3000)
+
+    def _create_hatch_brush(self, angle_or_pattern, spacing):
+        """Create a brush with the specified hatch pattern."""
+        from PyQt6.QtGui import QPixmap, QPainter, QBrush
+        from PyQt6.QtCore import Qt
+
+        # Create a pixmap for the pattern
+        size = max(spacing * 4, 32)  # Make pattern large enough
+        pixmap = QPixmap(size, size)
+        pixmap.fill(Qt.GlobalColor.transparent)
+
+        painter = QPainter(pixmap)
+        pen = QPen(Qt.GlobalColor.black, 1)
+        painter.setPen(pen)
+
+        if isinstance(angle_or_pattern, int):
+            # Simple line pattern at an angle
+            self._draw_hatch_lines(painter, size, size, angle_or_pattern, spacing)
+        elif angle_or_pattern == "cross":
+            # Horizontal + Vertical cross
+            self._draw_hatch_lines(painter, size, size, 0, spacing)
+            self._draw_hatch_lines(painter, size, size, 90, spacing)
+        elif angle_or_pattern == "cross_diagonal":
+            # Diagonal cross (X pattern)
+            self._draw_hatch_lines(painter, size, size, 45, spacing)
+            self._draw_hatch_lines(painter, size, size, 135, spacing)
+        elif angle_or_pattern == "brick":
+            # Brick pattern
+            self._draw_brick_hatch(painter, size, size, spacing)
+        elif angle_or_pattern == "dots":
+            # Dot pattern
+            self._draw_dot_hatch(painter, size, size, spacing)
+
+        painter.end()
+        return QBrush(pixmap)
+
+    def _draw_hatch_lines(self, painter, width, height, angle, spacing):
+        """Draw parallel lines at given angle for hatch pattern."""
+        import math
+
+        if angle == 0:
+            # Horizontal lines
+            y = 0
+            while y < height:
+                painter.drawLine(0, int(y), width, int(y))
+                y += spacing
+        elif angle == 90:
+            # Vertical lines
+            x = 0
+            while x < width:
+                painter.drawLine(int(x), 0, int(x), height)
+                x += spacing
+        elif angle == 45:
+            # Diagonal lines (/)
+            start = -width
+            while start < width + height:
+                painter.drawLine(0, int(start), int(min(start, width)), 0)
+                painter.drawLine(int(max(0, start - height)), height, width, int(max(0, width + height - start)))
+                start += spacing
+        elif angle == 135:
+            # Diagonal lines (\)
+            start = 0
+            while start < width + height:
+                painter.drawLine(0, int(min(start, height)), int(min(start, width)), 0)
+                painter.drawLine(int(max(0, start - height)), height, width, int(max(0, width + height - start)))
+                start += spacing
+
+    def _draw_brick_hatch(self, painter, width, height, spacing):
+        """Draw brick-like hatch pattern."""
+        y = 0
+        offset = False
+        while y < height:
+            # Horizontal line
+            painter.drawLine(0, int(y), width, int(y))
+
+            # Vertical lines
+            x = spacing // 2 if offset else 0
+            while x < width:
+                painter.drawLine(int(x), int(y), int(x), int(min(y + spacing, height)))
+                x += spacing
+
+            y += spacing
+            offset = not offset
+
+    def _draw_dot_hatch(self, painter, width, height, spacing):
+        """Draw dot hatch pattern."""
+        y = spacing // 2
+        row = 0
+        while y < height:
+            x = spacing // 2 if row % 2 == 0 else spacing
+            while x < width:
+                painter.drawEllipse(int(x) - 1, int(y) - 1, 2, 2)
+                x += spacing
+            y += spacing
+            row += 1
 
     def _on_spindle_from_popup_selected(self, spindle_name):
         """Callback for spindle selection from the popup menu."""
@@ -451,6 +570,9 @@ class SkeyEditor(QMainWindow):
 
         self.draw_toolbar_widget.btn_fill_color.setMenu(create_fill_color_menu(
             self.draw_toolbar_widget.btn_fill_color, self._on_fill_color_selected
+        ))
+        self.draw_toolbar_widget.btn_hatch.setMenu(create_hatch_menu(
+            self.draw_toolbar_widget.btn_hatch, self._on_hatch_selected
         ))
         self.draw_toolbar_widget.btn_clear_sheet.clicked.connect(self.clear_canvas)
 

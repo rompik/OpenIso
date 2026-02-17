@@ -97,6 +97,7 @@ class DrawToolbarWidget(QWidget):
         }
 
         self.btn_fill_color = self._create_tool_button("Fill Color", ICONS["fill_colors"])
+        self.btn_hatch = self._create_tool_button("Hatch Pattern", ICONS["hatch"])
         self.btn_clear_sheet = self._create_tool_button("Clear Sheet", ICONS["clear_sheet"])
 
 
@@ -117,6 +118,7 @@ class DrawToolbarWidget(QWidget):
 
         self._add_separator()
         self.layout.addWidget(self.btn_fill_color)
+        self.layout.addWidget(self.btn_hatch)
         self.layout.addStretch()
         self.layout.addWidget(self.btn_clear_sheet)
 
@@ -167,4 +169,5 @@ class DrawToolbarWidget(QWidget):
         self.btn_plot_line.setToolTip(_t("Draw Lines"))
         self.btn_plot_shapes.setToolTip(_t("Draw Primitive"))
         self.btn_fill_color.setToolTip(_t("Fill Color"))
+        self.btn_hatch.setToolTip(_t("Hatch Pattern"))
         self.btn_clear_sheet.setToolTip(_t("Clear Sheet"))

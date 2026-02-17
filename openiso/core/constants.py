@@ -119,6 +119,7 @@ ICONS = {
     "export": "common/export.svg",
     "fill_colors": "common/fill.svg",
     "filter_clear": "common/filter_clear.svg",
+    "hatch": "common/hatch.svg",
     "help": "common/help.svg",
     "import": "common/import.svg",
     "keyboard": "common/keyboard.svg",
