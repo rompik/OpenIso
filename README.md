@@ -1,23 +1,32 @@
-<h1 align="center">🎯 OpenIso</h1>
+<h1 align="center">
+  <img src="data/icons/logo.svg" width="128" alt="OpenIso Logo"/>
+  <br>
+  OpenIso
+</h1>
+
 <p align="center"><em>Lightweight Isometric Piping Symbol Editor</em></p>
 
+---
+<center>
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
 [![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
 [![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+</center>
 
+---
 
 <p align="center">
   <img src="data/screenshots/en/openiso_01.png" alt="Main UI">
 </p>
 
 
-**OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (SKEYs)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
+**OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (Skeys)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
 ## Features
 
-* **Format Interoperability:** Import and view symbols from legacy **ASCII (Intergraph)** and **IDF (AVEVA)** files.
+* **Format Interoperability:** Import and view symbols from **ASCII (Intergraph)** and **IDF (AVEVA)** files.
 * **Precision Connectors:** Define critical piping points: `Arrive`, `Leave`, `Tee`, and `Spindle`.
 * **Vector Toolset:** Specialized primitives for skeys:
     * Lines, Rectangles, Rhombus, Circle, Ellipses, Triangles, Caps (Arcs), Hexagons.
@@ -27,18 +36,11 @@
 
 ---
 
-## Documentation
+## Supported Symbol Keys (Skeys)
 
-* 📖 **[English Documentation](docs/en/INDEX.MD)** – Complete guide to using OpenIso, installation instructions, tutorials, and more.
-* 📖 **[Russian Documentation](docs/ru/INDEX.MD)** – Полное руководство по использованию OpenIso, инструкции по установке и многое другое.
+**OpenIso** allows you to define and edit standard SKEY types used in isometric generation:
 
----
-
-## Supported Symbol Keys (SKEYs)
-
-OpenIso allows you to define and edit standard SKEY types used in isometric generation:
-
-| Category | SKEY Examples | Description |
+| Category | Skey Examples | Description |
 | :--- | :--- | :--- |
 | **Valves** | `VAVW`, `VAGL`, `VACK` | Gate, Globe, and Check valves |
 | **Fittings** | `ELBW`, `TEBW`, `REDC` | Elbows, Tees, and Concentric Reducers |
@@ -50,7 +52,7 @@ OpenIso allows you to define and edit standard SKEY types used in isometric gene
 
 ## Symbol Anatomy
 
-OpenIso focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
+**OpenIso** focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
 
 <p align="center">
   <img src="docs/en/images/skey_structure.svg" width="500" alt="SKEY Structure Diagram">
@@ -60,20 +62,42 @@ OpenIso focuses on the logical structure of a piping component. Each symbol is d
 * **Spindle:** The orientation point for valve handles or actuators.
 * **Tee:** (Not shown) Used for branching components.
 
+---
 
-## Requirements
+## Installation
+### Clone repository:
+```bash
+git clone https://github.com/rompik/OpenIso.git
+cd OpenIso
+```
 
-OpenIso requires Python 3.10 or higher and the following Python modules:
+### Install dependencies:
+
+**OpenIso** requires Python 3.10 or higher and the following Python modules:
 
 * **PyQt6** (≥6.0.0) – Qt bindings for the graphical user interface
+
 * **markdown** (≥3.0.0) – Markdown parser for documentation rendering
+
 * **pyinstaller** (≥5.0.0) – Package Python applications into standalone executables
 
-
-## Running
 ```bash
-cd OpenIso
 pip install -r requirements.txt
+```
+
+### Run from the source:
+```bash
 python -m openiso
 ```
+
+## Building Standalone Executable
+
+To build a standalone executable,
+```bash
+pyinstaller --clean OpenIso.spec --onefile
+```
+
+---
+## Documentation
+[:uk: English](./docs/en/INDEX.MD) - Complete guide to using OpenIso, installation instructions, tutorials, and more.
 
