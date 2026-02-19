@@ -490,6 +490,21 @@ class SkeyEditor(QMainWindow):
         self.status_label = QLabel(_t("Ready"))
         self.status_bar_widget.addWidget(self.status_label)
 
+        # Add primitive coordinates label (left)
+        self.primitive_coords_label = QLabel("")
+        self.primitive_coords_label.setMinimumWidth(100)
+        self.status_bar_widget.addWidget(self.primitive_coords_label)
+
+        # Add spacer
+        spacer = QLabel()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.status_bar_widget.addWidget(spacer)
+
+        # Add primitive dimensions label (right)
+        self.primitive_dimensions_label = QLabel("")
+        self.primitive_dimensions_label.setMinimumWidth(100)
+        self.status_bar_widget.addPermanentWidget(self.primitive_dimensions_label)
+
         # --- Signal connections ---
         self.menu_toolbar_widget.btn_settings.clicked.connect(self._on_settings_clicked)
         self.menu_toolbar_widget.btn_keyboard_shortcuts.clicked.connect(self._on_keyboard_shortcuts_clicked)
@@ -592,6 +607,12 @@ class SkeyEditor(QMainWindow):
         self.tree_skeys.delete_skey_requested.connect(self._on_delete_skey_requested)
         self.properties_widget.cb_skey_group.currentIndexChanged.connect(self._on_group_changed)
         self.scene.spindle_point_placed.connect(self._on_spindle_point_placed)
+        self.scene.primitive_info_updated.connect(self._update_primitive_info_status)
+
+    def _update_primitive_info_status(self, coords_str, dimensions_str):
+        """Update status bar with primitive coordinates and dimensions"""
+        self.primitive_coords_label.setText(coords_str)
+        self.primitive_dimensions_label.setText(dimensions_str)
 
     def _on_settings_clicked(self):
         """Opens the settings dialog and handles configuration changes."""
@@ -832,7 +853,7 @@ class SkeyEditor(QMainWindow):
         current_language_code = lang_code
 
         # Update all translatable UI texts without full UI rebuild
-        self.setWindowTitle(_t("Iso Symbols Library"))
+        self.setWindowTitle(_t("OpenIso - Skey Editor"))
         self.status_label.setText(_t("Ready"))
         self.group_skeys.setTitle(_t("Skeys List"))
         self.group_editor.setTitle(_t("Shape"))

@@ -60,6 +60,7 @@ class ResizeHandle(QGraphicsRectItem):
 class SheetLayout(QGraphicsScene):
     spindle_point_placed = pyqtSignal(str, QPointF)
     symbol_changed = pyqtSignal()
+    primitive_info_updated = pyqtSignal(str, str)  # Signal for coordinates and dimensions
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -581,6 +582,9 @@ class SheetLayout(QGraphicsScene):
         p0 = self.cursor_coordinates[0]
         p1 = self.cursor_position  # ВАЖНО: не трогаем cursor_coordinates
 
+        # Update primitive info in status bar
+        self._update_primitive_info(p0, p1)
+
         self._clear_temp_preview()
 
         if action == "draw_line":
@@ -666,6 +670,12 @@ class SheetLayout(QGraphicsScene):
         if len(self.cursor_coordinates) == 0:
             return
 
+        # Update primitive info if we have at least one point
+        if len(self.cursor_coordinates) > 0:
+            p0 = self.cursor_coordinates[0]
+            p1 = self.cursor_position
+            self._update_primitive_info(p0, p1)
+
         self._clear_temp_preview()
 
         # Build preview polygon from existing points + current cursor position
@@ -683,6 +693,12 @@ class SheetLayout(QGraphicsScene):
         """Preview polyline as it's being drawn"""
         if len(self.cursor_coordinates) == 0:
             return
+
+        # Update primitive info for polyline
+        if len(self.cursor_coordinates) > 0:
+            p0 = self.cursor_coordinates[0]
+            p1 = self.cursor_position
+            self._update_primitive_info(p0, p1)
 
         self._clear_temp_preview()
 
@@ -767,6 +783,24 @@ class SheetLayout(QGraphicsScene):
 
         super().mouseMoveEvent(mouse_event)
 
+    def _update_primitive_info(self, p0, p1):
+        """Calculate and emit primitive coordinates and dimensions"""
+        # Convert to relative coordinates for display
+        rel_p0 = self.convert_to_relative_position(p0)
+
+        # Calculate dimensions
+        width = abs(p1.x() - p0.x()) / (self.step_x * 20)
+        height = abs(p1.y() - p0.y()) / (self.step_y * 20)
+
+        # Format coordinate string (start point)
+        coord_str = f"{rel_p0.x():.2f} / {rel_p0.y():.2f}"
+
+        # Format dimension string (width x height)
+        dim_str = f"{width:.2f} x {height:.2f}"
+
+        # Emit signal with formatted strings
+        self.primitive_info_updated.emit(coord_str, dim_str)
+
     def _finalize_item(self, item):
         """Common finalization for drawn items"""
         item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
@@ -777,6 +811,8 @@ class SheetLayout(QGraphicsScene):
             QApplication.restoreOverrideCursor()
         self._push_undo_action("add", [item])
         self.symbol_changed.emit()
+        # Clear primitive info after finalization
+        self.primitive_info_updated.emit("", "")
 
     def _create_pen(self):
         """Create standard pen for drawing"""
