@@ -68,9 +68,9 @@ class DrawToolbarWidget(QWidget):
         # Define line tools grouped structure
         self.line_groups = {
             _t("Lines"): {
-                "Line": ICONS["line"],
-                "Polyline": ICONS["polyline"],
-                "Orthogonal Polyline": ICONS["polyline_orthogonal"]
+                _t("Line"): ICONS["line"],
+                _t("Polyline"): ICONS["polyline"],
+                _t("Orthogonal Polyline"): ICONS["polyline_orthogonal"]
             }
         }
 
@@ -81,18 +81,18 @@ class DrawToolbarWidget(QWidget):
         # Define shape tools grouped structure
         self.shapes_groups = {
             _t("Basic Shapes"): {
-                "Square": ICONS["square"],
-                "Rectangle": ICONS["rectangle"],
-                "Circle": ICONS["circle"],
-                "Triangle": ICONS["triangle"]
+                _t("Square"): ICONS["square"],
+                _t("Rectangle"): ICONS["rectangle"],
+                _t("Circle"): ICONS["circle"],
+                _t("Triangle"): ICONS["triangle"]
             },
             _t("Special Shapes"): {
-                "Cap": ICONS["cap"],
-                "Diamond": ICONS["diamond"],
-                "Pentagon": ICONS["pentagon"],
-                "Hexagon": ICONS["hexagon"],
-                "Octagon": ICONS["octagon"],
-                "Dodecagon": ICONS["dodecagon"]
+                _t("Cap"): ICONS["cap"],
+                _t("Diamond"): ICONS["diamond"],
+                _t("Pentagon"): ICONS["pentagon"],
+                _t("Hexagon"): ICONS["hexagon"],
+                _t("Octagon"): ICONS["octagon"],
+                _t("Dodecagon"): ICONS["dodecagon"]
             }
         }
 

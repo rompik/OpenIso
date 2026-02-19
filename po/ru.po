@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: https://github.com/rompik/OpenIso/issues\n"
-"POT-Creation-Date: 2026-02-19 23:12+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-20 00:42+0100\n"
 "PO-Revision-Date: 2026-02-20 00:12+0100\n"
 "Last-Translator: Roman PARYGIN\n"
 "Language-Team: Roman PARYGIN\n"
@@ -19,247 +19,116 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.8\n"
 
-#: openiso/view/window.py:220
-msgid "No items selected to fill"
-msgstr "Нет выбранных объектов для заливки"
+#: openiso/view/about_dialog.py:28
+#: openiso/view/keyboard_shortcuts_dialog.py:235
+#: openiso/view/menu_toolbar.py:83
+msgid "About"
+msgstr "О программе"
 
-#: openiso/view/window.py:227
-msgid "Fill color applied"
-msgstr "Цвет заливки применен"
+#: openiso/view/about_dialog.py:146
+msgid "Website"
+msgstr "Веб-сайт"
 
-#: openiso/view/window.py:233
-msgid "No items selected for hatching"
-msgstr "Нет выбранных объектов для штриховки"
+#: openiso/view/about_dialog.py:155
+msgid "Support Questions"
+msgstr "Вопросы поддержки"
 
-#: openiso/view/window.py:241
-msgid "Hatch cleared"
-msgstr "Убрать штриховку"
+#: openiso/view/about_dialog.py:159
+msgid "Report an Issue"
+msgstr "Сообщить об ошибке"
 
-#: openiso/view/window.py:352
+#: openiso/view/about_dialog.py:163
+msgid "Troubleshooting"
+msgstr "Устранение неполадок"
+
+#: openiso/view/about_dialog.py:168 openiso/view/about_dialog.py:181
+msgid "Credits"
+msgstr "Участники"
+
+#: openiso/view/about_dialog.py:169 openiso/view/about_dialog.py:185
+msgid "Legal"
+msgstr "Юридическая информация"
+
+#: openiso/view/about_dialog.py:170 openiso/view/about_dialog.py:189
+msgid "Acknowledgments"
+msgstr "Благодарности"
+
+#: openiso/view/about_dialog.py:213
 #, python-brace-format
-msgid "Spindle selected: {name}"
-msgstr "Выбран шпиндель: {name}"
-
-#: openiso/view/window.py:374
-#, python-brace-format
-msgid "Connection point: {0} ({1})"
-msgstr "Точка подключения: {0} ({1})"
-
-#: openiso/view/window.py:420
-msgid "Skeys"
-msgstr "Skey-символы"
-
-#: openiso/view/window.py:424 openiso/view/window.py:859
-msgid "Shape"
-msgstr "Форма"
-
-#: openiso/view/window.py:431 openiso/view/properties.py:156
-msgid "Properties"
-msgstr "Свойства"
-
-#: openiso/view/window.py:432 openiso/view/window.py:861
-msgid "Preview"
-msgstr "Предпросмотр"
-
-#: openiso/view/window.py:490 openiso/view/window.py:857
-msgid "Ready"
-msgstr "Готово"
-
-#: openiso/view/window.py:523
-msgid "Butt Weld"
-msgstr "Стыковая сварка"
-
-#: openiso/view/window.py:524
-msgid "Socket Weld"
-msgstr "Сварка под раструб"
-
-#: openiso/view/window.py:525
-msgid "Flanged"
-msgstr "Фланцевое"
-
-#: openiso/view/window.py:526
-msgid "Threaded"
-msgstr "Резьбовое"
-
-#: openiso/view/window.py:527
-msgid "Plain"
-msgstr "Гладкое"
-
-#: openiso/view/window.py:528
-msgid "Compression"
-msgstr "Компрессионное"
-
-#: openiso/view/window.py:529
-msgid "Screwed"
-msgstr "Винтовое"
-
-#: openiso/view/window.py:530
-msgid "Plain End"
-msgstr "Гладкий конец"
-
-#: openiso/view/window.py:531
-msgid "Beveled End"
-msgstr "Скошенный конец"
-
-#: openiso/view/window.py:532
-msgid "Threaded End"
-msgstr "Резьбовой конец"
-
-#: openiso/view/window.py:536 openiso/view/settings_dialog.py:168
-msgid "Arrive Point"
-msgstr "Точка входа"
-
-#: openiso/view/window.py:537 openiso/view/settings_dialog.py:169
-msgid "Leave Point"
-msgstr "Точка выхода"
-
-#: openiso/view/window.py:538
-msgid "Additional Point (Tee)"
-msgstr "Дополнительная точка (тройник)"
-
-#: openiso/view/window.py:551
-msgid "Select Connection Point Type"
-msgstr "Выберите тип точки подключения"
-
-#: openiso/view/window.py:573
-msgid "Select Spindle"
-msgstr "Выберите шпиндель"
-
-#: openiso/view/window.py:658
-msgid "Color settings applied"
-msgstr "Настройки цвета применены"
-
-#: openiso/view/window.py:683
-msgid "Create new Skey"
-msgstr "Создать новый Skey"
-
-#: openiso/view/window.py:720 openiso/view/skey_tree.py:244
-msgid "Delete Skey"
-msgstr "Удалить Skey"
-
-#: openiso/view/window.py:721
-#, python-brace-format
-msgid "Are you sure you want to delete Skey '{0}'?"
-msgstr "Вы уверены, что хотите удалить Skey '{0}'?"
-
-#: openiso/view/window.py:738
-#, python-brace-format
-msgid "Skey '{0}' deleted"
-msgstr "Skey '{0}' удален"
-
-#: openiso/view/window.py:744 openiso/view/window.py:1434
-msgid "Error"
-msgstr "Ошибка"
-
-#: openiso/view/window.py:744
-#, python-brace-format
-msgid "Failed to delete Skey '{0}'"
-msgstr "Не удалось удалить Skey '{0}'"
-
-#: openiso/view/window.py:856
-msgid "OpenIso - Skey Editor"
-msgstr "OpenIso - Редактор Skey"
-
-#: openiso/view/window.py:858
-msgid "Skeys List"
-msgstr "Список Skey"
-
-#: openiso/view/window.py:922
-msgid "No items selected to scale"
-msgstr "Нет выбранных объектов для масштабирования"
-
-#: openiso/view/window.py:925
-msgid "Scale Element"
-msgstr "Масштабировать элемент"
-
-#: openiso/view/window.py:925
-msgid "Scale Factor:"
-msgstr "Коэффициент масштабирования:"
-
-#: openiso/view/window.py:1059
-msgid "Polyline: Click to add points, right-click or Enter to finish."
-msgstr "Полилиния: щелкните для добавления точек, правый клик или Enter для завершения."
-
-#: openiso/view/window.py:1067
 msgid ""
-"Orthogonal Polyline: Click to add points, right-click or Enter to finish."
+"This application is distributed without any warranties. More details in "
+"{link}."
 msgstr ""
-"Ортогональная полилиния: щелкните для добавления точек, правый клик или Enter для завершения."
+"Это приложение распространяется без каких-либо гарантий. Подробности в "
+"{link}."
 
-#: openiso/view/window.py:1359 openiso/view/window.py:1407
-msgid "Export Error"
-msgstr "Ошибка экспорта"
-
-#: openiso/view/window.py:1359
-msgid "No Skey selected or name is empty"
-msgstr "Не выбран Skey или имя пустое"
-
-#: openiso/view/window.py:1391
-msgid "Export Skey as ASCII"
-msgstr "Экспортировать Skey в ASCII"
-
-#: openiso/view/window.py:1393
-msgid "ASCII Symbolic File"
-msgstr "Символьный файл ASCII"
-
-#: openiso/view/window.py:1393
-msgid "All Files"
-msgstr "Все файлы"
-
-#: openiso/view/window.py:1404
-#, python-brace-format
-msgid "Skey '{0}' exported to {1}"
-msgstr "Skey '{0}' экспортирован в {1}"
-
-#: openiso/view/window.py:1407
-#, python-brace-format
-msgid "Failed to export Skey: {0}"
-msgstr "Не удалось экспортировать Skey: {0}"
-
-#: openiso/view/window.py:1434
-msgid "Skey name cannot be empty"
-msgstr "Имя Skey не может быть пустым"
-
-#: openiso/view/window.py:1466
-#, python-brace-format
-msgid "Skey '{0}' saved successfully"
-msgstr "Skey '{0}' успешно сохранен"
-
-#: openiso/view/window.py:1571
-msgid "Select File"
-msgstr "Выбрать файл"
-
-#: openiso/view/window.py:1573
-msgid "Symbols file"
-msgstr "Файл символов"
-
-#: openiso/view/window.py:1667
-msgid "Zoomed in"
-msgstr "Увеличено"
-
-#: openiso/view/window.py:1672
-msgid "Zoomed out"
-msgstr "Уменьшено"
-
-#: openiso/view/window.py:1677
-msgid "Fitted to view"
-msgstr "Подогнано под вид"
-
-#: openiso/view/window.py:1683
-msgid "View reset"
-msgstr "Вид сброшен"
+#: openiso/view/about_dialog.py:226
+msgid "Special thanks to all contributors and users!"
+msgstr "Особая благодарность всем участникам и пользователям!"
 
 #: openiso/view/draw_toolbar.py:70
 msgid "Lines"
 msgstr "Линии"
 
+#: openiso/view/draw_toolbar.py:71
+msgid "Line"
+msgstr "Линии"
+
+#: openiso/view/draw_toolbar.py:72
+msgid "Polyline"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:73
+msgid "Orthogonal Polyline"
+msgstr ""
+
 #: openiso/view/draw_toolbar.py:83
 msgid "Basic Shapes"
 msgstr "Базовые фигуры"
 
+#: openiso/view/draw_toolbar.py:84
+msgid "Square"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:85
+msgid "Rectangle"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:86
+msgid "Circle"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:87
+msgid "Triangle"
+msgstr ""
+
 #: openiso/view/draw_toolbar.py:89
 msgid "Special Shapes"
 msgstr "Специальные фигуры"
+
+#: openiso/view/draw_toolbar.py:90
+msgid "Cap"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:91
+msgid "Diamond"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:92
+msgid "Pentagon"
+msgstr "Ориентация"
+
+#: openiso/view/draw_toolbar.py:93
+msgid "Hexagon"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:94
+msgid "Octagon"
+msgstr ""
+
+#: openiso/view/draw_toolbar.py:95
+msgid "Dodecagon"
+msgstr ""
 
 #: openiso/view/draw_toolbar.py:135
 msgid "Select Line Tool"
@@ -274,6 +143,7 @@ msgid "Select Element"
 msgstr "Выбрать элемент"
 
 #: openiso/view/draw_toolbar.py:161
+#: openiso/view/keyboard_shortcuts_dialog.py:217
 msgid "Select All"
 msgstr "Выбрать всё"
 
@@ -290,10 +160,12 @@ msgid "Scale"
 msgstr "Масштаб"
 
 #: openiso/view/draw_toolbar.py:165
+#: openiso/view/keyboard_shortcuts_dialog.py:215
 msgid "Undo"
 msgstr "Отменить"
 
 #: openiso/view/draw_toolbar.py:166
+#: openiso/view/keyboard_shortcuts_dialog.py:216
 msgid "Redo"
 msgstr "Повторить"
 
@@ -313,33 +185,100 @@ msgstr "Нарисовать линии"
 msgid "Draw Primitive"
 msgstr "Нарисовать примитив"
 
-#: openiso/view/draw_toolbar.py:171
+#: openiso/view/draw_toolbar.py:171 openiso/view/fill_color_popup.py:39
 msgid "Fill Color"
 msgstr "Цвет заливки"
 
-#: openiso/view/draw_toolbar.py:172
+#: openiso/view/draw_toolbar.py:172 openiso/view/hatch_popup.py:151
 msgid "Hatch Pattern"
 msgstr "Штриховка"
 
 #: openiso/view/draw_toolbar.py:173
+#: openiso/view/keyboard_shortcuts_dialog.py:218
 msgid "Clear Sheet"
 msgstr "Очистить лист"
 
+#: openiso/view/fill_color_popup.py:65
+msgid "Recent"
+msgstr ""
+
+#: openiso/view/fill_color_popup.py:85
+msgid "Custom Color..."
+msgstr ""
+
+#: openiso/view/hatch_popup.py:157
+msgid "Spacing:"
+msgstr "Трассировка"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:24 openiso/view/menu_toolbar.py:81
+msgid "Keyboard Shortcuts"
+msgstr "Горячие клавиши"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:119
+msgid "Close"
+msgstr ""
+
+#: openiso/view/keyboard_shortcuts_dialog.py:204
+msgid "File Operations"
+msgstr ""
+
+#: openiso/view/keyboard_shortcuts_dialog.py:206
 #: openiso/view/menu_toolbar.py:74
 msgid "Import File"
 msgstr "Импортировать файл"
 
+#: openiso/view/keyboard_shortcuts_dialog.py:207
 #: openiso/view/menu_toolbar.py:75
 msgid "Export File"
 msgstr "Экспортировать файл"
 
+#: openiso/view/keyboard_shortcuts_dialog.py:208
+#: openiso/view/menu_toolbar.py:77
+msgid "Save"
+msgstr "Сохранить"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:209
 #: openiso/view/menu_toolbar.py:76
 msgid "Print"
 msgstr "Печать"
 
-#: openiso/view/menu_toolbar.py:77
-msgid "Save"
-msgstr "Сохранить"
+#: openiso/view/keyboard_shortcuts_dialog.py:213
+msgid "Editing"
+msgstr ""
+
+#: openiso/view/keyboard_shortcuts_dialog.py:222
+msgid "Drawing Tools"
+msgstr "Нарисовать линии"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:224
+msgid "Line Tool"
+msgstr "Выбрать инструмент линии"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:225
+msgid "Polyline Tool"
+msgstr "Выбрать инструмент линии"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:226
+msgid "Rectangle Tool"
+msgstr "Выбрать инструмент линии"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:227
+msgid "Circle Tool"
+msgstr ""
+
+#: openiso/view/keyboard_shortcuts_dialog.py:231
+msgid "Application"
+msgstr ""
+
+#: openiso/view/keyboard_shortcuts_dialog.py:233
+#: openiso/view/menu_toolbar.py:80 openiso/view/settings_dialog.py:66
+msgid "Settings"
+msgstr "Настройки"
+
+#: openiso/view/keyboard_shortcuts_dialog.py:234
+#: openiso/view/menu_toolbar.py:82
+msgid "Help"
+msgstr "Помощь"
 
 #: openiso/view/menu_toolbar.py:78
 msgid "Import of Skeys from ASCII file ( Intergraph )"
@@ -348,22 +287,6 @@ msgstr "Импорт Skeys из ASCII файла (Intergraph)"
 #: openiso/view/menu_toolbar.py:79
 msgid "Import Skeys from IDF file ( AVEVA )"
 msgstr "Импорт Skeys из IDF файла (AVEVA)"
-
-#: openiso/view/menu_toolbar.py:80 openiso/view/settings_dialog.py:66
-msgid "Settings"
-msgstr "Настройки"
-
-#: openiso/view/menu_toolbar.py:81
-msgid "Keyboard Shortcuts"
-msgstr "Горячие клавиши"
-
-#: openiso/view/menu_toolbar.py:82
-msgid "Help"
-msgstr "Помощь"
-
-#: openiso/view/menu_toolbar.py:83 openiso/view/about_dialog.py:28
-msgid "About"
-msgstr "О программе"
 
 #: openiso/view/properties.py:31 openiso/view/properties.py:157
 msgid "Code"
@@ -434,25 +357,13 @@ msgstr "Геометрия"
 msgid "Save Changes to Skey File"
 msgstr "Сохранить изменения в файле Skey"
 
+#: openiso/view/properties.py:156 openiso/view/window.py:431
+msgid "Properties"
+msgstr "Свойства"
+
 #: openiso/view/properties.py:158
 msgid "Alias Code"
 msgstr "Код-псевдоним"
-
-#: openiso/view/skey_tree.py:44
-msgid "Components"
-msgstr "Компоненты"
-
-#: openiso/view/skey_tree.py:215
-msgid "Clear Filter"
-msgstr "Очистить фильтр"
-
-#: openiso/view/skey_tree.py:216
-msgid "Search..."
-msgstr "Поиск..."
-
-#: openiso/view/skey_tree.py:233
-msgid "Create New Skey"
-msgstr "Создать новый Skey"
 
 #: openiso/view/settings_dialog.py:90
 msgid "Language Settings"
@@ -477,6 +388,14 @@ msgstr "Сбросить по умолчанию"
 #: openiso/view/settings_dialog.py:163
 msgid "Connection Point Colors"
 msgstr "Цвета точек подключения"
+
+#: openiso/view/settings_dialog.py:168 openiso/view/window.py:536
+msgid "Arrive Point"
+msgstr "Точка входа"
+
+#: openiso/view/settings_dialog.py:169 openiso/view/window.py:537
+msgid "Leave Point"
+msgstr "Точка выхода"
 
 #: openiso/view/settings_dialog.py:170
 msgid "Tee Point"
@@ -566,46 +485,242 @@ msgstr "Перо по умолчанию"
 msgid "Default drawing pen color"
 msgstr "Цвет пера для рисования по умолчанию"
 
-#: openiso/view/about_dialog.py:146
-msgid "Website"
-msgstr "Веб-сайт"
+#: openiso/view/skey_tree.py:44
+msgid "Components"
+msgstr "Компоненты"
 
-#: openiso/view/about_dialog.py:155
-msgid "Support Questions"
-msgstr "Вопросы поддержки"
+#: openiso/view/skey_tree.py:215
+msgid "Clear Filter"
+msgstr "Очистить фильтр"
 
-#: openiso/view/about_dialog.py:159
-msgid "Report an Issue"
-msgstr "Сообщить об ошибке"
+#: openiso/view/skey_tree.py:216
+msgid "Search..."
+msgstr "Поиск..."
 
-#: openiso/view/about_dialog.py:163
-msgid "Troubleshooting"
-msgstr "Устранение неполадок"
+#: openiso/view/skey_tree.py:233
+msgid "Create New Skey"
+msgstr "Создать новый Skey"
 
-#: openiso/view/about_dialog.py:168 openiso/view/about_dialog.py:181
-msgid "Credits"
-msgstr "Участники"
+#: openiso/view/skey_tree.py:244 openiso/view/window.py:720
+msgid "Delete Skey"
+msgstr "Удалить Skey"
 
-#: openiso/view/about_dialog.py:169 openiso/view/about_dialog.py:185
-msgid "Legal"
-msgstr "Юридическая информация"
+#: openiso/view/window.py:220
+msgid "No items selected to fill"
+msgstr "Нет выбранных объектов для заливки"
 
-#: openiso/view/about_dialog.py:170 openiso/view/about_dialog.py:189
-msgid "Acknowledgments"
-msgstr "Благодарности"
+#: openiso/view/window.py:227
+msgid "Fill color applied"
+msgstr "Цвет заливки применен"
 
-#: openiso/view/about_dialog.py:213
+#: openiso/view/window.py:233
+msgid "No items selected for hatching"
+msgstr "Нет выбранных объектов для штриховки"
+
+#: openiso/view/window.py:241
+msgid "Hatch cleared"
+msgstr "Убрать штриховку"
+
+#: openiso/view/window.py:352
 #, python-brace-format
-msgid ""
-"This application is distributed without any warranties. More details in "
-"{link}."
-msgstr ""
-"Это приложение распространяется без каких-либо гарантий. Подробности в "
-"{link}."
+msgid "Spindle selected: {name}"
+msgstr "Выбран шпиндель: {name}"
 
-#: openiso/view/about_dialog.py:226
-msgid "Special thanks to all contributors and users!"
-msgstr "Особая благодарность всем участникам и пользователям!"
+#: openiso/view/window.py:374
+#, python-brace-format
+msgid "Connection point: {0} ({1})"
+msgstr "Точка подключения: {0} ({1})"
+
+#: openiso/view/window.py:420
+msgid "Skeys"
+msgstr "Skey-символы"
+
+#: openiso/view/window.py:424 openiso/view/window.py:859
+msgid "Shape"
+msgstr "Форма"
+
+#: openiso/view/window.py:432 openiso/view/window.py:861
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: openiso/view/window.py:490 openiso/view/window.py:857
+msgid "Ready"
+msgstr "Готово"
+
+#: openiso/view/window.py:523
+msgid "Butt Weld"
+msgstr "Стыковая сварка"
+
+#: openiso/view/window.py:524
+msgid "Socket Weld"
+msgstr "Сварка под раструб"
+
+#: openiso/view/window.py:525
+msgid "Flanged"
+msgstr "Фланцевое"
+
+#: openiso/view/window.py:526
+msgid "Threaded"
+msgstr "Резьбовое"
+
+#: openiso/view/window.py:527
+msgid "Plain"
+msgstr "Гладкое"
+
+#: openiso/view/window.py:528
+msgid "Compression"
+msgstr "Компрессионное"
+
+#: openiso/view/window.py:529
+msgid "Screwed"
+msgstr "Винтовое"
+
+#: openiso/view/window.py:530
+msgid "Plain End"
+msgstr "Гладкий конец"
+
+#: openiso/view/window.py:531
+msgid "Beveled End"
+msgstr "Скошенный конец"
+
+#: openiso/view/window.py:532
+msgid "Threaded End"
+msgstr "Резьбовой конец"
+
+#: openiso/view/window.py:538
+msgid "Additional Point (Tee)"
+msgstr "Дополнительная точка (тройник)"
+
+#: openiso/view/window.py:551
+msgid "Select Connection Point Type"
+msgstr "Выберите тип точки подключения"
+
+#: openiso/view/window.py:573
+msgid "Select Spindle"
+msgstr "Выберите шпиндель"
+
+#: openiso/view/window.py:658
+msgid "Color settings applied"
+msgstr "Настройки цвета применены"
+
+#: openiso/view/window.py:683
+msgid "Create new Skey"
+msgstr "Создать новый Skey"
+
+#: openiso/view/window.py:721
+#, python-brace-format
+msgid "Are you sure you want to delete Skey '{0}'?"
+msgstr "Вы уверены, что хотите удалить Skey '{0}'?"
+
+#: openiso/view/window.py:738
+#, python-brace-format
+msgid "Skey '{0}' deleted"
+msgstr "Skey '{0}' удален"
+
+#: openiso/view/window.py:744 openiso/view/window.py:1434
+msgid "Error"
+msgstr "Ошибка"
+
+#: openiso/view/window.py:744
+#, python-brace-format
+msgid "Failed to delete Skey '{0}'"
+msgstr "Не удалось удалить Skey '{0}'"
+
+#: openiso/view/window.py:856
+msgid "OpenIso - Skey Editor"
+msgstr "OpenIso - Редактор Skey"
+
+#: openiso/view/window.py:858
+msgid "Skeys List"
+msgstr "Список Skey"
+
+#: openiso/view/window.py:922
+msgid "No items selected to scale"
+msgstr "Нет выбранных объектов для масштабирования"
+
+#: openiso/view/window.py:925
+msgid "Scale Element"
+msgstr "Масштабировать элемент"
+
+#: openiso/view/window.py:925
+msgid "Scale Factor:"
+msgstr "Коэффициент масштабирования:"
+
+#: openiso/view/window.py:1059
+msgid "Polyline: Click to add points, right-click or Enter to finish."
+msgstr ""
+"Полилиния: щелкните для добавления точек, правый клик или Enter для "
+"завершения."
+
+#: openiso/view/window.py:1067
+msgid ""
+"Orthogonal Polyline: Click to add points, right-click or Enter to finish."
+msgstr ""
+"Ортогональная полилиния: щелкните для добавления точек, правый клик или "
+"Enter для завершения."
+
+#: openiso/view/window.py:1359 openiso/view/window.py:1407
+msgid "Export Error"
+msgstr "Ошибка экспорта"
+
+#: openiso/view/window.py:1359
+msgid "No Skey selected or name is empty"
+msgstr "Не выбран Skey или имя пустое"
+
+#: openiso/view/window.py:1391
+msgid "Export Skey as ASCII"
+msgstr "Экспортировать Skey в ASCII"
+
+#: openiso/view/window.py:1393
+msgid "ASCII Symbolic File"
+msgstr "Символьный файл ASCII"
+
+#: openiso/view/window.py:1393
+msgid "All Files"
+msgstr "Все файлы"
+
+#: openiso/view/window.py:1404
+#, python-brace-format
+msgid "Skey '{0}' exported to {1}"
+msgstr "Skey '{0}' экспортирован в {1}"
+
+#: openiso/view/window.py:1407
+#, python-brace-format
+msgid "Failed to export Skey: {0}"
+msgstr "Не удалось экспортировать Skey: {0}"
+
+#: openiso/view/window.py:1434
+msgid "Skey name cannot be empty"
+msgstr "Имя Skey не может быть пустым"
+
+#: openiso/view/window.py:1466
+#, python-brace-format
+msgid "Skey '{0}' saved successfully"
+msgstr "Skey '{0}' успешно сохранен"
+
+#: openiso/view/window.py:1571
+msgid "Select File"
+msgstr "Выбрать файл"
+
+#: openiso/view/window.py:1573
+msgid "Symbols file"
+msgstr "Файл символов"
+
+#: openiso/view/window.py:1667
+msgid "Zoomed in"
+msgstr "Увеличено"
+
+#: openiso/view/window.py:1672
+msgid "Zoomed out"
+msgstr "Уменьшено"
+
+#: openiso/view/window.py:1677
+msgid "Fitted to view"
+msgstr "Подогнано под вид"
+
+#: openiso/view/window.py:1683
+msgid "View reset"
+msgstr "Вид сброшен"
 
 #~ msgid "Iso Symbols Library"
 #~ msgstr "Библиотека ISO символов"
