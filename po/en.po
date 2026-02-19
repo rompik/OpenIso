@@ -5,394 +5,595 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-09 00:24+0100\n"
-"PO-Revision-Date: 2026-01-31 11:44+0100\n"
-"Last-Translator: Automatically generated\n"
+"Project-Id-Version: OpenIso\n"
+"Report-Msgid-Bugs-To: https://github.com/rompik/OpenIso/issues\n"
+"POT-Creation-Date: 2026-02-19 23:12+0100\n"
+"PO-Revision-Date: 2026-02-20 00:12+0100\n"
+"Last-Translator: Roman PARYGIN\n"
 "Language-Team: none\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.8\n"
 
-#: src/view/window.py:151
+#: openiso/view/window.py:220
 msgid "No items selected to fill"
-msgstr ""
+msgstr "No items selected to fill"
 
-#: src/view/window.py:158
+#: openiso/view/window.py:227
 msgid "Fill color applied"
-msgstr ""
+msgstr "Fill color applied"
 
-#: src/view/window.py:165
+#: openiso/view/window.py:233
+msgid "No items selected for hatching"
+msgstr "No items selected for hatching"
+
+#: openiso/view/window.py:241
+msgid "Hatch cleared"
+msgstr "Hatch cleared"
+
+#: openiso/view/window.py:352
 #, python-brace-format
 msgid "Spindle selected: {name}"
-msgstr ""
+msgstr "Spindle selected: {name}"
 
-#: src/view/window.py:187
+#: openiso/view/window.py:374
 #, python-brace-format
 msgid "Connection point: {0} ({1})"
-msgstr ""
+msgstr "Connection point: {0} ({1})"
 
-#: src/view/window.py:234
+#: openiso/view/window.py:420
 msgid "Skeys"
 msgstr "Skeys"
 
-#: src/view/window.py:238 src/view/window.py:560
+#: openiso/view/window.py:424 openiso/view/window.py:859
 msgid "Shape"
 msgstr "Shape"
 
-#: src/view/window.py:245 src/view/properties.py:152 src/view/properties.py:166
+#: openiso/view/window.py:431 openiso/view/properties.py:156
 msgid "Properties"
 msgstr "Properties"
 
-#: src/view/window.py:246 src/view/window.py:562
+#: openiso/view/window.py:432 openiso/view/window.py:861
 msgid "Preview"
 msgstr "Preview"
 
-#: src/view/window.py:298 src/view/window.py:558
+#: openiso/view/window.py:490 openiso/view/window.py:857
 msgid "Ready"
-msgstr ""
+msgstr "Ready"
 
-#: src/view/window.py:316 src/view/connection_items.py:75
+#: openiso/view/window.py:523
+msgid "Butt Weld"
+msgstr "Butt Weld"
+
+#: openiso/view/window.py:524
+msgid "Socket Weld"
+msgstr "Socket Weld"
+
+#: openiso/view/window.py:525
+msgid "Flanged"
+msgstr "Flanged"
+
+#: openiso/view/window.py:526
+msgid "Threaded"
+msgstr "Threaded"
+
+#: openiso/view/window.py:527
+msgid "Plain"
+msgstr "Plain"
+
+#: openiso/view/window.py:528
+msgid "Compression"
+msgstr "Compression"
+
+#: openiso/view/window.py:529
+msgid "Screwed"
+msgstr "Screwed"
+
+#: openiso/view/window.py:530
+msgid "Plain End"
+msgstr "Plain End"
+
+#: openiso/view/window.py:531
+msgid "Beveled End"
+msgstr "Beveled End"
+
+#: openiso/view/window.py:532
+msgid "Threaded End"
+msgstr "Threaded End"
+
+#: openiso/view/window.py:536 openiso/view/settings_dialog.py:168
+msgid "Arrive Point"
+msgstr "Arrive Point"
+
+#: openiso/view/window.py:537 openiso/view/settings_dialog.py:169
+msgid "Leave Point"
+msgstr "Leave Point"
+
+#: openiso/view/window.py:538
+msgid "Additional Point (Tee)"
+msgstr "Additional Point (Tee)"
+
+#: openiso/view/window.py:551
 msgid "Select Connection Point Type"
-msgstr ""
+msgstr "Select Connection Point Type"
 
-#: src/view/window.py:384
-#, fuzzy
+#: openiso/view/window.py:573
+msgid "Select Spindle"
+msgstr "Select Spindle"
+
+#: openiso/view/window.py:658
+msgid "Color settings applied"
+msgstr "Color settings applied"
+
+#: openiso/view/window.py:683
 msgid "Create new Skey"
-msgstr "Spindle Skey"
+msgstr "Create new Skey"
 
-#: src/view/window.py:421 src/view/skey_tree.py:244
-#, fuzzy
+#: openiso/view/window.py:720 openiso/view/skey_tree.py:244
 msgid "Delete Skey"
-msgstr "Spindle Skey"
+msgstr "Delete Skey"
 
-#: src/view/window.py:422
+#: openiso/view/window.py:721
 #, python-brace-format
 msgid "Are you sure you want to delete Skey '{0}'?"
-msgstr ""
+msgstr "Are you sure you want to delete Skey '{0}'?"
 
-#: src/view/window.py:439
+#: openiso/view/window.py:738
 #, python-brace-format
 msgid "Skey '{0}' deleted"
-msgstr ""
+msgstr "Skey '{0}' deleted"
 
-#: src/view/window.py:445 src/view/window.py:1049
+#: openiso/view/window.py:744 openiso/view/window.py:1434
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
-#: src/view/window.py:445
+#: openiso/view/window.py:744
 #, python-brace-format
 msgid "Failed to delete Skey '{0}'"
-msgstr ""
+msgstr "Failed to delete Skey '{0}'"
 
-#: src/view/window.py:557
-#, fuzzy
-msgid "Iso Symbols Library"
-msgstr "ISO Symbols Library"
+#: openiso/view/window.py:856
+msgid "OpenIso - Skey Editor"
+msgstr "OpenIso - Skey Editor"
 
-#: src/view/window.py:559
-#, fuzzy
+#: openiso/view/window.py:858
 msgid "Skeys List"
-msgstr "Skeys"
+msgstr "Skeys List"
 
-#: src/view/window.py:623
+#: openiso/view/window.py:922
 msgid "No items selected to scale"
-msgstr ""
+msgstr "No items selected to scale"
 
-#: src/view/window.py:626
-#, fuzzy
+#: openiso/view/window.py:925
 msgid "Scale Element"
-msgstr "Select File"
+msgstr "Scale Element"
 
-#: src/view/window.py:626
+#: openiso/view/window.py:925
 msgid "Scale Factor:"
-msgstr ""
+msgstr "Scale Factor:"
 
-#: src/view/window.py:956 src/view/window.py:957
-msgid "Unknown"
-msgstr ""
+#: openiso/view/window.py:1059
+msgid "Polyline: Click to add points, right-click or Enter to finish."
+msgstr "Polyline: Click to add points, right-click or Enter to finish."
 
-#: src/view/window.py:971 src/view/window.py:1019
+#: openiso/view/window.py:1067
+msgid ""
+"Orthogonal Polyline: Click to add points, right-click or Enter to finish."
+msgstr ""
+"Orthogonal Polyline: Click to add points, right-click or Enter to finish."
+
+#: openiso/view/window.py:1359 openiso/view/window.py:1407
 msgid "Export Error"
-msgstr ""
+msgstr "Export Error"
 
-#: src/view/window.py:971
+#: openiso/view/window.py:1359
 msgid "No Skey selected or name is empty"
-msgstr ""
+msgstr "No Skey selected or name is empty"
 
-#: src/view/window.py:1003
+#: openiso/view/window.py:1391
 msgid "Export Skey as ASCII"
-msgstr ""
+msgstr "Export Skey as ASCII"
 
-#: src/view/window.py:1005
-#, fuzzy
+#: openiso/view/window.py:1393
 msgid "ASCII Symbolic File"
-msgstr "symbols"
+msgstr "ASCII Symbolic File"
 
-#: src/view/window.py:1005
+#: openiso/view/window.py:1393
 msgid "All Files"
-msgstr ""
+msgstr "All Files"
 
-#: src/view/window.py:1016
+#: openiso/view/window.py:1404
 #, python-brace-format
 msgid "Skey '{0}' exported to {1}"
-msgstr ""
+msgstr "Skey '{0}' exported to {1}"
 
-#: src/view/window.py:1019
+#: openiso/view/window.py:1407
 #, python-brace-format
 msgid "Failed to export Skey: {0}"
-msgstr ""
+msgstr "Failed to export Skey: {0}"
 
-#: src/view/window.py:1049
+#: openiso/view/window.py:1434
 msgid "Skey name cannot be empty"
-msgstr ""
+msgstr "Skey name cannot be empty"
 
-#: src/view/window.py:1081
+#: openiso/view/window.py:1466
 #, python-brace-format
 msgid "Skey '{0}' saved successfully"
-msgstr ""
+msgstr "Skey '{0}' saved successfully"
 
-#: src/view/window.py:1186
-#, fuzzy
+#: openiso/view/window.py:1571
 msgid "Select File"
 msgstr "Select File"
 
-#: src/view/window.py:1188
-#, fuzzy
+#: openiso/view/window.py:1573
 msgid "Symbols file"
-msgstr "symbols"
+msgstr "Symbols file"
 
-#: src/view/skey_tree.py:44
-msgid "Components"
-msgstr "Components"
+#: openiso/view/window.py:1667
+msgid "Zoomed in"
+msgstr "Zoomed in"
 
-#: src/view/skey_tree.py:215
-#, fuzzy
-msgid "Clear Filter"
-msgstr "Select File"
+#: openiso/view/window.py:1672
+msgid "Zoomed out"
+msgstr "Zoomed out"
 
-#: src/view/skey_tree.py:216
-msgid "Search..."
-msgstr ""
+#: openiso/view/window.py:1677
+msgid "Fitted to view"
+msgstr "Fitted to view"
 
-#: src/view/skey_tree.py:233
-#, fuzzy
-msgid "Create New Skey"
-msgstr "Spindle Skey"
+#: openiso/view/window.py:1683
+msgid "View reset"
+msgstr "View reset"
 
-#: src/view/properties.py:31 src/view/properties.py:153
-#: src/view/properties.py:167
-msgid "Skey"
-msgstr "Skey"
+#: openiso/view/draw_toolbar.py:70
+msgid "Lines"
+msgstr "Lines"
 
-#: src/view/properties.py:33 src/view/properties.py:154
-#: src/view/properties.py:168
-msgid "Group"
-msgstr "Group"
+#: openiso/view/draw_toolbar.py:83
+msgid "Basic Shapes"
+msgstr "Basic Shapes"
 
-#: src/view/properties.py:36 src/view/properties.py:155
-#: src/view/properties.py:169
-msgid "Subgroup"
-msgstr "Subgroup"
+#: openiso/view/draw_toolbar.py:89
+msgid "Special Shapes"
+msgstr "Special Shapes"
 
-#: src/view/properties.py:39 src/view/properties.py:156
-#, fuzzy
-msgid "Spindle"
-msgstr "Spindle Skey"
+#: openiso/view/draw_toolbar.py:135
+msgid "Select Line Tool"
+msgstr "Select Line Tool"
 
-#: src/view/properties.py:45 src/view/properties.py:157
-#: src/view/properties.py:170
-msgid "Description"
-msgstr "Description"
+#: openiso/view/draw_toolbar.py:152
+msgid "Select Primitive Tool"
+msgstr "Select Primitive Tool"
 
-#: src/view/properties.py:53 src/view/properties.py:158
-#: src/view/properties.py:171
-msgid "Orientation"
-msgstr "Orientation"
-
-#: src/view/properties.py:61 src/view/properties.py:174
-msgid "Use on symmetrical component"
-msgstr "Use on symmetrical component"
-
-#: src/view/properties.py:62 src/view/properties.py:175
-msgid "Use on non-symmetrical component"
-msgstr "Use on non-symmetrical component"
-
-#: src/view/properties.py:63 src/view/properties.py:176
-msgid "Use on reducers"
-msgstr "Use on reducers"
-
-#: src/view/properties.py:64 src/view/properties.py:177
-msgid "Use on flanges"
-msgstr "Use on flanges"
-
-#: src/view/properties.py:97 src/view/properties.py:159
-#: src/view/properties.py:183
-msgid "Flow Arrow"
-msgstr "Flow Arrow"
-
-#: src/view/properties.py:99 src/view/properties.py:160
-#: src/view/properties.py:184
-msgid "Dimensioned"
-msgstr "Dimensioned"
-
-#: src/view/properties.py:101 src/view/properties.py:161
-#: src/view/properties.py:185
-msgid "Tracing"
-msgstr ""
-
-#: src/view/properties.py:103 src/view/properties.py:162
-#: src/view/properties.py:186
-msgid "Insulation"
-msgstr ""
-
-#: src/view/properties.py:105 src/view/properties.py:163
-msgid "Geometry"
-msgstr ""
-
-#: src/view/properties.py:110 src/view/properties.py:111
-#: src/view/properties.py:164 src/view/properties.py:165
-#: src/view/properties.py:187 src/view/properties.py:188
-msgid "Save Changes to Skey File"
-msgstr "Save Changes to Skey File"
-
-#: src/view/menu_toolbar.py:72
-#, fuzzy
-msgid "Import File"
-msgstr "Import from IDF"
-
-#: src/view/menu_toolbar.py:73
-#, fuzzy
-msgid "Export File"
-msgstr "Import from IDF"
-
-#: src/view/menu_toolbar.py:74
-msgid "Print"
-msgstr ""
-
-#: src/view/menu_toolbar.py:75
-msgid "Save"
-msgstr ""
-
-#: src/view/menu_toolbar.py:76
-msgid "Import of Skeys from ASCII file ( Intergraph )"
-msgstr "Import of Skeys from ASCII file ( Intergraph )"
-
-#: src/view/menu_toolbar.py:77
-msgid "Import Skeys from IDF file ( AVEVA )"
-msgstr "Import Skeys from IDF file ( AVEVA )"
-
-#: src/view/menu_toolbar.py:78
-msgid "Settings"
-msgstr ""
-
-#: src/view/menu_toolbar.py:79
-msgid "Help"
-msgstr ""
-
-#: src/view/menu_toolbar.py:80 src/view/about_dialog.py:28
-msgid "About"
-msgstr ""
-
-#: src/view/draw_toolbar.py:99
-#, fuzzy
+#: openiso/view/draw_toolbar.py:160
 msgid "Select Element"
-msgstr "Select File"
+msgstr "Select Element"
 
-#: src/view/draw_toolbar.py:100
-#, fuzzy
+#: openiso/view/draw_toolbar.py:161
 msgid "Select All"
-msgstr "Select File"
+msgstr "Select All"
 
-#: src/view/draw_toolbar.py:101
+#: openiso/view/draw_toolbar.py:162
 msgid "Move"
-msgstr ""
+msgstr "Move"
 
-#: src/view/draw_toolbar.py:102
+#: openiso/view/draw_toolbar.py:163
 msgid "Rotate"
-msgstr ""
+msgstr "Rotate"
 
-#: src/view/draw_toolbar.py:103
+#: openiso/view/draw_toolbar.py:164
 msgid "Scale"
 msgstr "Scale"
 
-#: src/view/draw_toolbar.py:104
+#: openiso/view/draw_toolbar.py:165
 msgid "Undo"
-msgstr ""
+msgstr "Undo"
 
-#: src/view/draw_toolbar.py:105
+#: openiso/view/draw_toolbar.py:166
 msgid "Redo"
-msgstr ""
+msgstr "Redo"
 
-#: src/view/draw_toolbar.py:106
+#: openiso/view/draw_toolbar.py:167
 msgid "Draw Connection Point"
-msgstr ""
+msgstr "Draw Connection Point"
 
-#: src/view/draw_toolbar.py:107
+#: openiso/view/draw_toolbar.py:168
 msgid "Draw Spindle Connection Point"
-msgstr ""
+msgstr "Draw Spindle Connection Point"
 
-#: src/view/draw_toolbar.py:108
-msgid "Draw Line"
-msgstr ""
+#: openiso/view/draw_toolbar.py:169
+msgid "Draw Lines"
+msgstr "Draw Lines"
 
-#: src/view/draw_toolbar.py:109
-msgid "Draw Rectangle"
-msgstr ""
+#: openiso/view/draw_toolbar.py:170
+msgid "Draw Primitive"
+msgstr "Draw Primitive"
 
-#: src/view/draw_toolbar.py:110
-msgid "Draw Triangle"
-msgstr ""
-
-#: src/view/draw_toolbar.py:111
-msgid "Draw Dish"
-msgstr ""
-
-#: src/view/draw_toolbar.py:112
-msgid "Draw Hexagon"
-msgstr ""
-
-#: src/view/draw_toolbar.py:113 src/view/fill_color_popup.py:36
+#: openiso/view/draw_toolbar.py:171
 msgid "Fill Color"
-msgstr ""
+msgstr "Fill Color"
 
-#: src/view/draw_toolbar.py:114
-#, fuzzy
+#: openiso/view/draw_toolbar.py:172
+msgid "Hatch Pattern"
+msgstr "Hatch Pattern"
+
+#: openiso/view/draw_toolbar.py:173
 msgid "Clear Sheet"
+msgstr "Clear Sheet"
+
+#: openiso/view/menu_toolbar.py:74
+msgid "Import File"
+msgstr "Import File"
+
+#: openiso/view/menu_toolbar.py:75
+msgid "Export File"
+msgstr "Export File"
+
+#: openiso/view/menu_toolbar.py:76
+msgid "Print"
+msgstr "Print"
+
+#: openiso/view/menu_toolbar.py:77
+msgid "Save"
+msgstr "Save"
+
+#: openiso/view/menu_toolbar.py:78
+msgid "Import of Skeys from ASCII file ( Intergraph )"
+msgstr "Import of Skeys from ASCII file ( Intergraph )"
+
+#: openiso/view/menu_toolbar.py:79
+msgid "Import Skeys from IDF file ( AVEVA )"
+msgstr "Import Skeys from IDF file ( AVEVA )"
+
+#: openiso/view/menu_toolbar.py:80 openiso/view/settings_dialog.py:66
+msgid "Settings"
+msgstr "Settings"
+
+#: openiso/view/menu_toolbar.py:81
+msgid "Keyboard Shortcuts"
+msgstr "Keyboard Shortcuts"
+
+#: openiso/view/menu_toolbar.py:82
+msgid "Help"
+msgstr "Help"
+
+#: openiso/view/menu_toolbar.py:83 openiso/view/about_dialog.py:28
+msgid "About"
+msgstr "About"
+
+#: openiso/view/properties.py:31 openiso/view/properties.py:157
+msgid "Code"
+msgstr "Code"
+
+#: openiso/view/properties.py:33
+msgid "Isogen Code"
+msgstr "Isogen Code"
+
+#: openiso/view/properties.py:35 openiso/view/properties.py:159
+msgid "Group"
+msgstr "Group"
+
+#: openiso/view/properties.py:38 openiso/view/properties.py:160
+msgid "Subgroup"
+msgstr "Subgroup"
+
+#: openiso/view/properties.py:41 openiso/view/properties.py:161
+msgid "Spindle"
+msgstr "Spindle"
+
+#: openiso/view/properties.py:47 openiso/view/properties.py:162
+msgid "Description"
+msgstr "Description"
+
+#: openiso/view/properties.py:55 openiso/view/properties.py:163
+msgid "Orientation"
+msgstr "Orientation"
+
+#: openiso/view/properties.py:63 openiso/view/properties.py:173
+msgid "Use on symmetrical component"
+msgstr "Use on symmetrical component"
+
+#: openiso/view/properties.py:64 openiso/view/properties.py:174
+msgid "Use on non-symmetrical component"
+msgstr "Use on non-symmetrical component"
+
+#: openiso/view/properties.py:65 openiso/view/properties.py:175
+msgid "Use on reducers"
+msgstr "Use on reducers"
+
+#: openiso/view/properties.py:66 openiso/view/properties.py:176
+msgid "Use on flanges"
+msgstr "Use on flanges"
+
+#: openiso/view/properties.py:97 openiso/view/properties.py:164
+msgid "Flow Arrow"
+msgstr "Flow Arrow"
+
+#: openiso/view/properties.py:99 openiso/view/properties.py:165
+msgid "Dimensioned"
+msgstr "Dimensioned"
+
+#: openiso/view/properties.py:101 openiso/view/properties.py:166
+msgid "Tracing"
+msgstr "Tracing"
+
+#: openiso/view/properties.py:103 openiso/view/properties.py:167
+msgid "Insulation"
+msgstr "Insulation"
+
+#: openiso/view/properties.py:105 openiso/view/properties.py:168
+msgid "Geometry"
+msgstr "Geometry"
+
+#: openiso/view/properties.py:110 openiso/view/properties.py:111
+#: openiso/view/properties.py:169 openiso/view/properties.py:170
+msgid "Save Changes to Skey File"
+msgstr "Save Changes to Skey File"
+
+#: openiso/view/properties.py:158
+msgid "Alias Code"
+msgstr "Alias Code"
+
+#: openiso/view/skey_tree.py:44
+msgid "Components"
+msgstr "Components"
+
+#: openiso/view/skey_tree.py:215
+msgid "Clear Filter"
+msgstr "Clear Filter"
+
+#: openiso/view/skey_tree.py:216
+msgid "Search..."
+msgstr "Search..."
+
+#: openiso/view/skey_tree.py:233
+msgid "Create New Skey"
+msgstr "Create New Skey"
+
+#: openiso/view/settings_dialog.py:90
+msgid "Language Settings"
+msgstr "Language Settings"
+
+#: openiso/view/settings_dialog.py:94
+msgid "Select Program Language:"
+msgstr "Select Program Language:"
+
+#: openiso/view/settings_dialog.py:114
+msgid "Isometric View"
+msgstr "Isometric View"
+
+#: openiso/view/settings_dialog.py:118
+msgid "Select Isometric Direction:"
+msgstr "Select Isometric Direction:"
+
+#: openiso/view/settings_dialog.py:145
+msgid "Reset to Defaults"
+msgstr "Reset to Defaults"
+
+#: openiso/view/settings_dialog.py:163
+msgid "Connection Point Colors"
+msgstr "Connection Point Colors"
+
+#: openiso/view/settings_dialog.py:170
+msgid "Tee Point"
+msgstr "Tee Point"
+
+#: openiso/view/settings_dialog.py:171
+msgid "Spindle Point"
+msgstr "Spindle Point"
+
+#: openiso/view/settings_dialog.py:177
+msgid "Color for connection point type"
+msgstr "Color for connection point type"
+
+#: openiso/view/settings_dialog.py:189
+msgid "Scene and Grid Colors"
+msgstr "Scene and Grid Colors"
+
+#: openiso/view/settings_dialog.py:194
+msgid "Background"
+msgstr "Background"
+
+#: openiso/view/settings_dialog.py:194
+msgid "Scene background color"
+msgstr "Scene background color"
+
+#: openiso/view/settings_dialog.py:195
+msgid "Sheet Border"
+msgstr "Sheet Border"
+
+#: openiso/view/settings_dialog.py:195
+msgid "Border around drawing sheet"
+msgstr "Border around drawing sheet"
+
+#: openiso/view/settings_dialog.py:196
+msgid "Grid Origin"
+msgstr "Grid Origin"
+
+#: openiso/view/settings_dialog.py:196
+msgid "Origin axis lines"
+msgstr "Origin axis lines"
+
+#: openiso/view/settings_dialog.py:197
+msgid "Major Grid"
+msgstr "Major Grid"
+
+#: openiso/view/settings_dialog.py:197
+msgid "Major grid lines (1.0 units)"
+msgstr "Major grid lines (1.0 units)"
+
+#: openiso/view/settings_dialog.py:198
+msgid "Middle Grid"
+msgstr "Middle Grid"
+
+#: openiso/view/settings_dialog.py:198
+msgid "Middle grid lines (0.5 units)"
+msgstr "Middle grid lines (0.5 units)"
+
+#: openiso/view/settings_dialog.py:199
+msgid "Minor Grid"
+msgstr "Minor Grid"
+
+#: openiso/view/settings_dialog.py:199
+msgid "Minor grid lines (0.1 units)"
+msgstr "Minor grid lines (0.1 units)"
+
+#: openiso/view/settings_dialog.py:200
+msgid "Grid Labels"
+msgstr "Grid Labels"
+
+#: openiso/view/settings_dialog.py:200
+msgid "Grid coordinate labels"
+msgstr "Grid coordinate labels"
+
+#: openiso/view/settings_dialog.py:201
+msgid "Selection Highlight"
 msgstr "Select File"
 
-#: src/view/about_dialog.py:146
+#: openiso/view/settings_dialog.py:201
+msgid "Selected items color"
+msgstr "Selected items color"
+
+#: openiso/view/settings_dialog.py:202
+msgid "Default Pen"
+msgstr "Default"
+
+#: openiso/view/settings_dialog.py:202
+msgid "Default drawing pen color"
+msgstr "Default drawing pen color"
+
+#: openiso/view/about_dialog.py:146
 msgid "Website"
 msgstr "Website"
 
-#: src/view/about_dialog.py:155
+#: openiso/view/about_dialog.py:155
 msgid "Support Questions"
 msgstr "Support Questions"
 
-#: src/view/about_dialog.py:159
+#: openiso/view/about_dialog.py:159
 msgid "Report an Issue"
 msgstr "Report an Issue"
 
-#: src/view/about_dialog.py:163
+#: openiso/view/about_dialog.py:163
 msgid "Troubleshooting"
 msgstr "Troubleshooting"
 
-#: src/view/about_dialog.py:168 src/view/about_dialog.py:181
+#: openiso/view/about_dialog.py:168 openiso/view/about_dialog.py:181
 msgid "Credits"
 msgstr "Credits"
 
-#: src/view/about_dialog.py:169 src/view/about_dialog.py:185
+#: openiso/view/about_dialog.py:169 openiso/view/about_dialog.py:185
 msgid "Legal"
 msgstr "Legal"
 
-#: src/view/about_dialog.py:170 src/view/about_dialog.py:189
+#: openiso/view/about_dialog.py:170 openiso/view/about_dialog.py:189
 msgid "Acknowledgments"
 msgstr "Acknowledgments"
 
-#: src/view/about_dialog.py:213
+#: openiso/view/about_dialog.py:213
 #, python-brace-format
 msgid ""
 "This application is distributed without any warranties. More details in "
@@ -401,91 +602,21 @@ msgstr ""
 "This application is distributed without any warranties. More details in "
 "{link}."
 
-#: src/view/about_dialog.py:214
-msgid "version 3 or later"
-msgstr "version 3 or later"
-
-#: src/view/about_dialog.py:226
+#: openiso/view/about_dialog.py:226
 msgid "Special thanks to all contributors and users!"
 msgstr "Special thanks to all contributors and users!"
 
-#: src/view/fill_color_popup.py:83
-msgid "Recent"
-msgstr ""
+#~ msgid "Skey"
+#~ msgstr "Skey"
 
-#: src/view/fill_color_popup.py:103
-msgid "Custom Color..."
-msgstr ""
-
-#: src/view/spindle_popup.py:63
-#, fuzzy
-msgid "Select Spindle"
-msgstr "Select File"
-
-#: src/view/spindle_popup.py:79
-msgid "No spindles found in database"
-msgstr ""
-
-#: src/view/connection_items.py:17
-msgid "Butt Weld"
-msgstr ""
-
-#: src/view/connection_items.py:18
-msgid "Socket Weld"
-msgstr ""
-
-#: src/view/connection_items.py:19
-msgid "Flanged"
-msgstr ""
-
-#: src/view/connection_items.py:20
-msgid "Threaded"
-msgstr ""
-
-#: src/view/connection_items.py:21
-msgid "Plain"
-msgstr ""
-
-#: src/view/connection_items.py:22
-msgid "Compression"
-msgstr ""
-
-#: src/view/connection_items.py:23
-msgid "Screwed"
-msgstr ""
-
-#: src/view/connection_items.py:24
-msgid "Plain End"
-msgstr ""
-
-#: src/view/connection_items.py:25
-msgid "Beveled End"
-msgstr ""
-
-#: src/view/connection_items.py:26
-msgid "Threaded End"
-msgstr ""
-
-#: src/view/connection_items.py:100
-msgid "Arrive Point"
-msgstr ""
-
-#: src/view/connection_items.py:101
-msgid "Leave Point"
-msgstr ""
-
-#: src/view/connection_items.py:102
-msgid "Additional Point (Tee)"
-msgstr ""
+#~ msgid "version 3 or later"
+#~ msgstr "version 3 or later"
 
 #~ msgid "Rotate Spindle Angle Minus"
 #~ msgstr "Rotate Spindle Angle Minus"
 
 #~ msgid "Rotate Spindle Angle Plus"
 #~ msgstr "Rotate Spindle Angle Plus"
-
-#~ msgid "Default"
-#~ msgstr "Default"
 
 #~ msgid "Off"
 #~ msgstr "Off"
@@ -538,9 +669,6 @@ msgstr ""
 
 #~ msgid "Main window with symbol editor"
 #~ msgstr "Main window with symbol editor"
-
-#~ msgid "isometric"
-#~ msgstr "isometric"
 
 #~ msgid "skey"
 #~ msgstr "skey"

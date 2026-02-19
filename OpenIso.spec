@@ -30,9 +30,7 @@ datas = [
     # Translation files (.mo)
     (os.path.join(spec_root, 'po', '*.mo'), 'po'),
     (os.path.join(spec_root, 'po', 'en'), 'po/en'),
-    (os.path.join(spec_root, 'po', 'fr'), 'po/fr'),
     (os.path.join(spec_root, 'po', 'ru'), 'po/ru'),
-    (os.path.join(spec_root, 'po', 'zh_CN'), 'po/zh_CN'),
 
     # OpenIso source modules
     (os.path.join(spec_root, 'openiso'), 'openiso'),
@@ -40,14 +38,25 @@ datas = [
 
 # Hidden imports - include all PyQt6 modules and potential dependencies
 hiddenimports = [
+    # PyQt6 modules
     'PyQt6.QtCore',
     'PyQt6.QtGui',
     'PyQt6.QtWidgets',
     'PyQt6.QtSvg',
     'PyQt6.sip',
+
+    # External dependencies
+    'markdown',
+
+    # Standard library modules (explicit for reliability)
     'sqlite3',
     'json',
     'xml.etree.ElementTree',
+    'gettext',
+    'locale',
+    'pathlib',
+    'glob',
+    'subprocess',
 ]
 
 a = Analysis(
