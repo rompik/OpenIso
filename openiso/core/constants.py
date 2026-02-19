@@ -172,8 +172,6 @@ GEOMETRY_CODES = {
 
 AVAILABLE_LANGUAGES = [
     ("Русский", "ru"),
-    ("Français", "fr"),
-    ("中文", "zh_CN"),
     ("English", "en")
 ]
 
