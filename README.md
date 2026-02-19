@@ -56,7 +56,7 @@
 **OpenIso** focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
 
 <p align="center">
-  <img src="docs/en/images/skey_structure.svg" width="500" alt="SKEY Structure Diagram">
+  <img src="docs/en/images/skey_structure.svg" width="450" alt="SKEY Structure Diagram">
 </p>
 
 * **Arrive & Leave:** Define the primary flow path through the component.
