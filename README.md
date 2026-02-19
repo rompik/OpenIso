@@ -8,13 +8,13 @@
 
 ---
 
-<center>
-[![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
-[![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
-[![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
-[![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-</center>
+<p align="center">
+  <a href="https://crowdin.com"><img src="https://badges.crowdin.net/openiso/localized.svg" alt="Crowdin"></a>
+  <a href="https://github.com/rompik/OpenIso/releases"><img src="https://img.shields.io/github/v/release/rompik/OpenIso" alt="Release"></a>
+  <a href="https://www.linux.org/"><img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux"></a>
+  <a href="https://www.microsoft.com/windows/"><img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+</p>
 
 ---
 
