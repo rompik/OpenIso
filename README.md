@@ -7,6 +7,7 @@
 <p align="center"><em>Lightweight Isometric Piping Symbol Editor</em></p>
 
 ---
+
 <center>
 [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
 [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
