@@ -60,6 +60,7 @@ cover/
 *.pot
 .backup
 /po/NEW_STRINGS_FOR_TRANSLATION.txt
+.po~
 
 # Django stuff:
 *.log
