@@ -56,7 +56,6 @@ coverage.xml
 cover/
 
 # Translations
-*.mo
 *.pot
 .backup
 /po/NEW_STRINGS_FOR_TRANSLATION.txt
