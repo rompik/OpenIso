@@ -18,13 +18,17 @@ Main components:
 """
 
 import os
+from pathlib import Path
+import sys
 
 # Read version from VERSION file in project root
 def _get_version():
     try:
-        version_file = os.path.join(os.path.dirname(__file__), '..', 'VERSION')
-        print(version_file)
-        with open(version_file, 'r') as f:
+        base_dir = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parent)).resolve()
+        version_file = (base_dir / 'VERSION')
+        if not version_file.exists():
+            version_file = (Path(__file__).resolve().parent / '..' / 'VERSION').resolve()
+        with open(version_file, 'r', encoding='utf-8') as f:
             return f.read().strip()
     except Exception:
         return '0.0.0'

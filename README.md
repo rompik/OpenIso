@@ -96,8 +96,10 @@ python -m openiso
 ### Windows
 From the repository root:
 ```bash
-pyinstaller --clean OpenIso_win.spec --onefile
+pyinstaller --clean OpenIso_win.spec 
 ```
+Output file will be save in folder dist with name OpenIso_<version>.exe 
+
 
 ---
 ## Documentation
