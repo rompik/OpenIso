@@ -93,9 +93,10 @@ python -m openiso
 
 ## Building Standalone Executable
 
-To build a standalone executable,
+### Windows
+From the repository root:
 ```bash
-pyinstaller --clean OpenIso.spec --onefile
+pyinstaller --clean OpenIso_win.spec --onefile
 ```
 
 ---

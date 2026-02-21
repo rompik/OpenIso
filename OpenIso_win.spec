@@ -4,8 +4,8 @@ import os
 import sys
 from pathlib import Path
 
-# Get the spec file directory (project root)
-spec_root = os.path.dirname(os.path.abspath(SPECPATH))
+# Resolve from this file location (works regardless of cwd)
+spec_root = Path(__file__).resolve().parent
 
 # Platform detection
 is_windows = sys.platform == 'win32'
@@ -15,25 +15,25 @@ is_mac = sys.platform == 'darwin'
 # Define all data files to include
 datas = [
     # Icons
-    (os.path.join(spec_root, 'data', 'icons'), 'data/icons'),
+    (str(spec_root / 'data' / 'icons'), 'data/icons'),
 
     # Settings
-    (os.path.join(spec_root, 'data', 'settings'), 'data/settings'),
+    (str(spec_root / 'data' / 'settings'), 'data/settings'),
 
     # Database files
-    (os.path.join(spec_root, 'data', 'database'), 'data/database'),
+    (str(spec_root / 'data' / 'database'), 'data/database'),
 
     # CSS files
-    (os.path.join(spec_root, 'data', 'markdown.css'), 'data'),
-    (os.path.join(spec_root, 'data', 'style.css'), 'data'),
+    (str(spec_root / 'data' / 'markdown.css'), 'data'),
+    (str(spec_root / 'data' / 'style.css'), 'data'),
 
     # Translation files (.mo)
-    (os.path.join(spec_root, 'po', '*.mo'), 'po'),
-    (os.path.join(spec_root, 'po', 'en'), 'po/en'),
-    (os.path.join(spec_root, 'po', 'ru'), 'po/ru'),
+    (str(spec_root / 'po' / '*.mo'), 'po'),
+    (str(spec_root / 'po' / 'en'), 'po/en'),
+    (str(spec_root / 'po' / 'ru'), 'po/ru'),
 
     # OpenIso source modules
-    (os.path.join(spec_root, 'openiso'), 'openiso'),
+    (str(spec_root / 'openiso'), 'openiso'),
 ]
 
 # Hidden imports - include all PyQt6 modules and potential dependencies
@@ -60,8 +60,8 @@ hiddenimports = [
 ]
 
 a = Analysis(
-    [os.path.join(spec_root, 'openiso', '__main__.py')],
-    pathex=[spec_root],
+    [str(spec_root / 'openiso' / '__main__.py')],
+    pathex=[str(spec_root)],
     binaries=[],
     datas=datas,
     hiddenimports=hiddenimports,
@@ -77,8 +77,8 @@ pyz = PYZ(a.pure)
 
 # Windows icon configuration
 # Place your icon file as 'data/icons/openiso.ico' or update the path below
-icon_path = os.path.join(spec_root, 'data', 'icons', 'openiso.ico')
-icon_file = icon_path if os.path.exists(icon_path) and is_windows else None
+icon_path = spec_root / 'data' / 'icons' / 'openiso.ico'
+icon_file = str(icon_path) if icon_path.exists() and is_windows else None
 
 # EXE configuration
 exe = EXE(
