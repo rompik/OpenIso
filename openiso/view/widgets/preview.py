@@ -11,7 +11,7 @@ from PyQt6.QtGui import QPen, QPainter, QPolygonF
 from PyQt6.QtCore import Qt, QPointF
 from openiso.core.constants import PREVIEW_WIDTH, PREVIEW_HEIGHT, SCENE_COLORS, POINT_COLORS, DEFAULT_ISO_VIEW
 from openiso.model.enums import IsometricView
-from openiso.view.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
+from openiso.view.graphics.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
 
 class PreviewWidget(QGroupBox):
     """

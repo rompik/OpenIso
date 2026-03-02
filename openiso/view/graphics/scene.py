@@ -13,7 +13,7 @@ from PyQt6.QtGui import (
 )
 from PyQt6.QtCore import Qt, QPointF, pyqtSignal, QRectF
 from openiso.core.constants import SHEET_SIZE, SCENE_COLORS
-from openiso.view.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
+from openiso.view.graphics.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
 
 
 class ResizeHandle(QGraphicsRectItem):

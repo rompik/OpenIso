@@ -15,18 +15,10 @@ import sys
 
 def main():
     """Application entry point."""
-    from PyQt6.QtWidgets import QApplication
-    from openiso.view.window import SkeyEditor
+    from openiso.application import Application
 
-    app = QApplication(sys.argv)
-    app.setApplicationName('OpenIso')
-    app.setOrganizationName('io.github.rompik')
-    app.setOrganizationDomain('github.io')
-
-    window = SkeyEditor()
-    window.show()
-
-    return app.exec()
+    app = Application()
+    return app.run(sys.argv)
 
 
 if __name__ == '__main__':

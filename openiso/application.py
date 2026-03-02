@@ -23,6 +23,11 @@ try:
 except ImportError:
     from __init__ import __version__, __app_id__
 
+# Application constants (single source of truth)
+APP_NAME = 'OpenIso'
+ORG_NAME = 'io.github.rompik'
+ORG_DOMAIN = 'github.io'
+
 
 class Application:
     """
@@ -43,19 +48,30 @@ class Application:
         """
         self.app_id = app_id or __app_id__
         self.version = version or __version__
-        self.pkgdatadir = Path(pkgdatadir) if pkgdatadir else self._find_data_dir()
+        self.pkgdatadir = Path(pkgdatadir) if pkgdatadir else Application._find_data_dir()
 
-        self._qt_app = None
-        self._settings = None
+        # Pre-compute paths once to avoid repeated operations
+        self.icons_dir: Path = self.pkgdatadir / 'icons'
+        self.settings_dir: Path = self.pkgdatadir / 'settings'
+        self.database_dir: Path = self.pkgdatadir / 'database'
 
-    def _find_data_dir(self) -> Path:
+        self._qt_app: Optional[QApplication] = None
+        self._settings: Optional[QSettings] = None
+
+    @staticmethod
+    def _find_data_dir() -> Path:
         """Find the data directory for development or installed mode."""
-        # Check if running from source
-        source_dir = Path(__file__).parent.parent.parent / 'data'
+        # PyInstaller bundle: data is extracted to _MEIPASS
+        meipass = getattr(sys, '_MEIPASS', None)
+        if meipass is not None:
+            return Path(meipass) / 'data'
+
+        # Running from source: go up two levels from openiso/application.py
+        source_dir = Path(__file__).parent.parent / 'data'
         if source_dir.exists():
             return source_dir
 
-        # Check standard install locations
+        # Standard install locations
         for prefix in ['/usr/local', '/usr', Path.home() / '.local']:
             data_dir = Path(prefix) / 'share' / 'openiso'
             if data_dir.exists():
@@ -65,40 +81,16 @@ class Application:
         return Path.cwd() / 'data'
 
     @property
-    def icons_dir(self) -> Path:
-        """Get the icons directory path."""
-        return self.pkgdatadir / 'icons'
-
-    @property
-    def settings_dir(self) -> Path:
-        """Get the settings directory path."""
-        return self.pkgdatadir / 'settings'
-
-    @property
-    def database_dir(self) -> Path:
-        """Get the database directory path."""
-        return self.pkgdatadir / 'database'
-
-    @property
     def settings(self) -> QSettings:
-        """Get application settings."""
+        """Get application settings. Requires QApplication to exist."""
         if self._settings is None:
-            self._settings = QSettings(
-                'io.github.rompik',
-                'OpenIso'
-            )
+            if QApplication.instance() is None:
+                raise RuntimeError("QApplication must be created before accessing settings")
+            self._settings = QSettings(ORG_NAME, APP_NAME)
         return self._settings
 
     def get_icon_path(self, icon_name: str) -> str:
-        """
-        Get full path to an icon file.
-
-        Args:
-            icon_name: Icon filename (can include subdirectory)
-
-        Returns:
-            Full path to the icon file
-        """
+        """Get full path to an icon file as string."""
         return str(self.icons_dir / icon_name)
 
     def run(self, argv: Optional[list] = None) -> int:
@@ -114,15 +106,20 @@ class Application:
         if argv is None:
             argv = sys.argv
 
-        self._qt_app = QApplication(argv)
-        self._qt_app.setApplicationName('OpenIso')
+        # Reuse existing QApplication if already created (e.g. in tests)
+        existing = QApplication.instance()
+        self._qt_app = existing if isinstance(existing, QApplication) else QApplication(argv)
+        self._qt_app.setApplicationName(APP_NAME)
         self._qt_app.setApplicationVersion(self.version)
-        self._qt_app.setOrganizationName('io.github.rompik')
-        self._qt_app.setOrganizationDomain('github.io')
+        self._qt_app.setOrganizationName(ORG_NAME)
+        self._qt_app.setOrganizationDomain(ORG_DOMAIN)
         self._qt_app.setDesktopFileName(self.app_id)
 
+        # Register this instance as the singleton
+        _set_application(self)
+
         # Import here to avoid circular imports
-        from .view.window import SkeyEditor
+        from .view.main_window.window import SkeyEditor
 
         window = SkeyEditor(application=self)
         window.show()
@@ -130,12 +127,18 @@ class Application:
         return self._qt_app.exec()
 
 
-# Singleton instance
-class _AppSingleton:
-    instance: Optional['Application'] = None
+# Module-level singleton stored in a mutable container to avoid global statement
+_singleton: dict = {'instance': None}
 
-def get_application() -> 'Application':
+
+def _set_application(app: Application) -> None:
+    """Register the active Application instance as singleton."""
+    _singleton['instance'] = app
+
+
+def get_application() -> Application:
     """Get the application singleton instance."""
-    if _AppSingleton.instance is None:
-        _AppSingleton.instance = Application()
-    return _AppSingleton.instance
+    app = _singleton['instance']
+    if app is None:
+        raise RuntimeError("Application has not been initialized. Call Application.run() first.")
+    return app

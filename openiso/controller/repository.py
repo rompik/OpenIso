@@ -62,8 +62,8 @@ class SkeyRepository:
 			raw_data = json.load(json_file)
 			for name, data in raw_data.items():
 				group_key, subgroup_key = self.get_description_info(name)
-				skey_data = SkeyData.from_dict(data)
-				skey_data.name = name
+				skey_data = SkeyData.from_dict(name, data)  # name is required first arg
+				# Override keys from descriptions file
 				skey_data.group_key = group_key
 				skey_data.subgroup_key = subgroup_key
 				self._skeys[name] = skey_data

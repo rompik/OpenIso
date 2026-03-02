@@ -27,30 +27,36 @@ class BaseSkeyImporter:
         self.geometry_converter = geometry_converter or GeometryConverter()
         self._errors: List[str] = []
 
-    def _name_to_key(self, prefix: str, name: str) -> str:
+    def _name_to_key(self, name: str) -> str:
+        """Convert a display name to a DB-compatible snake_case key (no prefix)."""
         if not name or name == "Unknown":
-            return f"{prefix}.unknown"
-        # Clean name: lowercase, replace spaces with underscores, remove special chars
-        clean_name = name.lower().replace(" ", "_").replace("-", "_").replace("/", "_").replace("(", "").replace(")", "").replace(",", "")
+            return "unknown"
         import re
-        clean_name = re.sub(r'[^a-z0-9_.]', '', clean_name)
+        clean_name = name.lower()
+        clean_name = clean_name.replace(" ", "_").replace("-", "_").replace("/", "_")
+        clean_name = clean_name.replace("(", "").replace(")", "").replace(",", "")
+        clean_name = re.sub(r'[^a-z0-9_]', '', clean_name)
         while "__" in clean_name:
             clean_name = clean_name.replace("__", "_")
-        return f"{prefix}.{clean_name.strip('_')}"
+        return clean_name.strip('_')
 
     def _get_description_info(self, skey_name: str) -> Tuple[str, str]:
-        """Get group and subgroup keys from descriptions"""
+        """Get group and subgroup keys from descriptions (plain snake_case, no prefix)."""
         if skey_name in self.descriptions:
             desc = self.descriptions[skey_name]
             if isinstance(desc, list) and len(desc) >= 2:
                 group_val = desc[0]
                 subgroup_val = desc[1]
-
-                group_key = group_val if "." in group_val else self._name_to_key("group", group_val)
-                subgroup_key = subgroup_val if "." in subgroup_val else self._name_to_key("subgroup", subgroup_val)
-
+                # Strip legacy group./subgroup. prefixes if present
+                if group_val.startswith("group."):
+                    group_val = group_val[len("group."):]
+                if subgroup_val.startswith("subgroup."):
+                    subgroup_val = subgroup_val[len("subgroup."):]
+                # Convert display names to snake_case keys
+                group_key = group_val if group_val.replace("_", "").isalnum() else self._name_to_key(group_val)
+                subgroup_key = subgroup_val if subgroup_val.replace("_", "").isalnum() else self._name_to_key(subgroup_val)
                 return (group_key, subgroup_key)
-        return ("group.unknown", "subgroup.unknown")
+        return ("unknown", "unknown")
 
     def _add_to_groups(self, groups: SkeyGroup, group: str, subgroup: str, skey_name: str):
         """Add skey to groups hierarchy"""
