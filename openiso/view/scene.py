@@ -355,13 +355,14 @@ class SheetLayout(QGraphicsScene):
             self.symbol_drawlist_temp.clear()
             self.cursor_coordinates.clear()
         elif event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
-            # Finish polyline on Enter
+            # Finish polyline on Enter — close the shape if 3+ points
             if self.current_action in ["draw_polyline", "draw_polyline_orthogonal"]:
                 if len(self.cursor_coordinates) >= 2:
+                    close = len(self.cursor_coordinates) >= 3
                     if self.current_action == "draw_polyline":
-                        self.draw_polyline(list(self.cursor_coordinates))
+                        self.draw_polyline(list(self.cursor_coordinates), close=close)
                     else:
-                        self.draw_polyline_orthogonal(list(self.cursor_coordinates))
+                        self.draw_polyline_orthogonal(list(self.cursor_coordinates), close=close)
 
                     self.cursor_coordinates.clear()
                     self._clear_temp_preview()
@@ -932,7 +933,7 @@ class SheetLayout(QGraphicsScene):
         line.setPen(self._create_pen())
         self._finalize_item(line)
 
-    def draw_polyline(self, positions):
+    def draw_polyline(self, positions, close=False):
         """Draw a polyline from multiple points"""
         if len(positions) < 2:
             return
@@ -941,12 +942,14 @@ class SheetLayout(QGraphicsScene):
         path.moveTo(positions[0])
         for point in positions[1:]:
             path.lineTo(point)
+        if close and len(positions) >= 3:
+            path.closeSubpath()
 
         polyline = QGraphicsPathItem(path)
         polyline.setPen(self._create_pen())
         self._finalize_item(polyline)
 
-    def draw_polyline_orthogonal(self, positions):
+    def draw_polyline_orthogonal(self, positions, close=False):
         """Draw an orthogonal (right-angle) polyline from multiple points"""
         if len(positions) < 2:
             return
@@ -971,6 +974,9 @@ class SheetLayout(QGraphicsScene):
                 # Vertical then horizontal
                 path.lineTo(prev_pt.x(), curr_pt.y())
                 path.lineTo(curr_pt.x(), curr_pt.y())
+
+        if close and len(positions) >= 3:
+            path.closeSubpath()
 
         polyline = QGraphicsPathItem(path)
         polyline.setPen(self._create_pen())

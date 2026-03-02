@@ -39,7 +39,9 @@ class SkeyDB:
             conn.close()
 
     def connect(self):
-        return sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("PRAGMA foreign_keys = ON")
+        return conn
 
     def get_all_skeys(self) -> List[SkeyData]:
         conn = self.connect()
@@ -71,7 +73,7 @@ class SkeyDB:
                 group_key=skey_group_key,
                 subgroup_key=skey_subgroup_key,
                 description_key=skey_description_key,
-                spindle_skey=spindle_skey,
+                spindle_skey=spindle_skey or "",  # NULL → '' для модели
                 orientation=orientation,
                 flow_arrow=flow_arrow,
                 dimensioned=dimensioned,
@@ -99,8 +101,9 @@ class SkeyDB:
     def insert_skey(self, skey: SkeyData, user: str = "system", comment: str = "create") -> int:
         conn = self.connect()
         cur = conn.cursor()
+        spindle_skey = skey.spindle_skey or None  # '' → NULL для корректной работы FK
         cur.execute("INSERT INTO skeys (name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (skey.name, skey.group_key, skey.subgroup_key, skey.description_key, skey.spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation))
+            (skey.name, skey.group_key, skey.subgroup_key, skey.description_key, spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation))
         skey_id = cur.lastrowid
         cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "create", comment))
         transaction_id = cur.lastrowid
@@ -132,8 +135,9 @@ class SkeyDB:
             conn.close()
             return self.insert_skey(skey, user, comment)
         skey_id = row[0]
+        spindle_skey = skey.spindle_skey or None  # '' → NULL
         cur.execute("UPDATE skeys SET skey_group_key = ?, skey_subgroup_key = ?, skey_description_key = ?, spindle_skey = ?, orientation = ?, flow_arrow = ?, dimensioned = ?, tracing = ?, insulation = ? WHERE id = ?",
-            (skey.group_key, skey.subgroup_key, skey.description_key, skey.spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation, skey_id))
+            (skey.group_key, skey.subgroup_key, skey.description_key, spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation, skey_id))
         cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "edit", comment))
         transaction_id = cur.lastrowid
         for geom in skey.geometry:
@@ -206,12 +210,13 @@ class SkeyDB:
         """Вставляет новый шпиндель в базу данных (аналогично Skey)."""
         conn = self.connect()
         cur = conn.cursor()
+        spindle_skey = spindle.spindle_skey or None  # '' → NULL
         cur.execute("""
             INSERT INTO spindles (name, skey_group_key, skey_subgroup_key, skey_description_key,
                                  spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (spindle.name, spindle.group_key, spindle.subgroup_key, spindle.description_key,
-              spindle.spindle_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
+              spindle_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
               spindle.tracing, spindle.insulation))
         spindle_id = cur.lastrowid
 
@@ -237,13 +242,14 @@ class SkeyDB:
             return self.insert_spindle(spindle, user, comment)
 
         spindle_id = row[0]
+        sp_skey = spindle.spindle_skey or None  # '' → NULL
         cur.execute("""
             UPDATE spindles SET skey_group_key = ?, skey_subgroup_key = ?, skey_description_key = ?,
                                spindle_skey = ?, orientation = ?, flow_arrow = ?, dimensioned = ?,
                                tracing = ?, insulation = ?
             WHERE id = ?
         """, (spindle.group_key, spindle.subgroup_key, spindle.description_key,
-              spindle.spindle_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
+              sp_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
               spindle.tracing, spindle.insulation, spindle_id))
 
         cur.execute("INSERT INTO spindle_transactions (spindle_id, user, action, comment) VALUES (?, ?, ?, ?)",
@@ -263,15 +269,22 @@ class SkeyDB:
         cur.execute('''CREATE TABLE IF NOT EXISTS spindles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
-            skey_group_key TEXT,
-            skey_subgroup_key TEXT,
+            skey_group_key TEXT NOT NULL,
+            skey_subgroup_key TEXT NOT NULL,
             skey_description_key TEXT,
             spindle_skey TEXT,
-            orientation INTEGER,
-            flow_arrow INTEGER,
-            dimensioned INTEGER,
-            tracing INTEGER,
-            insulation INTEGER
+            orientation INTEGER NOT NULL DEFAULT 0,
+            flow_arrow INTEGER NOT NULL DEFAULT 0,
+            dimensioned INTEGER NOT NULL DEFAULT 0,
+            tracing INTEGER NOT NULL DEFAULT 0,
+            insulation INTEGER NOT NULL DEFAULT 0,
+            CHECK (orientation IN (0, 1, 2, 3)),
+            CHECK (flow_arrow IN (0, 1, 2)),
+            CHECK (dimensioned IN (0, 1, 2)),
+            CHECK (tracing IN (0, 1, 2)),
+            CHECK (insulation IN (0, 1, 2)),
+            FOREIGN KEY (skey_group_key) REFERENCES skey_groups(skey_group_key) ON DELETE RESTRICT ON UPDATE CASCADE,
+            FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE
         )''')
 
         cur.execute('''CREATE TABLE IF NOT EXISTS spindle_transactions (
@@ -343,7 +356,7 @@ class SkeyDB:
         try:
             cur.execute("SELECT id FROM skey_groups WHERE skey_group_key = ?", (group_key,))
             group_id = cur.fetchone()[0]
-            cur.execute("INSERT OR IGNORE INTO skey_subgroups (group_id, skey_subgroup_key) VALUES (?, ?)", (group_id, subgroup_key))
+            cur.execute("INSERT OR IGNORE INTO skey_subgroups (group_id, skey_group_key, skey_subgroup_key) VALUES (?, ?, ?)", (group_id, group_key, subgroup_key))
             conn.commit()
         finally:
             conn.close()

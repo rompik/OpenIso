@@ -461,7 +461,7 @@ class SkeyEditor(QMainWindow):
         self.hbox_lay_editor.addWidget(self.draw_toolbar_widget)
         self.hbox_lay_editor.addWidget(self.view_editor, stretch=1)
 
-        if __version__ > "0.9.0":
+        if tuple(int(x) for x in __version__.split(".")) > (0, 9, 0):
             self.vbox_lay_editor.addWidget(self.terminal_widget)
 
         self.vbox_lay_right = QVBoxLayout()
@@ -763,8 +763,10 @@ class SkeyEditor(QMainWindow):
             print(f"No geometry found for spindle: {spindle_skey_name}")
             return
 
-        # For each spindle point found, add the spindle geometry centered at that point
+        # For each spindle point found, add the spindle geometry only if it matches the requested spindle
         for point in spindle_points:
+            if point.spindle_name != spindle_skey_name:
+                continue
             pos = point.pos()
             # We assume point.pos() is already in scene pixels
             # We need to map relative spindle geometry to scene pixels centered at pos
@@ -1028,6 +1030,7 @@ class SkeyEditor(QMainWindow):
         """Removes all user-drawn graphical elements from the current editing session."""
         for item in self.scene.symbol_drawlist:
             self.scene.removeItem( item )
+        self.scene.symbol_drawlist.clear()
 
     def select_all_items(self):
         """Select all items on the canvas."""
@@ -1415,7 +1418,16 @@ class SkeyEditor(QMainWindow):
         """Gathers form data and scene geometry, and saves the Skey information to the database."""
         try:
             # Get current values from form
-            skey_name = self.properties_widget.txt_skey.text().strip()
+            # txt_alias_code holds the real DB name; txt_skey holds a generated display code
+            skey_name = self.properties_widget.txt_alias_code.text().strip()
+            if not skey_name:
+                # Fallback: if alias is empty, try txt_skey (new skey creation flow)
+                skey_name = self.properties_widget.txt_skey.text().strip()
+
+            if not skey_name:
+                QMessageBox.warning(self, _t("Error"), _t("Skey name cannot be empty"))
+                return False
+
             group_key = self.properties_widget.cb_skey_group.currentData() or self.properties_widget.cb_skey_group.currentText()
             subgroup_key = self.properties_widget.cb_skey_subgroup.currentData() or self.properties_widget.cb_skey_subgroup.currentText()
             description_text = self.properties_widget.txt_skey_desc.toPlainText()
@@ -1429,10 +1441,6 @@ class SkeyEditor(QMainWindow):
 
             # Collect geometry from scene
             geometry = self._collect_geometry_from_scene()
-
-            if not skey_name:
-                QMessageBox.warning(self, _t("Error"), _t("Skey name cannot be empty"))
-                return False
 
             # Save to database
             self.skey_service.update_skey(
@@ -1510,9 +1518,9 @@ class SkeyEditor(QMainWindow):
 
     def _to_relative_coordinates(self, x: float, y: float) -> tuple:
         """Converts absolute scene pixel coordinates into relative symbolic coordinates used in the database."""
-        rel_x = (x - self.scene.origin_x) / 100.0
-        rel_y = -(y - self.scene.origin_y) / 100.0
-        return rel_x, rel_y
+        rel_x = (x - self.scene.sheet_width / 2) / (self.scene.step_x * 20)
+        rel_y = (self.scene.sheet_height / 2 - y) / (self.scene.step_y * 20)
+        return round(rel_x, 3), round(rel_y, 3)
 
     def _collect_geometry_from_scene(self):
         """Serializes all graphical elements on the canvas into a list of geometry data strings for saving."""
@@ -1560,7 +1568,7 @@ class SkeyEditor(QMainWindow):
                     for index in range(polygon.count()):
                         point = polygon.at(index)
                         pos = self.scene.convert_to_relative_position(point)
-                        parts.append(f"x{index + 1}={pos.x()} y{index + 1}={pos.y()}")
+                        parts.append(f"p{index + 1}x={pos.x()} p{index + 1}y={pos.y()}")
                     geometry.append(f"Polygon: {' '.join(parts)}")
 
         return geometry
