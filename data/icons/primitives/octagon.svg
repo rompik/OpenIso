@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="lucide lucide-octagon-regular">
+  <path d="
+    M12 4
+    L17.66 6.34
+    L20 12
+    L17.66 17.66
+    L12 20
+    L6.34 17.66
+    L4 12
+    L6.34 6.34
+    Z"/>
+</svg>
+

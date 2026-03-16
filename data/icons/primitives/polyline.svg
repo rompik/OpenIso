@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus-icon lucide-minus">
+  <circle cx="4.162" cy="10.698" r="2"/>
+  <path d="M 5.713 12.134 L 9.017 15.14" style=""/>
+  <circle cx="15.79" cy="12.604" r="10.667" style="stroke-width: 5.333;" transform="matrix(0.18812, 0, 0, 0.189256, 16.753202, 10.508214)"/>
+  <path d="M 12.558 8.468 L 18.029 11.77" style=""/>
+  <path d="M 12.511 8.477 L 9.018 15.183" style=""/>
+</svg>

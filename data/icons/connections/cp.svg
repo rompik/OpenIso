@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 128 128" stroke="currentColor" stroke-width="6"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+  <!-- Connecting Pipe Center Line -->
+  <line x1="20" y1="64" x2="108" y2="64" />
+
+  <!-- Compression symbol -->
+  <line x1="56" y1="48" x2="56" y2="80" />
+  <line x1="72" y1="48" x2="72" y2="80" />
+
+</svg>

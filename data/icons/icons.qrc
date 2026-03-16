@@ -1,0 +1,16 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/icons">
+    <file>common/100x100_filter_clear.png</file>
+    <file>common/128x128_select_element.png</file>
+    <file>primitives/128x128_point_arrive.png</file>
+    <file>primitives/128x128_point_leave.png</file>
+    <file>primitives/128x128_point_tee.png</file>
+    <file>primitives/128x128_point_spindle.png</file>
+    <file>primitives/128x128_line.png</file>
+    <file>primitives/128x128_rectangle.png</file>
+    <file>primitives/128x128_triangle.png</file>
+    <file>primitives/128x128_cap.png</file>
+    <file>primitives/128x128_hexagon.png</file>
+    <file>common/128x128_clear_sheet.png</file>
+</qresource>
+</RCC>

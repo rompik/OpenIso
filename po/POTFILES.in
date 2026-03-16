@@ -1,0 +1,16 @@
+# List of source files containing translatable strings
+data/io.github.rompik.OpenIso.desktop.in
+data/io.github.rompik.OpenIso.metainfo.xml.in
+data/io.github.rompik.OpenIso.gschema.xml
+openiso/application.py
+openiso/view/window.py
+openiso/view/draw_toolbar.py
+openiso/view/menu_toolbar.py
+openiso/view/properties.py
+openiso/view/preview.py
+openiso/view/skey_tree.py
+openiso/view/settings_dialog.py
+openiso/view/about_dialog.py
+openiso/view/help_window.py
+openiso/core/i18n.py
+openiso/model/enums.py

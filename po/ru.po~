@@ -1,0 +1,617 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Unknown <roman.parygin@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-09 00:24+0100\n"
+"PO-Revision-Date: 2026-01-31 11:45+0100\n"
+"Last-Translator: Roman PARYGIN\n"
+"Language-Team: Roman PARYGIN\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/view/window.py:151
+msgid "No items selected to fill"
+msgstr "Нет выбранных объектов для заливки"
+
+#: src/view/window.py:158
+msgid "Fill color applied"
+msgstr "Цвет заливки применен"
+
+#: src/view/window.py:165
+#, python-brace-format
+msgid "Spindle selected: {name}"
+msgstr "Выбран шпиндель: {name}"
+
+#: src/view/window.py:187
+#, python-brace-format
+msgid "Connection point: {0} ({1})"
+msgstr "Точка подключения: {0} ({1})"
+
+#: src/view/window.py:234
+msgid "Skeys"
+msgstr "Skey-символы"
+
+#: src/view/window.py:238 src/view/window.py:560
+msgid "Shape"
+msgstr "Форма"
+
+#: src/view/window.py:245 src/view/properties.py:152
+#: src/view/properties.py:166
+msgid "Properties"
+msgstr "Свойства"
+
+#: src/view/window.py:246 src/view/window.py:562
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: src/view/window.py:298 src/view/window.py:558
+msgid "Ready"
+msgstr "Готово"
+
+#: src/view/window.py:316 src/view/connection_items.py:75
+msgid "Select Connection Point Type"
+msgstr "Выберите тип точки подключения"
+
+#: src/view/window.py:384
+msgid "Create new Skey"
+msgstr "Создать новый Skey"
+
+#: src/view/window.py:421 src/view/skey_tree.py:244
+msgid "Delete Skey"
+msgstr "Удалить Skey"
+
+#: src/view/window.py:422
+#, python-brace-format
+msgid "Are you sure you want to delete Skey '{0}'?"
+msgstr "Вы уверены, что хотите удалить Skey '{0}'?"
+
+#: src/view/window.py:439
+#, python-brace-format
+msgid "Skey '{0}' deleted"
+msgstr "Skey '{0}' удален"
+
+#: src/view/window.py:445 src/view/window.py:1049
+msgid "Error"
+msgstr "Ошибка"
+
+#: src/view/window.py:445
+#, python-brace-format
+msgid "Failed to delete Skey '{0}'"
+msgstr "Не удалось удалить Skey '{0}'"
+
+#: src/view/window.py:557
+msgid "Iso Symbols Library"
+msgstr "Библиотека ISO символов"
+
+#: src/view/window.py:559
+msgid "Skeys List"
+msgstr "Список Skey"
+
+#: src/view/window.py:623
+msgid "No items selected to scale"
+msgstr "Нет выбранных объектов для масштабирования"
+
+#: src/view/window.py:626
+msgid "Scale Element"
+msgstr "Масштабировать элемент"
+
+#: src/view/window.py:626
+msgid "Scale Factor:"
+msgstr "Коэффициент масштабирования:"
+
+#: src/view/window.py:956 src/view/window.py:957
+msgid "Unknown"
+msgstr ""
+
+#: src/view/window.py:971 src/view/window.py:1019
+msgid "Export Error"
+msgstr "Ошибка экспорта"
+
+#: src/view/window.py:971
+msgid "No Skey selected or name is empty"
+msgstr ""
+
+#: src/view/window.py:1003
+msgid "Export Skey as ASCII"
+msgstr ""
+
+#: src/view/window.py:1005
+msgid "ASCII Symbolic File"
+msgstr "Символьный файл ASCII"
+
+#: src/view/window.py:1005
+msgid "All Files"
+msgstr "Все файлы"
+
+#: src/view/window.py:1016
+#, python-brace-format
+msgid "Skey '{0}' exported to {1}"
+msgstr ""
+
+#: src/view/window.py:1019
+#, python-brace-format
+msgid "Failed to export Skey: {0}"
+msgstr ""
+
+#: src/view/window.py:1049
+msgid "Skey name cannot be empty"
+msgstr ""
+
+#: src/view/window.py:1081
+#, python-brace-format
+msgid "Skey '{0}' saved successfully"
+msgstr ""
+
+#: src/view/window.py:1186
+#, fuzzy
+msgid "Select File"
+msgstr "Выберите шпиндель"
+
+#: src/view/window.py:1188
+#, fuzzy
+msgid "Symbols file"
+msgstr "символы"
+
+#: src/view/skey_tree.py:44
+msgid "Components"
+msgstr "Компоненты"
+
+#: src/view/skey_tree.py:215
+msgid "Clear Filter"
+msgstr "Очистить фильтр"
+
+#: src/view/skey_tree.py:216
+msgid "Search..."
+msgstr "Поиск..."
+
+#: src/view/skey_tree.py:233
+#, fuzzy
+msgid "Create New Skey"
+msgstr "Шпиндель"
+
+#: src/view/properties.py:31 src/view/properties.py:153
+#: src/view/properties.py:167
+msgid "Skey"
+msgstr "Skey"
+
+#: src/view/properties.py:33 src/view/properties.py:154
+#: src/view/properties.py:168
+msgid "Group"
+msgstr "Группа"
+
+#: src/view/properties.py:36 src/view/properties.py:155
+#: src/view/properties.py:169
+msgid "Subgroup"
+msgstr "Подгруппа"
+
+#: src/view/properties.py:39 src/view/properties.py:156
+#, fuzzy
+msgid "Spindle"
+msgstr "Шпиндель"
+
+#: src/view/properties.py:45 src/view/properties.py:157
+#: src/view/properties.py:170
+msgid "Description"
+msgstr "Описание"
+
+#: src/view/properties.py:53 src/view/properties.py:158
+#: src/view/properties.py:171
+msgid "Orientation"
+msgstr "Ориентация"
+
+#: src/view/properties.py:61 src/view/properties.py:174
+msgid "Use on symmetrical component"
+msgstr "Использовать на симметричном компоненте"
+
+#: src/view/properties.py:62 src/view/properties.py:175
+msgid "Use on non-symmetrical component"
+msgstr "Использовать на несимметричном компоненте"
+
+#: src/view/properties.py:63 src/view/properties.py:176
+msgid "Use on reducers"
+msgstr "Использовать на редукторах"
+
+#: src/view/properties.py:64 src/view/properties.py:177
+msgid "Use on flanges"
+msgstr "Использовать на фланцах"
+
+#: src/view/properties.py:97 src/view/properties.py:159
+#: src/view/properties.py:183
+msgid "Flow Arrow"
+msgstr "Стрелка потока"
+
+#: src/view/properties.py:99 src/view/properties.py:160
+#: src/view/properties.py:184
+msgid "Dimensioned"
+msgstr "Размерный"
+
+#: src/view/properties.py:101 src/view/properties.py:161
+#: src/view/properties.py:185
+msgid "Tracing"
+msgstr ""
+
+#: src/view/properties.py:103 src/view/properties.py:162
+#: src/view/properties.py:186
+msgid "Insulation"
+msgstr ""
+
+#: src/view/properties.py:105 src/view/properties.py:163
+msgid "Geometry"
+msgstr ""
+
+#: src/view/properties.py:110 src/view/properties.py:111
+#: src/view/properties.py:164 src/view/properties.py:165
+#: src/view/properties.py:187 src/view/properties.py:188
+msgid "Save Changes to Skey File"
+msgstr "Сохранить изменения в файле Skey"
+
+#: src/view/menu_toolbar.py:72
+msgid "Import File"
+msgstr "Импортировать файл"
+
+#: src/view/menu_toolbar.py:73
+msgid "Export File"
+msgstr "Экспортировать файл"
+
+#: src/view/menu_toolbar.py:74
+msgid "Print"
+msgstr "Печать"
+
+#: src/view/menu_toolbar.py:75
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/view/menu_toolbar.py:76
+msgid "Import of Skeys from ASCII file ( Intergraph )"
+msgstr "Импорт Skeys из ASCII файла (Intergraph)"
+
+#: src/view/menu_toolbar.py:77
+msgid "Import Skeys from IDF file ( AVEVA )"
+msgstr "Импорт Skeys из IDF файла (AVEVA)"
+
+#: src/view/menu_toolbar.py:78
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/view/menu_toolbar.py:79
+msgid "Help"
+msgstr "Помощь"
+
+#: src/view/menu_toolbar.py:80 src/view/about_dialog.py:28
+msgid "About"
+msgstr "О программе"
+
+#: src/view/draw_toolbar.py:99
+#, fuzzy
+msgid "Select Element"
+msgstr "Выбрать файл"
+
+#: src/view/draw_toolbar.py:100
+#, fuzzy
+msgid "Select All"
+msgstr "Выбрать файл"
+
+#: src/view/draw_toolbar.py:101
+msgid "Move"
+msgstr ""
+
+#: src/view/draw_toolbar.py:102
+msgid "Rotate"
+msgstr ""
+
+#: src/view/draw_toolbar.py:103
+msgid "Scale"
+msgstr "Масштаб"
+
+#: src/view/draw_toolbar.py:104
+msgid "Undo"
+msgstr "Отменить"
+
+#: src/view/draw_toolbar.py:105
+msgid "Redo"
+msgstr "Повторить"
+
+#: src/view/draw_toolbar.py:106
+msgid "Draw Connection Point"
+msgstr ""
+
+#: src/view/draw_toolbar.py:107
+msgid "Draw Spindle Connection Point"
+msgstr ""
+
+#: src/view/draw_toolbar.py:108
+msgid "Draw Line"
+msgstr ""
+
+#: src/view/draw_toolbar.py:109
+msgid "Draw Rectangle"
+msgstr ""
+
+#: src/view/draw_toolbar.py:110
+msgid "Draw Triangle"
+msgstr ""
+
+#: src/view/draw_toolbar.py:111
+msgid "Draw Dish"
+msgstr ""
+
+#: src/view/draw_toolbar.py:112
+msgid "Draw Hexagon"
+msgstr ""
+
+#: src/view/draw_toolbar.py:113 src/view/fill_color_popup.py:36
+msgid "Fill Color"
+msgstr ""
+
+#: src/view/draw_toolbar.py:114
+#, fuzzy
+msgid "Clear Sheet"
+msgstr "Очистить фильтр"
+
+#: src/view/about_dialog.py:146
+msgid "Website"
+msgstr "Веб-сайт"
+
+#: src/view/about_dialog.py:155
+msgid "Support Questions"
+msgstr "Вопросы поддержки"
+
+#: src/view/about_dialog.py:159
+msgid "Report an Issue"
+msgstr "Сообщить об ошибке"
+
+#: src/view/about_dialog.py:163
+msgid "Troubleshooting"
+msgstr "Устранение неполадок"
+
+#: src/view/about_dialog.py:168 src/view/about_dialog.py:181
+msgid "Credits"
+msgstr "Участники"
+
+#: src/view/about_dialog.py:169 src/view/about_dialog.py:185
+msgid "Legal"
+msgstr "Юридическая информация"
+
+#: src/view/about_dialog.py:170 src/view/about_dialog.py:189
+msgid "Acknowledgments"
+msgstr "Благодарности"
+
+#: src/view/about_dialog.py:213
+#, python-brace-format
+msgid ""
+"This application is distributed without any warranties. More details in "
+"{link}."
+msgstr ""
+"Это приложение распространяется без каких-либо гарантий. Подробности в "
+"{link}."
+
+#: src/view/about_dialog.py:214
+msgid "version 3 or later"
+msgstr "версии 3 или новее"
+
+#: src/view/about_dialog.py:226
+msgid "Special thanks to all contributors and users!"
+msgstr "Особая благодарность всем участникам и пользователям!"
+
+#: src/view/fill_color_popup.py:83
+msgid "Recent"
+msgstr ""
+
+#: src/view/fill_color_popup.py:103
+msgid "Custom Color..."
+msgstr ""
+
+#: src/view/spindle_popup.py:63
+#, fuzzy
+msgid "Select Spindle"
+msgstr "Выберите шпиндель"
+
+#: src/view/spindle_popup.py:79
+msgid "No spindles found in database"
+msgstr "Шпиндели не найдены в базе данных"
+
+#: src/view/connection_items.py:17
+msgid "Butt Weld"
+msgstr ""
+
+#: src/view/connection_items.py:18
+msgid "Socket Weld"
+msgstr ""
+
+#: src/view/connection_items.py:19
+msgid "Flanged"
+msgstr ""
+
+#: src/view/connection_items.py:20
+msgid "Threaded"
+msgstr ""
+
+#: src/view/connection_items.py:21
+msgid "Plain"
+msgstr ""
+
+#: src/view/connection_items.py:22
+msgid "Compression"
+msgstr ""
+
+#: src/view/connection_items.py:23
+msgid "Screwed"
+msgstr ""
+
+#: src/view/connection_items.py:24
+msgid "Plain End"
+msgstr ""
+
+#: src/view/connection_items.py:25
+msgid "Beveled End"
+msgstr ""
+
+#: src/view/connection_items.py:26
+msgid "Threaded End"
+msgstr ""
+
+#: src/view/connection_items.py:100
+msgid "Arrive Point"
+msgstr ""
+
+#: src/view/connection_items.py:101
+msgid "Leave Point"
+msgstr ""
+
+#: src/view/connection_items.py:102
+msgid "Additional Point (Tee)"
+msgstr ""
+
+#~ msgid "Rotate Spindle Angle Minus"
+#~ msgstr "Повернуть угол шпинделя минус"
+
+#~ msgid "Rotate Spindle Angle Plus"
+#~ msgstr "Повернуть угол шпинделя плюс"
+
+#~ msgid "Default"
+#~ msgstr "По умолчанию"
+
+#~ msgid "Off"
+#~ msgstr "Выкл"
+
+#~ msgid "On"
+#~ msgstr "Вкл"
+
+#~ msgid "Skey Symbol Library Editor for Isometric Drawings"
+#~ msgstr "Редактор библиотеки символов Skey для изометрических чертежей"
+
+#~ msgid "isometric;skey;symbols;piping;engineering;"
+#~ msgstr "изометрия;skey;символы;трубопровод;инженерия;"
+
+#~ msgid ""
+#~ "ISO Symbols Library is a graphical editor for managing and creating Skey "
+#~ "symbols used in isometric piping drawings. It provides tools for:"
+#~ msgstr ""
+#~ "Библиотека ISO символов - это графический редактор для управления и создания"
+#~ " символов Skey, используемых в изометрических чертежах трубопроводов. Он "
+#~ "предоставляет инструменты для:"
+
+#~ msgid "Creating and editing geometric primitives"
+#~ msgstr "Создание и редактирование геометрических примитивов"
+
+#~ msgid "Managing symbol libraries"
+#~ msgstr "Управление библиотеками символов"
+
+#~ msgid "Importing symbols from ASCII and IDF formats"
+#~ msgstr "Импорт символов из форматов ASCII и IDF"
+
+#~ msgid "Organizing symbols into categories"
+#~ msgstr "Организация символов по категориям"
+
+#~ msgid "OpenIso Developers"
+#~ msgstr "Разработчики OpenIso"
+
+#~ msgid "Initial release with core features:"
+#~ msgstr "Первый выпуск с основными функциями:"
+
+#~ msgid "Symbol editor with geometric primitives"
+#~ msgstr "Редактор символов с геометрическими примитивами"
+
+#~ msgid "ASCII and IDF file import"
+#~ msgstr "Импорт файлов ASCII и IDF"
+
+#~ msgid "Symbol library management"
+#~ msgstr "Управление библиотекой символов"
+
+#~ msgid "Category organization"
+#~ msgstr "Организация по категориям"
+
+#~ msgid "Main window with symbol editor"
+#~ msgstr "Главное окно с редактором символов"
+
+#~ msgid "isometric"
+#~ msgstr "изометрия"
+
+#~ msgid "skey"
+#~ msgstr "skey"
+
+#~ msgid "piping"
+#~ msgstr "трубопровод"
+
+#~ msgid "engineering"
+#~ msgstr "инженерия"
+
+#~ msgid "CAD"
+#~ msgstr "САПР"
+
+#~ msgid "Window width"
+#~ msgstr "Ширина окна"
+
+#~ msgid "The width of the main window"
+#~ msgstr "Ширина главного окна"
+
+#~ msgid "Window height"
+#~ msgstr "Высота окна"
+
+#~ msgid "The height of the main window"
+#~ msgstr "Высота главного окна"
+
+#~ msgid "Window maximized"
+#~ msgstr "Окно развернуто"
+
+#~ msgid "Whether the window is maximized"
+#~ msgstr "Развернуто ли окно"
+
+#~ msgid "Drawing sheet size"
+#~ msgstr "Размер чертежного листа"
+
+#~ msgid "The size of the drawing sheet in pixels"
+#~ msgstr "Размер чертежного листа в пикселях"
+
+#~ msgid "Show grid"
+#~ msgstr "Показать сетку"
+
+#~ msgid "Whether to show the grid on the drawing sheet"
+#~ msgstr "Отображать ли сетку на чертежном листе"
+
+#~ msgid "Snap to grid"
+#~ msgstr "Привязка к сетке"
+
+#~ msgid "Whether to snap elements to the grid"
+#~ msgstr "Привязывать ли элементы к сетке"
+
+#~ msgid "Recent database path"
+#~ msgstr "Путь к недавней базе данных"
+
+#~ msgid "Path to the last opened database"
+#~ msgstr "Путь к последней открытой базе данных"
+
+#~ msgid "Last import directory"
+#~ msgstr "Последний каталог импорта"
+
+#~ msgid "The last directory used for importing files"
+#~ msgstr "Последний каталог, использованный для импорта файлов"
+
+#~ msgid "Import from ASCII"
+#~ msgstr "Импорт из ASCII"
+
+#~ msgid "Import from IDF"
+#~ msgstr "Импорт из IDF"
+
+#~ msgid "Language Settings"
+#~ msgstr "Настройки языка"
+
+#~ msgid "Select Program Language:"
+#~ msgstr "Выберите язык программы:"
+
+#~ msgid "Author"
+#~ msgstr "Автор"
+
+#~ msgid "Version"
+#~ msgstr "Версия"
+
+#~ msgid "Non-Dimensioned"
+#~ msgstr "Безразмерный"

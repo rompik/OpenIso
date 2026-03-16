@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 128 128" stroke="currentColor" stroke-width="4"
+     fill="none" stroke-linejoin="round" stroke-linecap="round">
+
+  <!-- Левый треугольник (вершина направлена вправо) -->
+  <polygon points="28,32 28,96 56,64"/>
+
+  <!-- Правый треугольник (вершина направлена влево) -->
+  <polygon points="100,32 100,96 72,64"/>
+
+  <!-- Вертикальная штриховая линия -->
+  <line x1="64" y1="24" x2="64" y2="104" stroke-dasharray="6,8"/>
+</svg>
+
+

@@ -1,0 +1,1325 @@
+{
+  "spindles": {
+    "_name": "Spindles",
+    "all": {
+      "_name": "All",
+      "01sp": {
+        "_name": "01SP",
+        "description": ""
+      },
+      "02sp": {
+        "_name": "02SP",
+        "description": ""
+      },
+      "03sp": {
+        "_name": "03SP",
+        "description": ""
+      },
+      "04sp": {
+        "_name": "04SP",
+        "description": ""
+      },
+      "05sp": {
+        "_name": "05SP",
+        "description": ""
+      },
+      "06sp": {
+        "_name": "06SP",
+        "description": ""
+      },
+      "07sp": {
+        "_name": "07SP",
+        "description": ""
+      },
+      "08sp": {
+        "_name": "08SP",
+        "description": ""
+      },
+      "09sp": {
+        "_name": "09SP",
+        "description": ""
+      },
+      "10sp": {
+        "_name": "10SP",
+        "description": ""
+      },
+      "11sp": {
+        "_name": "11SP",
+        "description": ""
+      },
+      "12sp": {
+        "_name": "12SP",
+        "description": ""
+      },
+      "13sp": {
+        "_name": "13SP",
+        "description": ""
+      },
+      "14sp": {
+        "_name": "14SP",
+        "description": ""
+      },
+      "15sp": {
+        "_name": "15SP",
+        "description": ""
+      }
+    }
+  },
+  "flanges": {
+    "_name": "Flanges",
+    "blind_or_blanking_flange": {
+      "_name": "Blind or Blanking Flange",
+      "flbl": {
+        "_name": "FLBL",
+        "description": ""
+      }
+    },
+    "flared_loose_backing_flange": {
+      "_name": "Flared/Loose backing flange",
+      "flfl": {
+        "_name": "FLFL",
+        "description": ""
+      }
+    },
+    "loose_backing": {
+      "_name": "Loose Backing",
+      "fllb": {
+        "_name": "FLLB",
+        "description": ""
+      }
+    },
+    "reducing_concentric": {
+      "_name": "Reducing Concentric",
+      "flrc": {
+        "_name": "FLRC",
+        "description": ""
+      }
+    },
+    "reducing_eccentric": {
+      "_name": "Reducing Eccentric",
+      "flre": {
+        "_name": "FLRE",
+        "description": ""
+      }
+    },
+    "screwed_fitting": {
+      "_name": "Screwed Fitting",
+      "flsc": {
+        "_name": "FLSC",
+        "description": ""
+      }
+    },
+    "orifice_slip_on_flange_with_tapping_connection": {
+      "_name": "Orifice slip-on flange with tapping connection",
+      "foso": {
+        "_name": "FOSO",
+        "description": ""
+      }
+    },
+    "socket_weld_flange": {
+      "_name": "Socket Weld Flange",
+      "flsw": {
+        "_name": "FLSW",
+        "description": ""
+      }
+    },
+    "weld_neck_flange": {
+      "_name": "Weld Neck Flange",
+      "flwn": {
+        "_name": "FLWN",
+        "description": ""
+      }
+    },
+    "orifice_weld_neck_flange_with_tapping_connections": {
+      "_name": "Orifice weld neck flange with tapping connections",
+      "fown": {
+        "_name": "FOWN",
+        "description": ""
+      }
+    },
+    "lap_joint_ring_stub_end_combined_flange": {
+      "_name": "Lap joint ring/Stub end combined flange",
+      "fbse": {
+        "_name": "FBSE",
+        "description": ""
+      }
+    },
+    "seal_welded_flange_sarlun_sargol_male_connection": {
+      "_name": "Seal-welded flange (Sarlun/Sargol) (Male) connection",
+      "flsm": {
+        "_name": "FLSM",
+        "description": ""
+      }
+    },
+    "cast_lined_flange_with_female_gland_type": {
+      "_name": "Cast/lined flange with Female gland type",
+      "flgf": {
+        "_name": "FLGF",
+        "description": ""
+      }
+    },
+    "cast__lined_flange_with_male_gland_type": {
+      "_name": "Cast/ lined flange with Male gland type",
+      "flgm": {
+        "_name": "FLGM",
+        "description": ""
+      }
+    }
+  },
+  "unknown": {
+    "_name": "Unknown"
+  },
+  "couplings": {
+    "_name": "Couplings",
+    "screwed_fitting_nipple": {
+      "_name": "Screwed Fitting Nipple",
+      "nrsc": {
+        "_name": "NRSC",
+        "description": ""
+      }
+    },
+    "screwed_nipple": {
+      "_name": "Screwed Nipple",
+      "nbsc": {
+        "_name": "NBSC",
+        "description": ""
+      }
+    },
+    "compression_fitting_coupling": {
+      "_name": "Compression Fitting Coupling",
+      "cocp": {
+        "_name": "COCP",
+        "description": ""
+      }
+    },
+    "butt_weld_elbolet": {
+      "_name": "Butt Weld Elbolet",
+      "cebw": {
+        "_name": "CEBW",
+        "description": ""
+      }
+    },
+    "screwed_fitting_elbolet": {
+      "_name": "Screwed Fitting Elbolet",
+      "cesc": {
+        "_name": "CESC",
+        "description": ""
+      }
+    },
+    "socket_weld_elbolet": {
+      "_name": "Socket Weld Elbolet",
+      "cesw": {
+        "_name": "CESW",
+        "description": ""
+      }
+    },
+    "coupling_with_compression_sleeve_connections": {
+      "_name": "Coupling with compression sleeve connections",
+      "cscp": {
+        "_name": "CSCP",
+        "description": ""
+      }
+    },
+    "coupling_with_victaulic_connections_grooved_pipe": {
+      "_name": "Coupling with Victaulic connections (Grooved pipe)",
+      "covt": {
+        "_name": "COVT",
+        "description": ""
+      }
+    },
+    "coupling_with_grayloc_connections": {
+      "_name": "Coupling with Grayloc connections",
+      "cogy": {
+        "_name": "COGY",
+        "description": ""
+      }
+    },
+    "coupling_with_victaulic_connections_welded_connections": {
+      "_name": "Coupling with Victaulic connections (Welded connections)",
+      "covr": {
+        "_name": "COVR",
+        "description": ""
+      }
+    }
+  },
+  "unions": {
+    "_name": "Unions",
+    "screwed_fitting_union": {
+      "_name": "Screwed Fitting Union",
+      "unsc": {
+        "_name": "UNSC",
+        "description": ""
+      }
+    },
+    "butt_or_socket_weld_union": {
+      "_name": "Butt or Socket Weld Union",
+      "unsw": {
+        "_name": "UNSW",
+        "description": ""
+      }
+    }
+  },
+  "miscellaneous_pipe_components": {
+    "_name": "Miscellaneous Pipe Components",
+    "expansion_bellows": {
+      "_name": "Expansion Bellows",
+      "ex": {
+        "_name": "EX",
+        "description": ""
+      }
+    },
+    "flame_trap": {
+      "_name": "Flame Trap",
+      "ft": {
+        "_name": "FT",
+        "description": ""
+      }
+    },
+    "flexible_hose": {
+      "_name": "Flexible Hose",
+      "fx": {
+        "_name": "FX",
+        "description": ""
+      }
+    },
+    "hose_coupling": {
+      "_name": "Hose Coupling",
+      "ch": {
+        "_name": "CH",
+        "description": ""
+      }
+    },
+    "non_category_item": {
+      "_name": "Non-Category Item",
+      "nc": {
+        "_name": "NC",
+        "description": ""
+      }
+    },
+    "block_offset": {
+      "_name": "Block offset",
+      "bo": {
+        "_name": "BO",
+        "description": ""
+      }
+    },
+    "plug": {
+      "_name": "Plug",
+      "pl": {
+        "_name": "PL",
+        "description": ""
+      }
+    },
+    "restrictor_plate": {
+      "_name": "Restrictor plate",
+      "rp": {
+        "_name": "RP",
+        "description": ""
+      }
+    },
+    "sight_glass": {
+      "_name": "Sight Glass",
+      "sg": {
+        "_name": "SG",
+        "description": ""
+      }
+    },
+    "slip_plate": {
+      "_name": "Slip plate",
+      "sp": {
+        "_name": "SP",
+        "description": ""
+      }
+    },
+    "slip_ring": {
+      "_name": "Slip ring",
+      "sr": {
+        "_name": "SR",
+        "description": ""
+      }
+    },
+    "spectacle_blind": {
+      "_name": "Spectacle Blind",
+      "sb": {
+        "_name": "SB",
+        "description": ""
+      }
+    },
+    "tundish_funnel": {
+      "_name": "Tundish (funnel)",
+      "tu": {
+        "_name": "TU",
+        "description": ""
+      }
+    }
+  },
+  "miscellaneous_items": {
+    "_name": "Miscellaneous Items",
+    "flow_arrow": {
+      "_name": "Flow arrow",
+      "flow": {
+        "_name": "FLOW",
+        "description": ""
+      }
+    },
+    "insulation_symbol": {
+      "_name": "Insulation symbol",
+      "inpp": {
+        "_name": "INPP",
+        "description": ""
+      }
+    },
+    "floor_penetration": {
+      "_name": "Floor Penetration",
+      "flor": {
+        "_name": "FLOR",
+        "description": ""
+      }
+    },
+    "arrow_head_dimension_line": {
+      "_name": "Arrow head (dimension line)",
+      "ar01": {
+        "_name": "AR01",
+        "description": ""
+      }
+    },
+    "arrow_head_message_line": {
+      "_name": "Arrow head (message line)",
+      "ar02": {
+        "_name": "AR02",
+        "description": ""
+      }
+    },
+    "line_break": {
+      "_name": "Line break",
+      "ar04": {
+        "_name": "AR04",
+        "description": ""
+      }
+    },
+    "wall_symbol": {
+      "_name": "Wall symbol",
+      "wall": {
+        "_name": "WALL",
+        "description": ""
+      }
+    }
+  },
+  "supports": {
+    "_name": "Supports",
+    "hanger": {
+      "_name": "Hanger",
+      "01hg": {
+        "_name": "01HG",
+        "description": ""
+      }
+    },
+    "anchor": {
+      "_name": "Anchor",
+      "anch": {
+        "_name": "ANCH",
+        "description": ""
+      }
+    },
+    "duck_foot": {
+      "_name": "Duck Foot",
+      "duck": {
+        "_name": "DUCK",
+        "description": ""
+      }
+    },
+    "skid": {
+      "_name": "Skid",
+      "skid": {
+        "_name": "SKID",
+        "description": ""
+      }
+    },
+    "spring": {
+      "_name": "Spring",
+      "sprg": {
+        "_name": "SPRG",
+        "description": ""
+      }
+    },
+    "guide___steady": {
+      "_name": "Guide / Steady",
+      "guid": {
+        "_name": "GUID",
+        "description": ""
+      }
+    }
+  },
+  "pipe_blocks": {
+    "_name": "Pipe Blocks",
+    "fixed_length": {
+      "_name": "Fixed Length",
+      "pf": {
+        "_name": "PF",
+        "description": ""
+      }
+    },
+    "variable_length": {
+      "_name": "Variable Length",
+      "pv": {
+        "_name": "PV",
+        "description": ""
+      }
+    }
+  },
+  "traps": {
+    "_name": "Traps",
+    "offset_trap": {
+      "_name": "Offset Trap",
+      "to": {
+        "_name": "TO",
+        "description": ""
+      }
+    },
+    "in_line_trap": {
+      "_name": "In-line Trap",
+      "ti": {
+        "_name": "TI",
+        "description": ""
+      }
+    },
+    "angled_trap": {
+      "_name": "Angled Trap",
+      "ta": {
+        "_name": "TA",
+        "description": ""
+      }
+    }
+  },
+  "caps": {
+    "_name": "Caps",
+    "compression_cap": {
+      "_name": "Compression cap",
+      "kacp": {
+        "_name": "KACP",
+        "description": ""
+      }
+    },
+    "butt_weld_cap": {
+      "_name": "Butt Weld Cap",
+      "kabw": {
+        "_name": "KABW",
+        "description": ""
+      }
+    }
+  },
+  "instruments": {
+    "_name": "Instruments",
+    "orifice_plate": {
+      "_name": "Orifice plate",
+      "op": {
+        "_name": "OP",
+        "description": ""
+      }
+    },
+    "restrictor_plate": {
+      "_name": "Restrictor plate",
+      "pr": {
+        "_name": "PR",
+        "description": ""
+      }
+    },
+    "rupture_disc": {
+      "_name": "Rupture Disc",
+      "dr": {
+        "_name": "DR",
+        "description": ""
+      }
+    },
+    "control_valve": {
+      "_name": "Control Valve",
+      "cv": {
+        "_name": "CV",
+        "description": ""
+      }
+    },
+    "angled_control_valve": {
+      "_name": "Angled Control Valve",
+      "ca": {
+        "_name": "CA",
+        "description": ""
+      }
+    },
+    "3_way_control_valve": {
+      "_name": "3-Way Control Valve",
+      "c3": {
+        "_name": "C3",
+        "description": ""
+      }
+    },
+    "4_way_control_valve": {
+      "_name": "4-Way Control Valve",
+      "c4": {
+        "_name": "C4",
+        "description": ""
+      }
+    },
+    "relief_valve": {
+      "_name": "Relief Valve",
+      "rv": {
+        "_name": "RV",
+        "description": ""
+      }
+    }
+  },
+  "welds": {
+    "_name": "Welds",
+    "workshop_weld": {
+      "_name": "Workshop Weld",
+      "ww": {
+        "_name": "WW",
+        "description": ""
+      }
+    },
+    "dotted_workshop_weld": {
+      "_name": "Dotted Workshop Weld",
+      "wwd": {
+        "_name": "WWD",
+        "description": ""
+      }
+    },
+    "site_weld": {
+      "_name": "Site Weld",
+      "ws": {
+        "_name": "WS",
+        "description": ""
+      }
+    },
+    "tack_for_site_weld": {
+      "_name": "Tack for site weld",
+      "wst": {
+        "_name": "WST",
+        "description": ""
+      }
+    },
+    "dotted_site_weld": {
+      "_name": "Dotted site weld",
+      "wsd": {
+        "_name": "WSD",
+        "description": ""
+      }
+    },
+    "field_fit_weld": {
+      "_name": "Field fit weld",
+      "wf": {
+        "_name": "WF",
+        "description": ""
+      }
+    },
+    "tack_for_field_fit_weld": {
+      "_name": "Tack for field fit weld",
+      "wft": {
+        "_name": "WFT",
+        "description": ""
+      }
+    },
+    "dotted_field_fit_weld": {
+      "_name": "Dotted field fit weld",
+      "wfd": {
+        "_name": "WFD",
+        "description": ""
+      }
+    },
+    "offshore_weld": {
+      "_name": "Offshore weld",
+      "wo": {
+        "_name": "WO",
+        "description": ""
+      }
+    },
+    "tack_for_offshore_weld": {
+      "_name": "Tack for offshore weld",
+      "wot": {
+        "_name": "WOT",
+        "description": ""
+      }
+    },
+    "dotted_offshore_weld": {
+      "_name": "Dotted offshore weld",
+      "wod": {
+        "_name": "WOD",
+        "description": ""
+      }
+    },
+    "offshore_field_fit_weld": {
+      "_name": "Offshore field fit weld",
+      "wof": {
+        "_name": "WOF",
+        "description": ""
+      }
+    },
+    "tack_for_offshore_field_fit_weld": {
+      "_name": "Tack for offshore field fit weld",
+      "woft": {
+        "_name": "WOFT",
+        "description": ""
+      }
+    },
+    "field_fit_offshore_dotted": {
+      "_name": "Field fit offshore dotted",
+      "wofd": {
+        "_name": "WOFD",
+        "description": ""
+      }
+    },
+    "special_site_weld_non_spooling": {
+      "_name": "Special site weld (non-spooling)",
+      "wssp": {
+        "_name": "WSSP",
+        "description": ""
+      }
+    },
+    "automatic_workshop_weld": {
+      "_name": "Automatic workshop weld",
+      "wwa": {
+        "_name": "WWA",
+        "description": ""
+      }
+    },
+    "erection_seal_weld": {
+      "_name": "Erection seal weld",
+      "wssr": {
+        "_name": "WSSR",
+        "description": ""
+      }
+    }
+  },
+  "olets": {
+    "_name": "Olets",
+    "screwed_half_coupling": {
+      "_name": "Screwed Half Coupling",
+      "hc": {
+        "_name": "HC",
+        "description": ""
+      }
+    },
+    "butt_weld_latrolet": {
+      "_name": "Butt Weld Latrolet",
+      "la": {
+        "_name": "LA",
+        "description": ""
+      }
+    },
+    "socket_weld_sockolet": {
+      "_name": "Socket Weld Sockolet",
+      "sk": {
+        "_name": "SK",
+        "description": ""
+      }
+    },
+    "butt_weld_sweepolet": {
+      "_name": "Butt Weld Sweepolet",
+      "sw": {
+        "_name": "SW",
+        "description": ""
+      }
+    },
+    "screwed_fitting_thredolet": {
+      "_name": "Screwed Fitting Thredolet",
+      "th": {
+        "_name": "TH",
+        "description": ""
+      }
+    },
+    "weldolet": {
+      "_name": "Weldolet",
+      "wt": {
+        "_name": "WT",
+        "description": ""
+      }
+    },
+    "olet_half_coupling_socket_weld": {
+      "_name": "Olet (Half coupling socket weld)",
+      "hcsw": {
+        "_name": "HCSW",
+        "description": ""
+      }
+    },
+    "latrolet_butt_weld": {
+      "_name": "Latrolet (Butt weld)",
+      "labw": {
+        "_name": "LABW",
+        "description": ""
+      }
+    },
+    "latrolet_screwed": {
+      "_name": "Latrolet (Screwed)",
+      "lasc": {
+        "_name": "LASC",
+        "description": ""
+      }
+    },
+    "nipolet_screwed": {
+      "_name": "Nipolet (Screwed)",
+      "nisc": {
+        "_name": "NISC",
+        "description": ""
+      }
+    },
+    "sockolet_socket_weld": {
+      "_name": "Sockolet (Socket weld)",
+      "sksw": {
+        "_name": "SKSW",
+        "description": ""
+      }
+    },
+    "sweepolet_butt_weld": {
+      "_name": "Sweepolet (Butt weld)",
+      "swbw": {
+        "_name": "SWBW",
+        "description": ""
+      }
+    },
+    "thredolet_screwed": {
+      "_name": "Thredolet (Screwed)",
+      "thsc": {
+        "_name": "THSC",
+        "description": ""
+      }
+    },
+    "weldolet_butt_weld": {
+      "_name": "Weldolet (Butt weld)",
+      "wtbw": {
+        "_name": "WTBW",
+        "description": ""
+      }
+    }
+  },
+  "reducers": {
+    "_name": "Reducers",
+    "butt_weld_concentric_reducer": {
+      "_name": "Butt Weld Concentric Reducer",
+      "cpbw": {
+        "_name": "CPBW",
+        "description": ""
+      }
+    },
+    "concentric_reducer_butt_weld_swaged_from_pipe": {
+      "_name": "Concentric reducer (Butt weld swaged from pipe)",
+      "csbw": {
+        "_name": "CSBW",
+        "description": ""
+      }
+    },
+    "butt_weld_concentric_reducer_with_tee": {
+      "_name": "Butt Weld Concentric Reducer with Tee",
+      "ctbw": {
+        "_name": "CTBW",
+        "description": ""
+      }
+    },
+    "concentric_reducer_fabricated_from_a_plate_with_a_connection": {
+      "_name": "Concentric reducer (Fabricated from a plate with a connection)",
+      "czbw": {
+        "_name": "CZBW",
+        "description": ""
+      }
+    },
+    "concentric_reducer_swaged_from_pipe_with_a_connection": {
+      "_name": "Concentric reducer (Swaged from pipe with a connection)",
+      "cxbw": {
+        "_name": "CXBW",
+        "description": ""
+      }
+    },
+    "concentric_reducer_flanged_with_a_connection": {
+      "_name": "Concentric reducer (Flanged with a connection)",
+      "ctfl": {
+        "_name": "CTFL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_screwed_nipple": {
+      "_name": "Concentric reducer (Screwed nipple)",
+      "rnsc": {
+        "_name": "RNSC",
+        "description": ""
+      }
+    },
+    "concentric_reducer_screwed_with_a_connection": {
+      "_name": "Concentric reducer (Screwed with a connection)",
+      "ctsc": {
+        "_name": "CTSC",
+        "description": ""
+      }
+    },
+    "concentric_reducer_socket_weld_with_a_connection": {
+      "_name": "Concentric reducer (Socket weld with a connection)",
+      "ctsw": {
+        "_name": "CTSW",
+        "description": ""
+      }
+    },
+    "concentric_reducer_socket_weld_bush": {
+      "_name": "Concentric reducer (Socket weld bush)",
+      "rbsw": {
+        "_name": "RBSW",
+        "description": ""
+      }
+    },
+    "butt_weld_eccentric_reducer": {
+      "_name": "Butt Weld Eccentric Reducer",
+      "epbw": {
+        "_name": "EPBW",
+        "description": ""
+      }
+    },
+    "eccentric_reducer_swaged_from_pipe": {
+      "_name": "Eccentric reducer (Swaged from pipe)",
+      "esbw": {
+        "_name": "ESBW",
+        "description": ""
+      }
+    },
+    "eccentric_reducer_butt_weld_with_a_connection": {
+      "_name": "Eccentric reducer (Butt weld with a connection)",
+      "otbw": {
+        "_name": "OTBW",
+        "description": ""
+      }
+    },
+    "eccentric_reducer_butt_weld_fabricated_from_plate_with_a_connection": {
+      "_name": "Eccentric reducer (Butt weld fabricated from plate with a connection)",
+      "ezbw": {
+        "_name": "EZBW",
+        "description": ""
+      }
+    },
+    "screwed_fitting_eccentric_reducer": {
+      "_name": "Screwed Fitting Eccentric Reducer",
+      "resc": {
+        "_name": "RESC",
+        "description": ""
+      }
+    },
+    "eccentric_reducer_screwed_with_a_connection": {
+      "_name": "Eccentric reducer (Screwed with a connection)",
+      "otsc": {
+        "_name": "OTSC",
+        "description": ""
+      }
+    },
+    "flanged_eccentric_reducer": {
+      "_name": "Flanged Eccentric Reducer",
+      "refl": {
+        "_name": "REFL",
+        "description": ""
+      }
+    },
+    "flanged_eccentric_reducer_fabricated_from_plate": {
+      "_name": "Flanged Eccentric Reducer (Fabricated from plate)",
+      "epfl": {
+        "_name": "EPFL",
+        "description": ""
+      }
+    },
+    "eccentric_reducer_flanged_with_a_connection": {
+      "_name": "Eccentric reducer (Flanged with a connection)",
+      "otfl": {
+        "_name": "OTFL",
+        "description": ""
+      }
+    },
+    "reducing_block": {
+      "_name": "Reducing block",
+      "rfpl": {
+        "_name": "RFPL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_fabricated_from_plate___flanged": {
+      "_name": "Concentric reducer (Fabricated from plate - flanged)",
+      "cpfl": {
+        "_name": "CPFL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_swaged_from_plate___flange": {
+      "_name": "Concentric reducer (Swaged from plate - flange)",
+      "csfl": {
+        "_name": "CSFL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_swaged_from_pipe___flanged_with_a_connection": {
+      "_name": "Concentric reducer (Swaged from pipe - flanged with a connection)",
+      "cxfl": {
+        "_name": "CXFL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_fabricated_from_plate___flanged_with_a_connection": {
+      "_name": "Concentric reducer (Fabricated from plate - flanged with a connection)",
+      "czfl": {
+        "_name": "CZFL",
+        "description": ""
+      }
+    },
+    "eccentric_reducer___flanged_swaged_from_pipe": {
+      "_name": "Eccentric reducer - flanged (Swaged from pipe)",
+      "esfl": {
+        "_name": "ESFL",
+        "description": ""
+      }
+    },
+    "eccentric_reducer___flanged_fabricated_from_plate_with_a_connection": {
+      "_name": "Eccentric reducer - flanged (Fabricated from plate with a connection)",
+      "ezfl": {
+        "_name": "EZFL",
+        "description": ""
+      }
+    },
+    "concentric_reducer_screwed_bush": {
+      "_name": "Concentric reducer (Screwed bush)",
+      "rbsc": {
+        "_name": "RBSC",
+        "description": ""
+      }
+    }
+  },
+  "valves": {
+    "_name": "Valves",
+    "angled_valve": {
+      "_name": "Angled Valve",
+      "av": {
+        "_name": "AV",
+        "description": ""
+      }
+    },
+    "basic_valve": {
+      "_name": "Basic Valve",
+      "vv": {
+        "_name": "VV",
+        "description": ""
+      }
+    },
+    "check_valve": {
+      "_name": "Check Valve",
+      "ck": {
+        "_name": "CK",
+        "description": ""
+      }
+    },
+    "ball_valve": {
+      "_name": "Ball Valve",
+      "vb": {
+        "_name": "VB",
+        "description": ""
+      }
+    },
+    "diaphragm_valve": {
+      "_name": "Diaphragm Valve",
+      "vd": {
+        "_name": "VD",
+        "description": ""
+      }
+    },
+    "globe_valve": {
+      "_name": "Globe Valve",
+      "vg": {
+        "_name": "VG",
+        "description": ""
+      }
+    },
+    "cock_valve": {
+      "_name": "Cock Valve",
+      "vk": {
+        "_name": "VK",
+        "description": ""
+      }
+    },
+    "gate_valve": {
+      "_name": "Gate Valve",
+      "vt": {
+        "_name": "VT",
+        "description": ""
+      }
+    },
+    "needle_valve": {
+      "_name": "Needle Valve",
+      "vn": {
+        "_name": "VN",
+        "description": ""
+      }
+    },
+    "plug_valve": {
+      "_name": "Plug Valve",
+      "vp": {
+        "_name": "VP",
+        "description": ""
+      }
+    },
+    "slide_valve": {
+      "_name": "Slide Valve",
+      "vs": {
+        "_name": "VS",
+        "description": ""
+      }
+    }
+  },
+  "hygienic_fittings": {
+    "_name": "Hygienic Fittings",
+    "separator_for_multi_level_valve": {
+      "_name": "Separator for multi-level valve",
+      "dumy": {
+        "_name": "DUMY",
+        "description": ""
+      }
+    },
+    "wide_angle_cock": {
+      "_name": "Wide-angle cock",
+      "kv": {
+        "_name": "KV",
+        "description": ""
+      }
+    },
+    "butterfly_valve": {
+      "_name": "Butterfly valve",
+      "zb": {
+        "_name": "ZB",
+        "description": ""
+      }
+    },
+    "graduated_control_valve_z": {
+      "_name": "Graduated control valve (Z)",
+      "zg": {
+        "_name": "ZG",
+        "description": ""
+      }
+    },
+    "graduated_control_valve_d": {
+      "_name": "Graduated control valve (D)",
+      "ig": {
+        "_name": "IG",
+        "description": ""
+      }
+    },
+    "non_return_valve": {
+      "_name": "Non-return valve",
+      "nv": {
+        "_name": "NV",
+        "description": ""
+      }
+    },
+    "three_way_check_valve": {
+      "_name": "Three-way check valve",
+      "k3": {
+        "_name": "K3",
+        "description": ""
+      }
+    },
+    "backing_nut_liner": {
+      "_name": "Backing nut liner",
+      "ln": {
+        "_name": "LN",
+        "description": ""
+      }
+    },
+    "drain_vent_plug": {
+      "_name": "Drain/Vent plug",
+      "dvp": {
+        "_name": "DVP",
+        "description": ""
+      }
+    },
+    "male_blanking_plug": {
+      "_name": "Male blanking plug",
+      "bm": {
+        "_name": "BM",
+        "description": ""
+      }
+    },
+    "blank_plain": {
+      "_name": "Blank plain",
+      "bp": {
+        "_name": "BP",
+        "description": ""
+      }
+    },
+    "reducing_concentric_blank_boss": {
+      "_name": "Reducing concentric blank boss",
+      "bbc": {
+        "_name": "BBC",
+        "description": ""
+      }
+    },
+    "reducing_eccentric_blank_boss": {
+      "_name": "Reducing eccentric blank boss",
+      "bbe": {
+        "_name": "BBE",
+        "description": ""
+      }
+    },
+    "blank_thermocouple_connector": {
+      "_name": "Blank thermocouple connector",
+      "btp": {
+        "_name": "BTP",
+        "description": ""
+      }
+    },
+    "male_to_male_adapter": {
+      "_name": "Male-to-male adapter",
+      "admm": {
+        "_name": "ADMM",
+        "description": ""
+      }
+    },
+    "male_to_female_adapter": {
+      "_name": "Male to Female Adapter",
+      "admf": {
+        "_name": "ADMF",
+        "description": ""
+      }
+    },
+    "two_port_single_level_angle_type_valve_z": {
+      "_name": "Two-port single level (angle type) valve (Z)",
+      "2z": {
+        "_name": "2Z",
+        "description": ""
+      }
+    },
+    "two_port_single_level_angle_type_valve_d": {
+      "_name": "Two-port single level (angle type) valve (D)",
+      "2d": {
+        "_name": "2D",
+        "description": ""
+      }
+    },
+    "three_port_single_level_valve_z": {
+      "_name": "Three-port single level valve (Z)",
+      "3z": {
+        "_name": "3Z",
+        "description": ""
+      }
+    },
+    "three_port_single_level_valve_d": {
+      "_name": "Three-port single level valve (D)",
+      "3d": {
+        "_name": "3D",
+        "description": ""
+      }
+    },
+    "four_port_single_level_valve_z": {
+      "_name": "Four-port single level valve (Z)",
+      "4z": {
+        "_name": "4Z",
+        "description": ""
+      }
+    },
+    "pressure_relief_valve_z": {
+      "_name": "Pressure relief valve (Z)",
+      "vz": {
+        "_name": "VZ",
+        "description": ""
+      }
+    },
+    "pressure_relief_valve_instrument_type_i": {
+      "_name": "Pressure relief valve (Instrument type) (I)",
+      "zv": {
+        "_name": "ZV",
+        "description": ""
+      }
+    },
+    "backing_nut": {
+      "_name": "Backing nut",
+      "bnut": {
+        "_name": "BNUT",
+        "description": ""
+      }
+    }
+  },
+  "clamped_joints": {
+    "_name": "Clamped Joints",
+    "flared_clamp": {
+      "_name": "Flared Clamp",
+      "clmp": {
+        "_name": "CLMP",
+        "description": ""
+      }
+    },
+    "victaulic_grooved_pipe_end_type": {
+      "_name": "Victaulic (Grooved pipe end type)",
+      "clvt": {
+        "_name": "CLVT",
+        "description": ""
+      }
+    },
+    "grayloc_type_coupling": {
+      "_name": "Grayloc-type coupling",
+      "clgy": {
+        "_name": "CLGY",
+        "description": ""
+      }
+    },
+    "victaulic_welded__forded_ring_type": {
+      "_name": "Victaulic (Welded /Forded ring type)",
+      "clvr": {
+        "_name": "CLVR",
+        "description": ""
+      }
+    }
+  },
+  "tees": {
+    "_name": "Tees",
+    "y_type_tee_large": {
+      "_name": "Y-type tee (Large)",
+      "ylrg": {
+        "_name": "YLRG",
+        "description": ""
+      }
+    },
+    "y_type_tee_medium": {
+      "_name": "Y-type tee (Medium)",
+      "ymed": {
+        "_name": "YMED",
+        "description": ""
+      }
+    },
+    "y_type_tee_small": {
+      "_name": "Y-type tee (Small)",
+      "ysml": {
+        "_name": "YSML",
+        "description": ""
+      }
+    }
+  },
+  "penetration_plate_items": {
+    "_name": "Penetration Plate Items",
+    "penetration_plate_end_sections": {
+      "_name": "Penetration Plate End Sections",
+      "plt1": {
+        "_name": "PLT1",
+        "description": ""
+      }
+    },
+    "penetration_plate_centre_sections": {
+      "_name": "Penetration Plate Centre Sections",
+      "plt2": {
+        "_name": "PLT2",
+        "description": ""
+      }
+    },
+    "locating_pin": {
+      "_name": "Locating Pin",
+      "lpin": {
+        "_name": "LPIN",
+        "description": ""
+      }
+    }
+  },
+  "fixed_length_pipes": {
+    "_name": "Fixed Length Pipes",
+    "fixed_length_pipe_with_plain_ends": {
+      "_name": "Fixed Length Pipe with Plain Ends",
+      "fppl": {
+        "_name": "FPPL",
+        "description": ""
+      }
+    }
+  }
+}

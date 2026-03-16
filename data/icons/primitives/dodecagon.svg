@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+     class="lucide lucide-octagon-regular">
+  <path d="
+    M12 4
+    L16.66 5.34
+    L19.66 8.34
+    L21 13
+    L19.66 17.66
+    L16.66 20.66
+    L12 22
+    L7.34 20.66
+    L4.34 17.66
+    L3 13
+    L4.34 8.34
+    L7.34 5.34
+    Z"/>
+</svg>
+

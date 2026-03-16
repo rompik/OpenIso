@@ -1,0 +1,1 @@
+-- DEPRECATED: таблица skey_subgroups перенесена в 01_create_tables.sql

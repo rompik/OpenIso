@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus-icon lucide-minus">
+  <circle cx="4.932" cy="11.989" r="2"/>
+  <path d="M 6.957 12 L 17.053 12" style=""/>
+  <circle cx="15.79" cy="12.604" r="10.667" style="stroke-width: 5.333;" transform="matrix(0.18812, 0, 0, 0.189256, 16.160177, 9.635539)"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"
+     viewBox="0 0 128 128" stroke="currentColor" stroke-width="4"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+  <!-- Малый прямоугольник слева -->
+  <rect x="36" y="40" width="20" height="48"/>
+
+  <!-- Фланец сбоку -->
+  <line x1="56" y1="32" x2="56" y2="96"/>
+  <line x1="72" y1="24" x2="72" y2="104"/>
+  <line x1="56" y1="32" x2="72" y2="24"/>
+  <line x1="56" y1="96" x2="72" y2="104"/>
+
+</svg>
+

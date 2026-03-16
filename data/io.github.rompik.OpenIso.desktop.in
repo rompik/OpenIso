@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=OpenIso
+Comment=Skey Symbol Library Editor for Isometric Drawings
+# Translators: Search terms for the application
+Keywords=isometric;skey;symbols;piping;engineering;
+Exec=openiso %U
+Icon=io.github.rompik.OpenIso
+Terminal=false
+Type=Application
+Categories=Graphics;Engineering;
+StartupNotify=true
+StartupWMClass=openiso
+X-GNOME-UsesNotifications=false
