@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QSettings
+from PyQt6.QtCore import QSettings, Qt
 
 try:
     from . import __version__, __app_id__
@@ -108,7 +108,15 @@ class Application:
 
         # Reuse existing QApplication if already created (e.g. in tests)
         existing = QApplication.instance()
-        self._qt_app = existing if isinstance(existing, QApplication) else QApplication(argv)
+        if existing is None:
+            # Fix menu displacement on Windows 11 with non-integer display scaling (125%, 150%).
+            # Must be called before QApplication is constructed.
+            QApplication.setHighDpiScaleFactorRoundingPolicy(
+                Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+            )
+            self._qt_app = QApplication(argv)
+        else:
+            self._qt_app = existing if isinstance(existing, QApplication) else QApplication(argv)
         self._qt_app.setApplicationName(APP_NAME)
         self._qt_app.setApplicationVersion(self.version)
         self._qt_app.setOrganizationName(ORG_NAME)

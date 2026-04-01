@@ -1,6 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-import os
 import sys
 from pathlib import Path
 
@@ -97,9 +96,6 @@ pyz = PYZ(a.pure)
 icon_path = spec_root / 'data' / 'icons' / 'openiso.ico'
 icon_file = str(icon_path) if icon_path.exists() and is_windows else None
 
-# Build mode: set OPENISO_ONEFILE=1 to produce a single executable
-onefile = os.environ.get('OPENISO_ONEFILE', '').strip() in {'1', 'true', 'TRUE', 'yes', 'YES'}
-
 # Versioned output name
 version_file = spec_root / 'VERSION'
 version = version_file.read_text(encoding='utf-8').strip() if version_file.exists() else ''
@@ -109,15 +105,17 @@ exe_name = f"OpenIso_{version}" if version else 'OpenIso'
 exe = EXE(
     pyz,
     a.scripts,
-    [] if onefile else [],
-    exclude_binaries=not onefile,
+    a.binaries,
+    a.datas,
+    [],
+    exclude_binaries=False,
     name=exe_name,
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     upx_exclude=[],
-    runtime_tmpdir=None if onefile else None,
+    runtime_tmpdir=None,
     console=False,  # Set to True for debugging on Windows
     disable_windowed_traceback=False,
     argv_emulation=False,
@@ -126,18 +124,3 @@ exe = EXE(
     entitlements_file=None,
     icon=icon_file,  # Windows icon
 )
-
-if onefile:
-    exe.binaries = a.binaries
-    exe.datas = a.datas
-else:
-    # One-folder distribution (default)
-    coll = COLLECT(
-        exe,
-        a.binaries,
-        a.datas,
-        strip=False,
-        upx=True,
-        upx_exclude=[],
-        name=exe_name,
-    )
