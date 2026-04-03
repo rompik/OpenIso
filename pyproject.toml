@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openiso"
+version = "0.7.6"
+description = "Lightweight isometric piping symbol editor"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Roman PARYGIN", email = "roman.parygin@gmail.com" },
+]
+keywords = ["isometric", "piping", "skey", "editor", "pyqt6"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics :: Editors",
+]
+dependencies = [
+    "PyQt6>=6.0.0",
+    "markdown>=3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rompik/OpenIso"
+Repository = "https://github.com/rompik/OpenIso"
+Issues = "https://github.com/rompik/OpenIso/issues"
+Documentation = "https://github.com/rompik/OpenIso/tree/main/docs"
+
+[project.scripts]
+openiso = "openiso.__main__:main"
+
+[project.optional-dependencies]
+dev = [
+    "coverage",
+    "coveralls",
+    "flake8",
+    "pytest",
+    "pytest-cov",
+    "pytest-qt",
+    "tox",
+]
+bundle = [
+    "pyinstaller>=5.0.0",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["openiso", "openiso.*"]
+
+[tool.setuptools.data-files]
+"share/openiso" = ["VERSION", "data/markdown.css", "data/style.css"]
+"share/openiso/settings" = ["data/settings/*"]
+"share/openiso/database" = ["data/database/*.sql", "data/database/*.db"]
+"share/openiso/database/sql" = ["data/database/sql/*.sql"]
+"share/openiso/icons" = ["data/icons/*.svg", "data/icons/*.ico", "data/icons/*.qrc"]
+"share/openiso/icons/common" = ["data/icons/common/*"]
+"share/openiso/icons/connections" = ["data/icons/connections/*"]
+"share/openiso/icons/primitives" = ["data/icons/primitives/*"]
+"share/openiso/icons/skeys" = ["data/icons/skeys/*"]
+"share/openiso/icons/spindles" = ["data/icons/spindles/*"]
+"share/openiso/po" = ["po/*.json"]
+"share/openiso/po/en/LC_MESSAGES" = ["po/en/LC_MESSAGES/*.mo"]
+"share/openiso/po/ru/LC_MESSAGES" = ["po/ru/LC_MESSAGES/*.mo"]
+
+[tool.pytest.ini_options]
+testpaths = ["openiso"]
+addopts = "-rf -s --cov=openiso --cov-report=xml --cov-report=html --cov-report=term-missing"
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+include = '(openiso/.*\\.py|docs/.*/.*\\.py)'
+
+[tool.isort]
+profile = "black"

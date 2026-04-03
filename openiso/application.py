@@ -13,6 +13,7 @@ application lifecycle and resource management.
 from typing import Optional
 
 import sys
+import sysconfig
 from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
@@ -70,6 +71,17 @@ class Application:
         source_dir = Path(__file__).parent.parent / 'data'
         if source_dir.exists():
             return source_dir
+
+        # pip/venv installs with setuptools data-files
+        data_root = sysconfig.get_path('data')
+        if data_root:
+            data_dir = Path(data_root) / 'share' / 'openiso'
+            if data_dir.exists():
+                return data_dir
+
+        prefix_data_dir = Path(sys.prefix) / 'share' / 'openiso'
+        if prefix_data_dir.exists():
+            return prefix_data_dir
 
         # Standard install locations
         for prefix in ['/usr/local', '/usr', Path.home() / '.local']:

@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include VERSION
+
+recursive-include data *
+recursive-include po *.mo *.json

@@ -261,7 +261,7 @@ class SkeyEditor(
         self.draw_toolbar_widget.btn_scale.clicked.connect(self._on_scale_tool_clicked)
 
         # Connection points popup
-        connection_types = [
+        connection_types = [export_to_file
             ("BW", _t("Butt Weld")), ("SW", _t("Socket Weld")), ("FL", _t("Flanged")),
             ("THD", _t("Threaded")), ("PL", _t("Plain")), ("CP", _t("Compression")),
             ("SC", _t("Screwed")), ("PE", _t("Plain End")), ("BE", _t("Beveled End")),
@@ -273,7 +273,7 @@ class SkeyEditor(
             (_t("Additional Point (Tee)"), "_on_draw_tee_point_clicked"),
         ]
         connection_groups = {
-            title: {code: f"connections/{code.lower()}.svg" for code, _ in connection_types}
+            title: {code: f"connections/{code.lower()}.svg" for export_to_filecode, _ in connection_types}
             for title, _ in point_definitions
         }
         action_by_group = {title: action for title, action in point_definitions}
