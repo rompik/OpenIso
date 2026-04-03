@@ -132,12 +132,14 @@ class SkeyEditor(
         self.origin_x = self.sheet_width / 2
         self.origin_y = self.sheet_height / 2
 
-        self.icons_library_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'icons')
-        )
-        data_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data')
-        )
+        if self._application is not None:
+            data_path = str(self._application.pkgdatadir)
+        else:
+            data_path = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data')
+            )
+
+        self.icons_library_path = os.path.join(data_path, 'icons')
         print(f"Initializing with data_path: {data_path}")
 
         self._load_styles(data_path)
@@ -261,7 +263,7 @@ class SkeyEditor(
         self.draw_toolbar_widget.btn_scale.clicked.connect(self._on_scale_tool_clicked)
 
         # Connection points popup
-        connection_types = [export_to_file
+        connection_types = [
             ("BW", _t("Butt Weld")), ("SW", _t("Socket Weld")), ("FL", _t("Flanged")),
             ("THD", _t("Threaded")), ("PL", _t("Plain")), ("CP", _t("Compression")),
             ("SC", _t("Screwed")), ("PE", _t("Plain End")), ("BE", _t("Beveled End")),
@@ -273,7 +275,7 @@ class SkeyEditor(
             (_t("Additional Point (Tee)"), "_on_draw_tee_point_clicked"),
         ]
         connection_groups = {
-            title: {code: f"connections/{code.lower()}.svg" for export_to_filecode, _ in connection_types}
+            title: {code: f"connections/{code.lower()}.svg" for code, _ in connection_types}
             for title, _ in point_definitions
         }
         action_by_group = {title: action for title, action in point_definitions}

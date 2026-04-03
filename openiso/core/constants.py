@@ -2,6 +2,8 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
+import sys
+import sysconfig
 from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
 from openiso.model.enums import IsometricView
@@ -175,7 +177,37 @@ AVAILABLE_LANGUAGES = [
     ("English", "en")
 ]
 
-# Path Constants
-# Assuming this file is in src/core/constants.py
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-LOCALEDIR = os.path.join(PROJECT_ROOT, 'po')
+def _find_project_root() -> str:
+    """Resolve project root for source checkout (development mode)."""
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+
+def _find_data_root() -> str:
+    """Resolve runtime data root for source, venv, user and system installs."""
+    project_root = _find_project_root()
+    source_data = os.path.join(project_root, 'data')
+    if os.path.exists(source_data):
+        return source_data
+
+    data_root = sysconfig.get_path('data')
+    if data_root:
+        candidate = os.path.join(data_root, 'share', 'openiso')
+        if os.path.exists(candidate):
+            return candidate
+
+    prefix_candidate = os.path.join(sys.prefix, 'share', 'openiso')
+    if os.path.exists(prefix_candidate):
+        return prefix_candidate
+
+    for prefix in ('/usr/local', '/usr', os.path.join(os.path.expanduser('~'), '.local')):
+        candidate = os.path.join(prefix, 'share', 'openiso')
+        if os.path.exists(candidate):
+            return candidate
+
+    return os.path.join(project_root, 'data')
+
+
+# Path constants
+PROJECT_ROOT = _find_project_root()
+DATA_ROOT = _find_data_root()
+LOCALEDIR = os.path.join(os.path.dirname(DATA_ROOT), 'po') if os.path.basename(DATA_ROOT) == 'data' else os.path.join(DATA_ROOT, 'po')
