@@ -5,6 +5,7 @@
 ## 🧭 Разделы
 
 - [**Руководство по использованию**](USAGE.MD) — как пользоваться редактором и управлять символами.
+- [**Creating a Symbol with Primitives**](CREATING_SYMBOL.MD) — Guide to creating a valve symbol.
 - [**Terminal Commands**](TERMINAL.MD) — ссылка на встроенные терминальные команды.
 - [**установка**](INSTALL.MD) — как установить и настроить приложение.
 - [\*\*О \*\*](ABOUT.MD) — информация о проекте и лицензия.
