@@ -6,6 +6,7 @@
 """
 from dataclasses import dataclass
 
+
 @dataclass
 class Point2D:
     x: float = 0.0

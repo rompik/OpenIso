@@ -1,19 +1,33 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QComboBox,
-    QDialogButtonBox, QGroupBox, QPushButton, QGridLayout,
-    QScrollArea, QWidget, QColorDialog
-)
-from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
-from openiso.core.constants import (
-    AVAILABLE_LANGUAGES, POINT_COLORS, SCENE_COLORS,
-    DEFAULT_ISO_VIEW, ISO_VIEW_NAMES
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (
+    QColorDialog,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
 )
+
+from openiso.core.constants import (
+    AVAILABLE_LANGUAGES,
+    DEFAULT_ISO_VIEW,
+    ISO_VIEW_NAMES,
+    POINT_COLORS,
+    SCENE_COLORS,
+)
+from openiso.core.i18n import get_current_language, setup_i18n
 from openiso.model.enums import IsometricView
-from openiso.core.i18n import setup_i18n, get_current_language
+
 
 class ColorButton(QPushButton):
     """Button that displays and allows selecting a color."""

@@ -2,13 +2,21 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QGridLayout,
-    QLabel, QMenu, QWidgetAction, QFrame, QScrollArea
-)
+
 from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGridLayout,
+    QLabel,
+    QMenu,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
+    QWidgetAction,
+)
 
 from openiso.view.base_classes.base_popup_menu_item import BaseMenuPopupItem
+
 
 class BasePopupMenuGrouped(QWidget):
     """Popup containing multiple sections """

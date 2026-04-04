@@ -4,7 +4,7 @@
 """
 OpenIso - Skey Symbol Library Editor
 
-A GNOME-style application for managing and creating Skey symbols
+A Qt-style application for managing and creating Skey symbols
 used in isometric piping drawings.
 
 Main components:
@@ -18,8 +18,35 @@ Main components:
 """
 
 import sys
-from importlib.metadata import PackageNotFoundError, version as package_version
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as package_version
 from pathlib import Path
+
+from openiso.controller.importers import (
+    ASCIISkeyImporter,
+    BaseSkeyImporter,
+    IDFSkeyImporter,
+    ImportResult,
+    SkeyImporterFactory,
+)
+from openiso.controller.repository import SkeyRepository
+from openiso.controller.services import GeometryService, SkeyService
+from openiso.model.enums import Dimensioned, FlowArrow, Orientation
+from openiso.model.geometry import (
+    ArcGeometry,
+    GeometryConverter,
+    GeometryItem,
+    GeometrySettings,
+    HexagonGeometry,
+    IsometricProjection,
+    LineGeometry,
+    PointGeometry,
+    PolygonGeometry,
+    RectangleGeometry,
+)
+from openiso.model.point2d import Point2D
+from openiso.model.skey import SkeyData, SkeyGroup
+
 
 # Read version from source tree/PyInstaller bundle, then installed package metadata.
 def _get_version():
@@ -41,37 +68,6 @@ def _get_version():
 
 __version__ = _get_version()
 __app_id__ = 'io.github.rompik.OpenIso'
-
-from openiso.model.skey import (
-    SkeyData,
-    SkeyGroup,
-)
-from openiso.model.point2d import Point2D
-from openiso.model.geometry import GeometryItem, PointGeometry, LineGeometry, RectangleGeometry, PolygonGeometry
-from openiso.model.enums import Orientation, FlowArrow, Dimensioned
-
-from openiso.controller.repository import SkeyRepository
-
-from openiso.model.geometry import (
-    GeometryConverter,
-    GeometrySettings,
-    IsometricProjection,
-    ArcGeometry,
-    HexagonGeometry,
-)
-
-from openiso.controller.importers import (
-    BaseSkeyImporter,
-    ASCIISkeyImporter,
-    IDFSkeyImporter,
-    SkeyImporterFactory,
-    ImportResult,
-)
-
-from openiso.controller.services import (
-    SkeyService,
-    GeometryService,
-)
 
 __all__ = [
     '__version__',

@@ -10,19 +10,18 @@ This module provides the main Application class that handles
 application lifecycle and resource management.
 """
 
-from typing import Optional
-
 import sys
 import sysconfig
 from pathlib import Path
+from typing import Optional
 
-from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QSettings, Qt
+from PyQt6.QtWidgets import QApplication
 
 try:
-    from . import __version__, __app_id__
+    from . import __app_id__, __version__
 except ImportError:
-    from __init__ import __version__, __app_id__
+    from __init__ import __app_id__, __version__
 
 # Application constants (single source of truth)
 APP_NAME = 'OpenIso'

@@ -5,9 +5,11 @@
 Geometry item base and concrete classes for Skey Library
 """
 import math
-from typing import List, Tuple, Optional
 from dataclasses import dataclass, field
+from typing import List, Optional, Tuple
+
 from .point2d import Point2D
+
 
 @dataclass
 class GeometryItem:

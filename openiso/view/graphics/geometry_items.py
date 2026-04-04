@@ -16,9 +16,10 @@ Classes:
     SpindlePoint: Spindle connection point
 """
 
+from PyQt6.QtCore import QRectF, Qt
+from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsItem
-from PyQt6.QtGui import QPen, QColor
-from PyQt6.QtCore import Qt, QRectF
+
 from openiso.core.constants import POINT_COLORS
 
 

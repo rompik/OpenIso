@@ -1,14 +1,15 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-import os
-import glob
-import subprocess
 import gettext
-import locale
+import glob
 import json
+import locale
+import os
+import subprocess
 from typing import Optional
-from openiso.core.constants import LOCALEDIR, AVAILABLE_LANGUAGES
+
+from openiso.core.constants import AVAILABLE_LANGUAGES, LOCALEDIR
 
 # Global translation state
 _gettext = None

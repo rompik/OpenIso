@@ -15,42 +15,53 @@ imported below.
 import os
 import sys
 
-if __name__ == "__main__":
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if project_root not in sys.path:
-        sys.path.insert(0, project_root)
-
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QGroupBox,
-    QVBoxLayout, QHBoxLayout, QGraphicsView, QWidget,
-    QSizePolicy, QStatusBar, QLabel, QMessageBox,
-)
-from PyQt6.QtGui import QPainter
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter
+from PyQt6.QtWidgets import (
+    QApplication,
+    QGraphicsView,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QSizePolicy,
+    QStatusBar,
+    QVBoxLayout,
+    QWidget,
+)
 
+from openiso import __version__
 from openiso.controller.services import SkeyService
 from openiso.core.constants import SHEET_SIZE
-from openiso.core.i18n import setup_i18n, get_current_language
-from openiso.view.graphics.scene import SheetLayout
-from openiso.view.widgets.skey_tree import SkeyTreeView
-from openiso.view.widgets.properties import PropertiesWidget
-from openiso.view.widgets.preview import PreviewWidget
-from openiso.view.widgets.menu_toolbar import MenuToolbarWidget
-from openiso.view.widgets.draw_toolbar import DrawToolbarWidget
-from openiso.view.widgets.terminal import TerminalWidget
-from openiso.view.popups.fill_color_popup import create_fill_color_menu
-from openiso.view.popups.hatch_popup import create_hatch_menu
-from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
-from openiso import __version__
+from openiso.core.i18n import get_current_language, setup_i18n
 from openiso.core.parser import CommandParser
+from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
+from openiso.view.graphics.scene import SheetLayout
+from openiso.view.main_window.window_canvas import CanvasMixin
+from openiso.view.main_window.window_dialogs import DialogsMixin
 
 # --- Mixin imports ---
 from openiso.view.main_window.window_draw_tools import DrawToolsMixin
 from openiso.view.main_window.window_fill_hatch import FillHatchMixin
 from openiso.view.main_window.window_geometry_io import GeometryIOMixin
 from openiso.view.main_window.window_skey_ops import SkeyOpsMixin
-from openiso.view.main_window.window_canvas import CanvasMixin
-from openiso.view.main_window.window_dialogs import DialogsMixin
+from openiso.view.popups.fill_color_popup import create_fill_color_menu
+from openiso.view.popups.hatch_popup import create_hatch_menu
+from openiso.view.widgets.draw_toolbar import DrawToolbarWidget
+from openiso.view.widgets.menu_toolbar import MenuToolbarWidget
+from openiso.view.widgets.preview import PreviewWidget
+from openiso.view.widgets.properties import PropertiesWidget
+from openiso.view.widgets.skey_tree import SkeyTreeView
+from openiso.view.widgets.terminal import TerminalWidget
+
+if __name__ == "__main__":
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+
+
+
 
 # Initialize translations
 _t = setup_i18n()

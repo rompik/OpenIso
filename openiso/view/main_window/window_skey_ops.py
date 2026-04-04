@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import os
 
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 from openiso.core.i18n import _t, get_current_language
 

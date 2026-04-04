@@ -2,10 +2,11 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 from typing import Optional
-from openiso.model.skey import SkeyGroup, SkeyData
+
+from openiso.controller.db import SkeyDB
 from openiso.controller.repository import SkeyRepository
 from openiso.model.geometry import GeometryConverter
-from openiso.controller.db import SkeyDB
+from openiso.model.skey import SkeyData, SkeyGroup
 
 
 class GeometryService:
@@ -66,7 +67,7 @@ class SkeyService:
     def reload_groups(self):
         """Reload skeys from DB and rebuild SkeyGroup from current repository data."""
         self.load_skeys_from_db()
-        # Пополняем структуру групп из таблиц групп и подгрупп
+        # Populate the group structure from groups and subgroups tables
         db_groups = self._db.get_all_groups()
         for g_key in db_groups:
             if g_key not in self._groups.get_groups():
@@ -159,26 +160,26 @@ class SkeyService:
             for prefix in ["group.", "subgroup.", "description."]:
                 if val.startswith(prefix):
                     clean_val = val[len(prefix):]
-                    # Если после префикса идет путь (например description.group.subgroup.name), берем последний кусок?
-                    # Нет, лучше просто убрать префикс и оставить путь.
+                    # If a path follows the prefix (e.g. description.group.subgroup.name), should we take only the last segment?
+                    # No, better to remove only the prefix and keep the path.
                     return clean_val
             return val
 
-        # Нормализуем идентификаторы групп/подгрупп
+        # Normalize group/subgroup identifiers
         g_id = clean_key(group_key).lower().replace(' ', '_').replace('-', '_')
         sg_id = clean_key(subgroup_key).lower().replace(' ', '_').replace('-', '_')
 
-        # Если нам передали не ключ, а текст названия группы/подгруппы, сохраним его перевод
+        # If we received a display name (not a key), store its translation
         if "." not in group_key:
             save_json_translation(f"{g_id}._name", group_key, lang_code)
         if "." not in subgroup_key:
             save_json_translation(f"{g_id}.{sg_id}._name", subgroup_key, lang_code)
 
-        # Формируем иерархические ключи для Skey
+        # Build hierarchical keys for Skey
         name_i18n_key = f"{g_id}.{sg_id}.{name.lower()}"
         desc_i18n_key = f"{name_i18n_key}.description"
 
-        # Сохраняем перевод имени Skey
+        # Save the Skey name translation
         save_json_translation(name_i18n_key, name, lang_code)
 
         if description_key and "." not in description_key and not description_key.startswith("description."):
@@ -198,7 +199,7 @@ class SkeyService:
             geometry=geometry
         )
 
-        # Гарантируем наличие группы и подгруппы в БД
+        # Ensure group and subgroup exist in the database
         self._db.ensure_subgroup_exists(g_id, sg_id)
 
         # Update in database

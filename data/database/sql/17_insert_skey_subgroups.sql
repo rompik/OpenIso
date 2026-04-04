@@ -1,5 +1,5 @@
--- Сгенерировано из openiso.db
--- Дата: 2026-03-02
+-- Generated from openiso.db
+-- Date: 2026-03-02
 
 INSERT OR IGNORE INTO skey_subgroups (group_id, skey_group_key, skey_subgroup_key) SELECT id, 'caps', 'butt_weld_cap' FROM skey_groups WHERE skey_group_key = 'caps';
 INSERT OR IGNORE INTO skey_subgroups (group_id, skey_group_key, skey_subgroup_key) SELECT id, 'caps', 'compression_cap' FROM skey_groups WHERE skey_group_key = 'caps';

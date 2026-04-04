@@ -7,12 +7,12 @@
 
 from __future__ import annotations
 
-from openiso.view.dialogs.settings_dialog import SettingsDialog
-from openiso.view.dialogs.help_window import HelpWindow
-from openiso.view.dialogs.about_dialog import AboutDialog
-from openiso.view.dialogs.keyboard_shortcuts_dialog import KeyboardShortcutsDialog
-from openiso.core.i18n import _t, get_current_language, setup_i18n
 from openiso import __version__
+from openiso.core.i18n import _t, get_current_language, setup_i18n
+from openiso.view.dialogs.about_dialog import AboutDialog
+from openiso.view.dialogs.help_window import HelpWindow
+from openiso.view.dialogs.keyboard_shortcuts_dialog import KeyboardShortcutsDialog
+from openiso.view.dialogs.settings_dialog import SettingsDialog
 
 
 class DialogsMixin:

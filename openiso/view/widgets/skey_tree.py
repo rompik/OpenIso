@@ -2,14 +2,22 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import (
-    QTreeWidget, QTreeWidgetItem, QWidget, QVBoxLayout, QHBoxLayout,
-    QLineEdit, QPushButton, QMenu
-)
+
+from PyQt6.QtCore import QPoint, QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt, pyqtSignal, QSize, QPoint
-from openiso.core.i18n import setup_i18n
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLineEdit,
+    QMenu,
+    QPushButton,
+    QTreeWidget,
+    QTreeWidgetItem,
+    QVBoxLayout,
+    QWidget,
+)
+
 from openiso.core.constants import ICONS
+from openiso.core.i18n import setup_i18n
 
 
 class SkeyTree(QTreeWidget):

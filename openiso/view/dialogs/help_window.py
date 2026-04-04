@@ -2,14 +2,22 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
+
 import markdown
-from PyQt6.QtWidgets import (
-    QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
-    QTextBrowser, QTreeView, QSplitter
-)
-from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtGui import QFileSystemModel
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QMainWindow,
+    QSplitter,
+    QTextBrowser,
+    QTreeView,
+    QVBoxLayout,
+    QWidget,
+)
+
 from openiso.core.constants import PROJECT_ROOT
+
 
 class HelpWindow(QMainWindow):
     """

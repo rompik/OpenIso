@@ -7,9 +7,9 @@
 
 from __future__ import annotations
 
-from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsPolygonItem, QGraphicsPathItem
-from PyQt6.QtGui import QBrush, QPen, QPixmap, QPainter
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QBrush, QPainter, QPen, QPixmap
+from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsPolygonItem, QGraphicsRectItem
 
 from openiso.core.i18n import _t
 

@@ -1,4 +1,4 @@
--- Таблица шпинделей
+-- Spindles table
 CREATE TABLE IF NOT EXISTS spindles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS spindles (
     FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- Таблица транзакций для шпинделей
+-- Transactions table for spindles
 CREATE TABLE IF NOT EXISTS spindle_transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     spindle_id INTEGER NOT NULL,
@@ -31,12 +31,12 @@ CREATE TABLE IF NOT EXISTS spindle_transactions (
     FOREIGN KEY (spindle_id) REFERENCES spindles(id)
 );
 
--- Таблица геометрии шпинделей
+-- Spindle geometry table
 CREATE TABLE IF NOT EXISTS spindle_geometry (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     spindle_id INTEGER NOT NULL,
-    type TEXT NOT NULL, -- тип элемента (например, Line, Point, Polygon и т.д.)
-    data TEXT NOT NULL, -- сериализованные параметры (например, JSON или строка)
+    type TEXT NOT NULL, -- element type (e.g. Line, Point, Polygon, etc.)
+    data TEXT NOT NULL, -- serialized parameters (e.g. JSON or a plain string)
     transaction_id INTEGER NOT NULL,
     FOREIGN KEY (spindle_id) REFERENCES spindles(id),
     FOREIGN KEY (transaction_id) REFERENCES spindle_transactions(id)

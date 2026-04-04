@@ -2,16 +2,36 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import math
+
+from PyQt6.QtCore import QPointF, Qt
+from PyQt6.QtGui import QPainter, QPen, QPolygonF
 from PyQt6.QtWidgets import (
-    QGroupBox, QVBoxLayout, QGraphicsView, QGraphicsScene,
-    QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsRectItem,
-    QGraphicsPolygonItem, QGraphicsPathItem
+    QGraphicsEllipseItem,
+    QGraphicsLineItem,
+    QGraphicsPathItem,
+    QGraphicsPolygonItem,
+    QGraphicsRectItem,
+    QGraphicsScene,
+    QGraphicsView,
+    QGroupBox,
+    QVBoxLayout,
 )
-from PyQt6.QtGui import QPen, QPainter, QPolygonF
-from PyQt6.QtCore import Qt, QPointF
-from openiso.core.constants import PREVIEW_WIDTH, PREVIEW_HEIGHT, SCENE_COLORS, POINT_COLORS, DEFAULT_ISO_VIEW
+
+from openiso.core.constants import (
+    DEFAULT_ISO_VIEW,
+    POINT_COLORS,
+    PREVIEW_HEIGHT,
+    PREVIEW_WIDTH,
+    SCENE_COLORS,
+)
 from openiso.model.enums import IsometricView
-from openiso.view.graphics.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
+from openiso.view.graphics.geometry_items import (
+    ArrivePoint,
+    LeavePoint,
+    SpindlePoint,
+    TeePoint,
+)
+
 
 class PreviewWidget(QGroupBox):
     """

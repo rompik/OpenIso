@@ -1,9 +1,16 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit,
-                             QLineEdit, QLabel)
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
 
 class CommandLineEdit(QLineEdit):
     """ Custom QLineEdit that maintains a history of entered commands and allows navigation through them using arrow keys."""

@@ -2,18 +2,30 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QFrame, QWidget,
-    QStackedWidget
-)
-from PyQt6.QtGui import QPixmap, QDesktopServices
+
 from PyQt6.QtCore import Qt, QUrl
-from openiso.core.i18n import setup_i18n
-from openiso.core.constants import (
-    REPO_URL, ISSUES_URL, NEW_ISSUE_URL, README_URL, MIT_LICENSE_URL
+from PyQt6.QtGui import QDesktopServices, QPixmap
+from PyQt6.QtWidgets import (
+    QDialog,
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
 )
+
 from openiso import __version__
+from openiso.core.constants import (
+    ISSUES_URL,
+    MIT_LICENSE_URL,
+    NEW_ISSUE_URL,
+    README_URL,
+    REPO_URL,
+)
+from openiso.core.i18n import setup_i18n
+
 
 class AboutDialog(QDialog):
     """

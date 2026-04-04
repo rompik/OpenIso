@@ -2,13 +2,25 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import (
-    QGroupBox, QGridLayout, QLabel, QLineEdit, QComboBox,
-    QPushButton, QHBoxLayout, QListWidget, QVBoxLayout, QCheckBox,
-    QRadioButton, QButtonGroup, QTextEdit
-)
-from PyQt6.QtGui import QPixmap
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import (
+    QButtonGroup,
+    QCheckBox,
+    QComboBox,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QPushButton,
+    QRadioButton,
+    QTextEdit,
+    QVBoxLayout,
+)
+
 from openiso.core.i18n import setup_i18n
 
 _t = setup_i18n()

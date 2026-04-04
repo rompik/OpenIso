@@ -2,9 +2,11 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QLabel
+
+from PyQt6.QtCore import QSize, Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from PyQt6.QtWidgets import QLabel, QPushButton, QVBoxLayout
+
 from openiso.core.i18n import setup_i18n
 
 _t = setup_i18n()

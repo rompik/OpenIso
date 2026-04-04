@@ -7,14 +7,22 @@
 
 from __future__ import annotations
 
-from PyQt6.QtWidgets import (
-    QGraphicsLineItem, QGraphicsRectItem, QGraphicsPolygonItem,
-    QGraphicsEllipseItem, QGraphicsItem,
-)
-from PyQt6.QtGui import QPen, QColor, QBrush, QPolygonF
 from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QBrush, QColor, QPen, QPolygonF
+from PyQt6.QtWidgets import (
+    QGraphicsEllipseItem,
+    QGraphicsItem,
+    QGraphicsLineItem,
+    QGraphicsPolygonItem,
+    QGraphicsRectItem,
+)
 
-from openiso.view.graphics.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
+from openiso.view.graphics.geometry_items import (
+    ArrivePoint,
+    LeavePoint,
+    SpindlePoint,
+    TeePoint,
+)
 
 
 class GeometryIOMixin:

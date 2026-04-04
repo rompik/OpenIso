@@ -1,4 +1,4 @@
--- Инициализация базы OpenIso
+-- OpenIso database initialization
 .read data/database/sql/01_create_tables.sql
 .read data/database/sql/09_create_spindles.sql
 .read data/database/sql/15_insert_skey_groups.sql

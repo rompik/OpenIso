@@ -1,4 +1,4 @@
--- Создание таблиц для хранения Skey и истории изменений
+-- Create tables for storing Skey data and change history
 
 CREATE TABLE IF NOT EXISTS skeys (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS transactions (
 CREATE TABLE IF NOT EXISTS geometry (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     skey_id INTEGER NOT NULL,
-    type TEXT NOT NULL, -- ArrivePoint, LeavePoint, Line, Rectangle, Polygon и т.д.
-    data TEXT NOT NULL, -- сериализованные параметры (например, JSON или строка)
+    type TEXT NOT NULL, -- ArrivePoint, LeavePoint, Line, Rectangle, Polygon, etc.
+    data TEXT NOT NULL, -- serialized parameters (e.g. JSON or a plain string)
     transaction_id INTEGER NOT NULL,
     FOREIGN KEY (skey_id) REFERENCES skeys(id),
     FOREIGN KEY (transaction_id) REFERENCES transactions(id)
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS skey_subgroups (
     UNIQUE(skey_group_key, skey_subgroup_key)
 );
 
--- Индексы для ускорения выборок геометрии и транзакций
+-- Indexes to speed up geometry and transaction queries
 CREATE INDEX IF NOT EXISTS idx_geometry_skey_txn ON geometry(skey_id, transaction_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_skey ON transactions(skey_id);
 CREATE INDEX IF NOT EXISTS idx_spindle_geometry_spindle_txn ON spindle_geometry(spindle_id, transaction_id);

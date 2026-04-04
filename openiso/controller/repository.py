@@ -6,7 +6,7 @@ Repository for Skey data - handles persistence (JSON files)
 """
 import json
 import os
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional
 
 from openiso.model.skey import SkeyData, SkeyGroup
 

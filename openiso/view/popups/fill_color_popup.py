@@ -1,15 +1,24 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QPushButton, QLabel, QComboBox, QMenu, QWidgetAction, QColorDialog,
-    QFrame
-)
-from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt, pyqtSignal
-from openiso.core.i18n import setup_i18n
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (
+    QColorDialog,
+    QComboBox,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QMenu,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+    QWidgetAction,
+)
+
 from openiso.core.constants import FILL_COLORS_PALETTE, RECENT_FILL_COLORS
+from openiso.core.i18n import setup_i18n
 
 _t = setup_i18n()
 

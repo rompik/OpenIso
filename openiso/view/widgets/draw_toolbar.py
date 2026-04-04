@@ -2,9 +2,11 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFrame, QMenu
+
 from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtWidgets import QFrame, QMenu, QPushButton, QVBoxLayout, QWidget
+
 from openiso.core.constants import BUTTON_SIZE, ICONS
 from openiso.core.i18n import setup_i18n
 from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped

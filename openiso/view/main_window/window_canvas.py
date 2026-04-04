@@ -7,12 +7,12 @@
 
 from __future__ import annotations
 
-from PyQt6.QtWidgets import QApplication, QMainWindow
-from PyQt6.QtGui import QCursor
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QCursor
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
-from openiso.view.graphics.geometry_items import PointItem
 from openiso.core.i18n import _t
+from openiso.view.graphics.geometry_items import PointItem
 
 
 class CanvasMixin:

@@ -1,27 +1,21 @@
-<h1 align="center">
-  <img src="data/icons/logo.svg" width="128" alt="OpenIso Logo"/>
-  <br>
-  OpenIso
-</h1>
+# OpenIso
 
-<p align="center"><em>Lightweight Isometric Piping Symbol Editor</em></p>
+![OpenIso Logo](data/icons/logo.svg)
+
+Lightweight Isometric Piping Symbol Editor.
 
 ---
 
-<p align="center">
-  <a href="https://crowdin.com"><img src="https://badges.crowdin.net/openiso/localized.svg" alt="Crowdin"></a>
-  <a href="https://github.com/rompik/OpenIso/releases"><img src="https://img.shields.io/github/v/release/rompik/OpenIso" alt="Release"></a>
-  <a href="https://www.linux.org/"><img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux"></a>
-  <a href="https://www.microsoft.com/windows/"><img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-</p>
+[![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com)
+[![PyPI](https://img.shields.io/pypi/v/openiso)](https://pypi.org/project/openiso/)
+[![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases)
+![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
+![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-<p align="center">
-  <img src="data/screenshots/en/openiso_01.png" alt="Main UI">
-</p>
-
+![Main UI](data/screenshots/en/openiso_01.png)
 
 **OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (Skeys)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
@@ -30,8 +24,8 @@
 * **Format Interoperability:** Import and view symbols from **ASCII (Intergraph)** and **IDF (AVEVA)** files.
 * **Precision Connectors:** Define critical piping points: `Arrive`, `Leave`, `Tee`, and `Spindle`.
 * **Vector Toolset:** Specialized primitives for skeys:
-    * Lines, Rectangles, Rhombus, Circle, Ellipses, Triangles, Caps (Arcs), Hexagons.
-    * Hatching and Solid Color Fills.
+  * Lines, Rectangles, Rhombus, Circle, Ellipses, Triangles, Caps (Arcs), Hexagons.
+  * Hatching and Solid Color Fills.
 * **Modern Export:** Save symbols in **ASCII** format for integration with modern piping tools.
 * **Globalized:** Full localization support via Crowdin.
 
@@ -55,9 +49,7 @@
 
 **OpenIso** focuses on the logical structure of a piping component. Each symbol is defined by its geometry and functional connection points.
 
-<p align="center">
-  <img src="docs/en/images/skey_structure.svg" width="400" alt="SKEY Structure Diagram">
-</p>
+![SKEY Structure Diagram](docs/en/images/skey_structure.svg)
 
 * **Arrive & Leave:** Define the primary flow path through the component.
 * **Spindle:** The orientation point for valve handles or actuators.
@@ -65,43 +57,41 @@
 
 ---
 
-## Installation
-### Clone repository:
+## Installation (PyPI)
+
+**OpenIso** is distributed via **PyPI**.
+
+Requirements:
+
+* Python 3.10+
+
+Install:
+
 ```bash
-git clone https://github.com/rompik/OpenIso.git
-cd OpenIso
+pip install --upgrade openiso
 ```
 
-### Install dependencies:
-
-**OpenIso** requires Python 3.10 or higher and the following Python modules:
-
-* **PyQt6** (≥6.0.0) – Qt bindings for the graphical user interface
-
-* **markdown** (≥3.0.0) – Markdown parser for documentation rendering
-
-* **pyinstaller** (≥5.0.0) – Package Python applications into standalone executables
+Run:
 
 ```bash
-pip install -r requirements.txt
-```
-
-### Run from the source:
-```bash
+openiso
+# or
 python -m openiso
 ```
 
-## Building Standalone Executable
+## Development from source (optional)
 
-### Windows
-From the repository root:
+If you need to work with source code locally:
+
 ```bash
-pyinstaller --clean OpenIso_win.spec
+git clone https://github.com/rompik/OpenIso.git
+cd OpenIso
+pip install -e .
+python -m openiso
 ```
-Output file will be save in folder dist with name OpenIso_<version>.exe
-
 
 ---
-## Documentation
-[:uk: English](./docs/en/INDEX.MD) - Guide to using OpenIso, installation instructions, tutorials, and more.
 
+## Documentation
+
+[:uk: English](./docs/en/INDEX.MD) - Guide to using OpenIso, installation instructions, tutorials, and more.

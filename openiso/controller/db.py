@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-import sqlite3
-import shutil
 import os
+import shutil
+import sqlite3
 from pathlib import Path
 from typing import List
+
 from openiso.model.skey import SkeyData
 
 DB_PATH = "data/database/openiso.db"
@@ -237,7 +238,7 @@ class SkeyDB:
                 group_key=skey_group_key,
                 subgroup_key=skey_subgroup_key,
                 description_key=skey_description_key,
-                spindle_skey=spindle_skey or "",  # NULL → '' для модели
+                spindle_skey=spindle_skey or "",  # NULL -> '' for the model
                 orientation=orientation,
                 flow_arrow=flow_arrow,
                 dimensioned=dimensioned,
@@ -265,7 +266,7 @@ class SkeyDB:
     def insert_skey(self, skey: SkeyData, user: str = "system", comment: str = "create") -> int:
         conn = self.connect()
         cur = conn.cursor()
-        spindle_skey = skey.spindle_skey or None  # '' → NULL для корректной работы FK
+        spindle_skey = skey.spindle_skey or None  # '' -> NULL for proper FK behavior
         cur.execute("INSERT INTO skeys (name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (skey.name, skey.group_key, skey.subgroup_key, skey.description_key, spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation))
         skey_id = cur.lastrowid
@@ -336,7 +337,7 @@ class SkeyDB:
             conn.close()
 
     def get_all_spindles(self) -> List[SkeyData]:
-        """Возвращает список всех шпинделей как объекты SkeyData из базы данных."""
+        """Returns all spindles as SkeyData objects from the database."""
         conn = self.connect()
         cur = conn.cursor()
         spindles = []
@@ -364,14 +365,14 @@ class SkeyDB:
                     geometry=geometry
                 ))
         except sqlite3.OperationalError:
-            # Таблица может отсутствовать или иметь старую структуру
+            # Table may be missing or have an outdated structure
             self._init_spindles_table(conn)
         finally:
             conn.close()
         return spindles
 
     def insert_spindle(self, spindle: SkeyData, user: str = "system", comment: str = "create") -> int:
-        """Вставляет новый шпиндель в базу данных (аналогично Skey)."""
+        """Inserts a new spindle into the database (similar to Skey)."""
         conn = self.connect()
         cur = conn.cursor()
         spindle_skey = spindle.spindle_skey or None  # '' → NULL
@@ -396,7 +397,7 @@ class SkeyDB:
         return spindle_id if spindle_id is not None else 0
 
     def update_spindle(self, spindle: SkeyData, user: str = "system", comment: str = "edit"):
-        """Обновляет данные шпинделя или создает новый, если его нет."""
+        """Updates spindle data or creates a new one if it does not exist."""
         conn = self.connect()
         cur = conn.cursor()
         cur.execute("SELECT id FROM spindles WHERE name = ?", (spindle.name,))
@@ -428,7 +429,7 @@ class SkeyDB:
         return spindle_id
 
     def _init_spindles_table(self, conn):
-        """Создает таблицы для шпинделей с новой структурой (аналогично skeys)."""
+        """Creates spindle tables with the new schema (similar to skeys)."""
         cur = conn.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS spindles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -473,7 +474,7 @@ class SkeyDB:
         conn.commit()
 
     def get_all_groups(self) -> List[str]:
-        """Возвращает список всех ключей групп из базы данных."""
+        """Returns all group keys from the database."""
         conn = self.connect()
         cur = conn.cursor()
         try:
@@ -485,7 +486,7 @@ class SkeyDB:
             conn.close()
 
     def get_subgroups_by_group(self, group_key: str) -> List[str]:
-        """Возвращает список всех ключей подгрупп для указанной группы."""
+        """Returns all subgroup keys for the specified group."""
         conn = self.connect()
         cur = conn.cursor()
         try:
@@ -503,7 +504,7 @@ class SkeyDB:
             conn.close()
 
     def ensure_group_exists(self, group_key: str):
-        """Гарантирует, что ключ группы существует в таблице skey_groups."""
+        """Ensures that a group key exists in the skey_groups table."""
         conn = self.connect()
         cur = conn.cursor()
         try:
@@ -513,7 +514,7 @@ class SkeyDB:
             conn.close()
 
     def ensure_subgroup_exists(self, group_key: str, subgroup_key: str):
-        """Гарантирует, что ключ подгруппы существует в таблице skey_subgroups для данной группы."""
+        """Ensures that a subgroup key exists in skey_subgroups for the given group."""
         self.ensure_group_exists(group_key)
         conn = self.connect()
         cur = conn.cursor()

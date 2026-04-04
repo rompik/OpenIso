@@ -3,17 +3,28 @@
 
 import math
 from collections import namedtuple
+
+from PyQt6.QtCore import QPointF, QRectF, Qt, pyqtSignal
+from PyQt6.QtGui import QBrush, QPainterPath, QPen, QPolygonF, QTransform
 from PyQt6.QtWidgets import (
-    QGraphicsScene, QGraphicsLineItem, QGraphicsRectItem, QGraphicsEllipseItem,
-    QGraphicsPolygonItem, QGraphicsSimpleTextItem, QGraphicsItem, QApplication,
-    QGraphicsPathItem
+    QApplication,
+    QGraphicsEllipseItem,
+    QGraphicsItem,
+    QGraphicsLineItem,
+    QGraphicsPathItem,
+    QGraphicsPolygonItem,
+    QGraphicsRectItem,
+    QGraphicsScene,
+    QGraphicsSimpleTextItem,
 )
-from PyQt6.QtGui import (
-    QPolygonF, QPen, QPainterPath, QTransform, QBrush
+
+from openiso.core.constants import SCENE_COLORS, SHEET_SIZE
+from openiso.view.graphics.geometry_items import (
+    ArrivePoint,
+    LeavePoint,
+    SpindlePoint,
+    TeePoint,
 )
-from PyQt6.QtCore import Qt, QPointF, pyqtSignal, QRectF
-from openiso.core.constants import SHEET_SIZE, SCENE_COLORS
-from openiso.view.graphics.geometry_items import ArrivePoint, LeavePoint, TeePoint, SpindlePoint
 
 
 class ResizeHandle(QGraphicsRectItem):

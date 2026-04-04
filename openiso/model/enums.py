@@ -6,6 +6,7 @@ Enums for Skey Library models (Orientation, FlowArrow, Dimensioned)
 """
 from enum import IntEnum
 
+
 class Orientation(IntEnum):
     """Skey orientation types"""
     SYMMETRICAL = 0

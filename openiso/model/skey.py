@@ -5,8 +5,10 @@
 SkeyData and SkeyGroup models for Skey Library
 """
 from dataclasses import dataclass, field
-from typing import List, Dict, Any
-from .enums import Orientation, FlowArrow, Dimensioned, Tracing, Insulation
+from typing import Any, Dict, List
+
+from .enums import Dimensioned, FlowArrow, Insulation, Orientation, Tracing
+
 
 @dataclass
 class SkeyData:

@@ -4,11 +4,12 @@
 """
 Importers for Skey files - GUI-independent
 """
-from typing import Dict, List, Tuple, Any, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Tuple
 
-from openiso.model.skey import SkeyData, SkeyGroup
 from openiso.model.geometry import GeometryConverter
+from openiso.model.skey import SkeyData, SkeyGroup
+
 
 @dataclass
 class ImportResult:
