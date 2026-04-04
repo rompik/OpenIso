@@ -69,5 +69,5 @@ The resulting `.exe` will be located in the `dist/` folder.
 For Linux users, a Flatpak build system is available. Refer to the `io.github.rompik.OpenIso.desktop.in` and `meson.build` files for packaging details.
 
 ---
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)
 

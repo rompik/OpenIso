@@ -56,30 +56,30 @@ The following table lists common symbol keys available in the standard library.
 
 | Group | Subgroup | Code | Symbol Image | Description |
 | :--- | :--- | :---: | :---: | :--- |
-| **Valves** | Generic | `VV` | ![VV](images/vv.png) | Vector Valve (Generic) |
-| **Valves** | Gate | `VAVW` | ![VAVW](images/vavw.png) | Butt Weld Gate Valve |
-| **Valves** | Globe | `VAGL` | ![VAGL](images/vagl.png) | Globe Valve |
-| **Valves** | Check | `VACK` | ![VACK](images/vack.png) | Check Valve |
-| **Valves** | Ball | `VB` | ![VB](images/vb.png) | Ball Valve |
-| **Valves** | Diaphragm | `VD` | ![VD](images/vd.png) | Diaphragm Valve |
-| **Fittings** | Elbow | `ELBW` | ![ELBW](images/elbw.png) | 90° Elbow Butt Weld |
-| **Fittings** | Tee | `TEBW` | ![TEBW](images/tebw.png) | Butt Weld Tee |
-| **Fittings** | Reducer | `REDC` | ![REDC](images/redc.png) | Concentric Reducer |
-| **Fittings** | Reducer | `CPBW` | ![CPBW](images/cpbw.png) | Concentric Reducer Butt Weld |
-| **Flanges** | Weld Neck | `FLwn` | ![FLwn](images/flwn.png) | Weld Neck Flange |
-| **Flanges** | Blind | `FLBL` | ![FLBL](images/flbl.png) | Blind Flange |
-| **Flanges** | Flat Face | `FLFL` | ![FLFL](images/flfl.png) | Flat Face Flange |
-| **Flanges** | Raised | `FLRE` | ![FLRE](images/flre.png) | Raised End Flange |
-| **Olets** | Weldolet | `WELD` | ![WELD](images/weld.png) | Weldolet |
-| **Supports** | Hanger | `01HG` | ![01HG](images/01hg.png) | Pipe Hanger |
-| **Supports** | Guide | `GUID` | ![GUID](images/guid.png) | Pipe Guide |
-| **Supports** | Anchor | `ANCH` | ![ANCH](images/anch.png) | Anchor Support |
-| **Instruments** | Flow | `FLME` | ![FLME](images/flme.png) | Flow Meter |
-| **Instruments** | Gauge | `PR` | ![PR](images/pr.png) | Pressure Gauge |
-| **Instruments** | Orifice | `OP` | ![OP](images/op.png) | Orifice Plate |
-| **Special** | Cap | `KABW` | ![KABW](images/kabw.png) | Cap Butt Weld |
-| **Special** | Clamp | `CLMP` | ![CLMP](images/clmp.png) | Clamp |
-| **Special** | Trap | `TO` | ![TO](images/to.png) | Trap Outlet |
+| **Valves** | Generic | `VV` | ![VV](./images/vv.png) | Vector Valve (Generic) |
+| **Valves** | Gate | `VAVW` | ![VAVW](./images/vavw.png) | Butt Weld Gate Valve |
+| **Valves** | Globe | `VAGL` | ![VAGL](./images/vagl.png) | Globe Valve |
+| **Valves** | Check | `VACK` | ![VACK](./images/vack.png) | Check Valve |
+| **Valves** | Ball | `VB` | ![VB](./images/vb.png) | Ball Valve |
+| **Valves** | Diaphragm | `VD` | ![VD](./images/vd.png) | Diaphragm Valve |
+| **Fittings** | Elbow | `ELBW` | ![ELBW](./images/elbw.png) | 90° Elbow Butt Weld |
+| **Fittings** | Tee | `TEBW` | ![TEBW](./images/tebw.png) | Butt Weld Tee |
+| **Fittings** | Reducer | `REDC` | ![REDC](./images/redc.png) | Concentric Reducer |
+| **Fittings** | Reducer | `CPBW` | ![CPBW](./images/cpbw.png) | Concentric Reducer Butt Weld |
+| **Flanges** | Weld Neck | `FLwn` | ![FLwn](./images/flwn.png) | Weld Neck Flange |
+| **Flanges** | Blind | `FLBL` | ![FLBL](./images/flbl.png) | Blind Flange |
+| **Flanges** | Flat Face | `FLFL` | ![FLFL](./images/flfl.png) | Flat Face Flange |
+| **Flanges** | Raised | `FLRE` | ![FLRE](./images/flre.png) | Raised End Flange |
+| **Olets** | Weldolet | `WELD` | ![WELD](./images/weld.png) | Weldolet |
+| **Supports** | Hanger | `01HG` | ![01HG](./images/01hg.png) | Pipe Hanger |
+| **Supports** | Guide | `GUID` | ![GUID](./images/guid.png) | Pipe Guide |
+| **Supports** | Anchor | `ANCH` | ![ANCH](./images/anch.png) | Anchor Support |
+| **Instruments** | Flow | `FLME` | ![FLME](./images/flme.png) | Flow Meter |
+| **Instruments** | Gauge | `PR` | ![PR](./images/pr.png) | Pressure Gauge |
+| **Instruments** | Orifice | `OP` | ![OP](./images/op.png) | Orifice Plate |
+| **Special** | Cap | `KABW` | ![KABW](./images/kabw.png) | Cap Butt Weld |
+| **Special** | Clamp | `CLMP` | ![CLMP](./images/clmp.png) | Clamp |
+| **Special** | Trap | `TO` | ![TO](./images/to.png) | Trap Outlet |
 
 > **Note:** Symbol images are placeholders and can be viewed directly in the application.
 
@@ -113,4 +113,4 @@ Each SKEY symbol consists of the following components:
 - **Display Options:** Flow Arrow, Dimensioned, Tracing, Insulation visibility.
 
 ---
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)

@@ -8,7 +8,7 @@ Thank you for your interest in contributing to OpenIso! We welcome contributions
 
 Before you start developing, ensure you have the following installed:
 
-- **Python 3.8 or higher** - [Download Python](https://www.python.org/downloads/)
+- **Python 3.10 or higher** - [Download Python](https://www.python.org/downloads/)
 - **Git** - [Download Git](https://git-scm.com/downloads)
 - A code editor or IDE (Visual Studio Code, PyCharm, etc.)
 
@@ -115,7 +115,7 @@ We follow standard Python conventions to maintain code quality.
 
 ## 📝 Translation Contributions
 
-We support multiple languages (English, Russian, French) and welcome new translations.
+We support multiple languages (English, Russian) and welcome new translations.
 
 ### Adding a New Language
 1.  Add the language code (e.g., `de`, `es`) to `po/LINGUAS`.
@@ -126,10 +126,10 @@ We support multiple languages (English, Russian, French) and welcome new transla
 3.  Edit the newly created `.po` file in `po/` (e.g., `po/de.po`) using Poedit or a text editor.
 4.  Commit the `.po` file.
 
-See [Localization Guide](LOCALISATION.md) for more details.
+See [Localization Guide](./LOCALISATION.md) for more details.
 
 ---
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)
 
 
 1. Visit our [project page on Crowdin](https://crowdin.com/project/openiso).

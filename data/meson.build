@@ -56,3 +56,8 @@ install_subdir(
   'database',
   install_dir: join_paths(get_option('datadir'), meson.project_name())
 )
+
+install_subdir(
+  '../docs/en',
+  install_dir: join_paths(get_option('datadir'), meson.project_name(), 'docs')
+)

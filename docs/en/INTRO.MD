@@ -28,4 +28,4 @@ The primary goal of OpenIso is to simplify the creation, editing, and management
 *   Fully localized interface (English, Russian, French).
 
 ---
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)

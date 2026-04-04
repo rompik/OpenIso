@@ -7,10 +7,10 @@ This guide describes the process of creating a new isometric symbol (SKEY) using
 The drawing tools are located on the toolbar to the left of the main drawing area (canvas).
 The main buttons we will need are:
 
-*   ![Primitive Shapes](images/menu_primitive.png) **Draw Primitive**: Button with a dropdown menu for selecting geometric shapes (triangle, circle, rectangle, etc.).
-*   ![Connection Points](images/point_arrive.png) **Draw Connection Point**: For adding pipe entry and exit points.
-*   ![Spindle](images/point_spindle.png) **Draw Spindle Connection Point**: For specifying the location of the actuator or handwheel.
-*   ![Save](images/save.png) **Save**: On the top toolbar for saving the created symbol.
+*   ![Primitive Shapes](./images/menu_primitive.png) **Draw Primitive**: Button with a dropdown menu for selecting geometric shapes (triangle, circle, rectangle, etc.).
+*   ![Connection Points](./images/point_arrive.png) **Draw Connection Point**: For adding pipe entry and exit points.
+*   ![Spindle](./images/point_spindle.png) **Draw Spindle Connection Point**: For specifying the location of the actuator or handwheel.
+*   ![Save](./images/save.png) **Save**: On the top toolbar for saving the created symbol.
 
 ---
 

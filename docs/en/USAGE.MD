@@ -39,5 +39,5 @@ Piping symbols rely on specific connection points to define flow and orientation
 *   This commits changes to the local database and creates a transaction record.
 
 ---
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)
 
