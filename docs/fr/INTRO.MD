@@ -33,4 +33,4 @@ The primary goal of OpenIso is to simplify the creation, editing, and management
 
 ---
 
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)
