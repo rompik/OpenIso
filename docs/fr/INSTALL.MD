@@ -74,5 +74,5 @@ For Linux users, a Flatpak build system is available. Refer to the `io.github.ro
 
 ---
 
-[Return to Index](INDEX.MD)
+[Return to Index](./INDEX.MD)
 
