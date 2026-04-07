@@ -10,6 +10,7 @@ This module provides the main Application class that handles
 application lifecycle and resource management.
 """
 
+import os
 import sys
 import sysconfig
 from pathlib import Path
@@ -125,6 +126,10 @@ class Application:
             QApplication.setHighDpiScaleFactorRoundingPolicy(
                 Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
             )
+            # Suppress D-Bus portal registration errors when running multiple instances
+            # or in environments where portal service registration fails
+            if 'QT_QPA_SERVICES' not in os.environ:
+                os.environ['QT_QPA_SERVICES'] = '1'
             self._qt_app = QApplication(argv)
         else:
             self._qt_app = existing if isinstance(existing, QApplication) else QApplication(argv)

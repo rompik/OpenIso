@@ -1,0 +1,123 @@
+name: Compile Translations
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'po/**/*.po'
+      - 'scripts/localisation/update_translations.sh'
+      - '.github/workflows/compile-translations.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'po/**/*.po'
+  workflow_dispatch:
+
+jobs:
+  compile-translations:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gettext tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext
+
+      - name: Compile translations
+        run: |
+          PROJECT_ROOT="${PWD}"
+          PO_DIR="${PROJECT_ROOT}/po"
+
+          # Compile all .po files to .mo files
+          for po_file in "$PO_DIR"/*.po; do
+              if [ -f "$po_file" ]; then
+                  lang=$(basename "$po_file" .po)
+                  mo_dir="$PO_DIR/$lang/LC_MESSAGES"
+                  mkdir -p "$mo_dir"
+
+                  msgfmt -o "$mo_dir/openiso.mo" "$po_file"
+                  mo_size=$(du -h "$mo_dir/openiso.mo" | cut -f1)
+                  echo "✅ Compiled: $lang/LC_MESSAGES/openiso.mo ($mo_size)"
+              fi
+          done
+
+      - name: Check for changes
+        id: git-diff
+        run: |
+          if git diff --quiet po/; then
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+              echo "No translation changes to commit"
+          else
+              echo "has-changes=true" >> $GITHUB_OUTPUT
+              echo "Translation changes detected"
+              git diff --stat po/
+          fi
+
+      - name: Commit compiled translations (push)
+        if: github.event_name == 'push' && steps.git-diff.outputs.has-changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add po/*/LC_MESSAGES/*.mo
+          git commit -m "chore: compile translations [skip ci]" \
+              -m "Auto-compiled .mo files from updated .po files"
+          git push
+
+      - name: Upload compiled translations as artifact
+        if: steps.git-diff.outputs.has-changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-translations
+          path: po/*/LC_MESSAGES/*.mo
+          retention-days: 30
+
+      - name: Comment on PR with translation status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Gather translation statistics
+            let stats = '### Translation Compilation Report\n\n';
+            stats += '| Language | File | Status |\n';
+            stats += '|----------|------|--------|\n';
+
+            const poDir = path.join(process.env.GITHUB_WORKSPACE, 'po');
+            const langs = fs.readdirSync(poDir)
+                .filter(f => !f.startsWith('.') && !f.startsWith('_') && f !== 'messages.pot')
+                .filter(f => fs.statSync(path.join(poDir, f)).isDirectory() || f.endsWith('.po'));
+
+            langs.forEach(lang => {
+              let langName = lang.replace('.po', '');
+              const moFile = path.join(poDir, langName, 'LC_MESSAGES', 'openiso.mo');
+
+              if (fs.existsSync(moFile)) {
+                const stats = fs.statSync(moFile);
+                const size = (stats.size / 1024).toFixed(2);
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: `✅ **${langName}** — Compiled successfully (${size} KB)`
+                });
+              }
+            });
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: stats
+            });

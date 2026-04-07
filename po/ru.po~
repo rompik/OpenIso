@@ -226,7 +226,7 @@ msgstr "Использовать на фланцах"
 #: src/view/properties.py:97 src/view/properties.py:159
 #: src/view/properties.py:183
 msgid "Flow Arrow"
-msgstr "Стрелка потока"
+msgstr "Стрелка направления потока"
 
 #: src/view/properties.py:99 src/view/properties.py:160
 #: src/view/properties.py:184
