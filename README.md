@@ -11,7 +11,20 @@
 ---
 
 <p align="center">
-  [![Crowdin](https://badges.crowdin.net/openiso/localized.svg)](https://crowdin.com) [![PyPI](https://img.shields.io/pypi/v/openiso)](https://pypi.org/project/openiso/) [![Release](https://img.shields.io/github/v/release/rompik/OpenIso)](https://github.com/rompik/OpenIso/releases) ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black) ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  <a href="https://crowdin.com/project/openiso">
+    <img src="https://badges.crowdin.net/openiso/localized.svg" alt="Crowdin" />
+  </a>
+  <a href="https://pypi.org/project/openiso/">
+    <img src="https://img.shields.io/pypi/v/openiso" alt="PyPI" />
+  </a>
+  <a href="https://github.com/rompik/OpenIso/releases">
+    <img src="https://img.shields.io/github/v/release/rompik/OpenIso" alt="Release" />
+  </a>
+  <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux" />
+  <img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows" />
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" />
+  </a>
 </p>
 
 ---
