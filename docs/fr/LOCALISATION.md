@@ -2,18 +2,18 @@
 
 This directory contains scripts for managing translations in OpenIso.
 
-## update_translations.sh
+## update_translations.sh {#update-translations-sh}
 
 Automated script to update all localization files.
 
-### What it does:
+### What it does: {#what-it-does}
 
 1. **Extracts translatable strings** from source code to `messages.pot`
 2. **Updates .po files** for all languages listed in LINGUAS
 3. **Compiles .po to .mo** files for runtime use
 4. **Shows translation statistics** for each language
 
-### Requirements:
+### Requirements: {#requirements}
 
 The script requires GNU gettext tools:
 
@@ -31,7 +31,7 @@ sudo pacman -S gettext
 brew install gettext
 ```
 
-### Usage:
+### Usage: {#usage}
 
 ```bash
 # Run from anywhere in the project:
@@ -42,7 +42,7 @@ cd scripts/localisation
 ./update_translations.sh
 ```
 
-### Workflow:
+### Workflow: {#workflow}
 
 1. **Developer adds translatable strings** in code using `_()` or `_t()`
 2. **Run the script** to extract new strings and update .po files
@@ -50,28 +50,30 @@ cd scripts/localisation
 4. **Run the script again** to compile updated translations
 5. **Test in application** to verify translations
 
-### Adding a new language:
+### Adding a new language: {#adding-language}
 
 1. Add the language code to `po/LINGUAS` file:
-   ```
-   ru
-   fr
-   zh_CN
-   de    # <- new language
-   ```
+
+        ```
+         ru
+         fr
+         zh_CN
+         de    # <- new language
+        ```
 
 2. Run the update script:
-   ```bash
-   ./scripts/localisation/update_translations.sh
-   ```
 
-3. The script will automatically create `po/de.po`
+        ```
+         ./scripts/localisation/update_translations.sh
+        ```
 
-4. Edit `po/de.po` to add translations
+3. The script will automatically create `po/de.po`.
 
-5. Run the script again to compile
+4. Edit `po/de.po` to add translations.
 
-### File structure:
+5. Run the script again to compile.
+
+### File structure: {#file-structure}
 
 - `po/POTFILES.in` - List of source files with translatable strings
 - `po/LINGUAS` - List of available language codes
@@ -80,14 +82,14 @@ cd scripts/localisation
 - `po/{lang}.mo` - Compiled binary translation files
 - `po/{lang}/LC_MESSAGES/openiso.mo` - Standard gettext location
 
-### Translation tools:
+### Translation tools: {#translation-tools}
 
 - **Poedit** - https://poedit.net/ (Recommended GUI editor)
 - **Lokalize** - KDE translation tool
 - **Gtranslator** - GNOME translation tool
 - **Text editor** - Any editor can edit .po files
 
-### Troubleshooting:
+### Troubleshooting: {#troubleshooting}
 
 **"command not found: xgettext"**
 
@@ -102,6 +104,6 @@ cd scripts/localisation
 - Check for syntax errors in .po file
 - Run `msgfmt -c po/{lang}.po` to validate
 
-### JSON translations:
+### JSON translations: {#json-translations}
 
 The project also uses JSON files (`po/en.json`, `po/ru.json`) for structured translations. These need to be updated manually if used.
