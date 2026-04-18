@@ -516,9 +516,9 @@
     }
   },
   "instruments": {
-    "_name": "Instruments",
+    "_name": "instruments",
     "3_way_control_valve": {
-      "_name": "3-Way Control Valve",
+      "_name": "3_way_control_valve",
       "c3": {
         "_name": "C3",
         "description": ""
@@ -546,7 +546,7 @@
       }
     },
     "rupture_disc": {
-      "_name": "Rupture Disc",
+      "_name": "rupture_disc",
       "dr": {
         "_name": "DR",
         "description": ""
@@ -560,7 +560,7 @@
       }
     },
     "restrictor_plate": {
-      "_name": "Restrictor plate",
+      "_name": "restrictor_plate",
       "pr": {
         "_name": "PR",
         "description": ""

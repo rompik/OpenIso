@@ -1,0 +1,12 @@
+[
+  {
+    "title": "🧭 Разделы",
+    "items": [
+      {"title": "Создание символа",          "file": "CREATING_SYMBOL.MD"},
+      {"title": "Символы (Справочник)",      "file": "SYMBOLS.MD"},
+      {"title": "Команды терминала",         "file": "TERMINAL.MD"},
+      {"title": "Вклад в проект",            "file": "CONTRIBUTING.MD"},
+      {"title": "Локализация",               "file": "LOCALISATION.md"}
+    ]
+  }
+]

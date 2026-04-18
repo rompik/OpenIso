@@ -58,6 +58,16 @@ install_subdir(
 )
 
 install_subdir(
+  '../docs/assets',
+  install_dir: join_paths(get_option('datadir'), meson.project_name(), 'docs')
+)
+
+install_subdir(
   '../docs/en',
+  install_dir: join_paths(get_option('datadir'), meson.project_name(), 'docs')
+)
+
+install_subdir(
+  '../docs/ru',
   install_dir: join_paths(get_option('datadir'), meson.project_name(), 'docs')
 )

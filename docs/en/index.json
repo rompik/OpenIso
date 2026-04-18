@@ -1,0 +1,95 @@
+[
+  {
+    "title": "🚀 Getting Started",
+    "items": [
+      {"title": "OpenIso Overview",          "file": "INTRO.MD"},
+      {"title": "Purpose",                   "file": "INTRO.MD",    "anchor": "purpose"},
+      {"title": "Key Features",              "file": "INTRO.MD",    "anchor": "key-features"},
+      {"title": "Vector Editing",            "file": "INTRO.MD",    "anchor": "vector-editing"},
+      {"title": "Connection Management",     "file": "INTRO.MD",    "anchor": "connection-management"},
+      {"title": "Format Support",            "file": "INTRO.MD",    "anchor": "format-support"},
+      {"title": "Cross-Platform",            "file": "INTRO.MD",    "anchor": "cross-platform"},
+      {"title": "Installation Guide",        "file": "INSTALL.MD"},
+      {"title": "System Requirements",       "file": "INSTALL.MD",  "anchor": "system-requirements"},
+      {"title": "Running from Source",       "file": "INSTALL.MD",  "anchor": "running-from-source"},
+      {"title": "Prerequisites",             "file": "INSTALL.MD",  "anchor": "prerequisites"},
+      {"title": "Step-by-Step Setup",        "file": "INSTALL.MD",  "anchor": "step-by-step"},
+      {"title": "Building Standalone",       "file": "INSTALL.MD",  "anchor": "building-standalone-application"},
+      {"title": "Windows Executable",        "file": "INSTALL.MD",  "anchor": "windows-executable"},
+      {"title": "Linux Flatpak",             "file": "INSTALL.MD",  "anchor": "linux-flatpak"}
+    ]
+  },
+  {
+    "title": "🛠️ User Guide",
+    "items": [
+      {"title": "User Guide",                "file": "USAGE.MD"},
+      {"title": "The Interface",             "file": "USAGE.MD",             "anchor": "the-interface"},
+      {"title": "Detailed Operations",       "file": "USAGE.MD",             "anchor": "detailed-operations"},
+      {"title": "Navigating Symbols",        "file": "USAGE.MD",             "anchor": "navigating-symbols"},
+      {"title": "Editing Geometry",          "file": "USAGE.MD",             "anchor": "editing-geometry"},
+      {"title": "Understanding Connections", "file": "USAGE.MD",             "anchor": "understanding-connections"},
+      {"title": "Saving Changes",            "file": "USAGE.MD",             "anchor": "saving-changes"},
+      {"title": "Creating Symbols",          "file": "CREATING_SYMBOL.MD"},
+      {"title": "Tool Location",             "file": "CREATING_SYMBOL.MD",   "anchor": "tool-location"},
+      {"title": "Gate Valve Tutorial",       "file": "CREATING_SYMBOL.MD",   "anchor": "step-by-step-gate-valve"},
+      {"title": "Step 1: Prepare SKEY",      "file": "CREATING_SYMBOL.MD",   "anchor": "step-1-prepare-skey"},
+      {"title": "Step 2: Draw Body",         "file": "CREATING_SYMBOL.MD",   "anchor": "step-2-draw-body"},
+      {"title": "Step 3: Connections",       "file": "CREATING_SYMBOL.MD",   "anchor": "step-3-connections"},
+      {"title": "Step 4: Spindle Point",     "file": "CREATING_SYMBOL.MD",   "anchor": "step-4-spindle"},
+      {"title": "Step 5: Saving",            "file": "CREATING_SYMBOL.MD",   "anchor": "step-5-saving"},
+      {"title": "Tips",                      "file": "CREATING_SYMBOL.MD",   "anchor": "tips"},
+      {"title": "Reference Guide",           "file": "SYMBOLS.MD"},
+      {"title": "Basic Primitives",          "file": "SYMBOLS.MD",           "anchor": "basic-primitives"},
+      {"title": "Connection Types",          "file": "SYMBOLS.MD",           "anchor": "connection-types"},
+      {"title": "Spindle Handles",           "file": "SYMBOLS.MD",           "anchor": "spindle-handles"},
+      {"title": "Symbol Catalog",            "file": "SYMBOLS.MD",           "anchor": "symbol-catalog"},
+      {"title": "Symbol Anatomy",            "file": "SYMBOLS.MD",           "anchor": "symbol-anatomy"},
+      {"title": "Terminal Commands",         "file": "TERMINAL.MD"},
+      {"title": "Move Command",              "file": "TERMINAL.MD",          "anchor": "move"},
+      {"title": "Rotate Command",            "file": "TERMINAL.MD",          "anchor": "rotate"},
+      {"title": "Clear Command",             "file": "TERMINAL.MD",          "anchor": "clear"},
+      {"title": "Help Command",              "file": "TERMINAL.MD",          "anchor": "help"}
+    ]
+  },
+  {
+    "title": "🔧 Architecture & Data",
+    "items": [
+      {"title": "Database Structure",        "file": "DATABASE.MD"},
+      {"title": "Database Schema",           "file": "DATABASE.MD",          "anchor": "database-schema"},
+      {"title": "skeys Table",               "file": "DATABASE.MD",          "anchor": "skeys-table"},
+      {"title": "geometry Table",            "file": "DATABASE.MD",          "anchor": "geometry-table"},
+      {"title": "transactions Table",        "file": "DATABASE.MD",          "anchor": "transactions-table"},
+      {"title": "spindles Table",            "file": "DATABASE.MD",          "anchor": "spindles-table"},
+      {"title": "Data Flow",                 "file": "DATABASE.MD",          "anchor": "data-flow"}
+    ]
+  },
+  {
+    "title": "🤝 Contributing",
+    "items": [
+      {"title": "Contribution Guide",        "file": "CONTRIBUTING.MD"},
+      {"title": "Dev Getting Started",       "file": "CONTRIBUTING.MD",      "anchor": "development-getting-started"},
+      {"title": "Dev Prerequisites",         "file": "CONTRIBUTING.MD",      "anchor": "development-prerequisites"},
+      {"title": "Dev Environment",           "file": "CONTRIBUTING.MD",      "anchor": "development-environment"},
+      {"title": "Running the Application",   "file": "CONTRIBUTING.MD",      "anchor": "running-the-application"},
+      {"title": "Project Structure",         "file": "CONTRIBUTING.MD",      "anchor": "project-structure"},
+      {"title": "Development Workflow",      "file": "CONTRIBUTING.MD",      "anchor": "development-workflow"},
+      {"title": "Coding Standards",          "file": "CONTRIBUTING.MD",      "anchor": "coding-standards"},
+      {"title": "Translation Contributions", "file": "CONTRIBUTING.MD",      "anchor": "translation-contributions"},
+      {"title": "Adding a New Language",     "file": "CONTRIBUTING.MD",      "anchor": "adding-a-new-language"},
+      {"title": "Reporting Issues",          "file": "CONTRIBUTING.MD",      "anchor": "reporting-issues"},
+      {"title": "Code Guidelines",           "file": "CONTRIBUTING.MD",      "anchor": "code-guidelines"},
+      {"title": "Need Help",                 "file": "CONTRIBUTING.MD",      "anchor": "need-help"},
+      {"title": "Localization",              "file": "LOCALISATION.md"},
+      {"title": "update_translations.sh",   "file": "LOCALISATION.md",      "anchor": "update-translations-sh"},
+      {"title": "What it does",              "file": "LOCALISATION.md",      "anchor": "what-it-does"},
+      {"title": "Requirements",              "file": "LOCALISATION.md",      "anchor": "requirements"},
+      {"title": "Usage",                     "file": "LOCALISATION.md",      "anchor": "usage"},
+      {"title": "Workflow",                  "file": "LOCALISATION.md",      "anchor": "workflow"},
+      {"title": "Adding a New Language",     "file": "LOCALISATION.md",      "anchor": "adding-language"},
+      {"title": "File Structure",            "file": "LOCALISATION.md",      "anchor": "file-structure"},
+      {"title": "Translation Tools",         "file": "LOCALISATION.md",      "anchor": "translation-tools"},
+      {"title": "Troubleshooting",           "file": "LOCALISATION.md",      "anchor": "troubleshooting"},
+      {"title": "JSON Translations",         "file": "LOCALISATION.md",      "anchor": "json-translations"}
+    ]
+  }
+]

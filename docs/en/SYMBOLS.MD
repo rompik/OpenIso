@@ -2,7 +2,7 @@
 
 This document provides a comprehensive reference for all symbols used in OpenIso, including primitives, connection types, spindle handle orientations, and Symbol Keys (SKEYs).
 
-## 1. Basic Primitives
+## 1. Basic Primitives {#basic-primitives}
 
 Primitive shapes are the fundamental drawing elements used to construct symbols.
 
@@ -19,7 +19,7 @@ Primitive shapes are the fundamental drawing elements used to construct symbols.
 | `↻` | Scale | Scaling/resizing tool | `+` |
 | `⇄` | Move | Movement/translation tool | `<->` |
 
-## 2. Connection Types
+## 2. Connection Types {#connection-types}
 
 Connection types define how pipes are joined together.
 
@@ -36,7 +36,7 @@ Connection types define how pipes are joined together.
 | `CP` | Compression Plain | Plain fitting with compression connection | Compression cone connection |
 | `SC` | Socket Compression | Socket compression fitting | Compression fitting in socket |
 
-## 3. Spindle Handles
+## 3. Spindle Handles {#spindle-handles}
 
 Spindle orientations define the position and direction of valve handles or actuators.
 
@@ -50,7 +50,7 @@ Spindle orientations define the position and direction of valve handles or actua
 | `06SP` | Triangle | Triangular handle shape | Three-point configuration |
 | [See full list in application] | ... | ... | ... |
 
-## 4. Symbol Catalog (SKEYs)
+## 4. Symbol Catalog (SKEYs) {#symbol-catalog}
 
 The following table lists common symbol keys available in the standard library.
 
@@ -85,25 +85,25 @@ The following table lists common symbol keys available in the standard library.
 
 ---
 
-## 5. Symbol Anatomy
+## 5. Symbol Anatomy {#symbol-anatomy}
 
 Each SKEY symbol consists of the following components:
 
-### Connection Points
+### Connection Points {#connection-points}
 
 - **Arrive (Red)**: Primary inlet connection point.
 - **Leave (Blue)**: Primary outlet connection point.
 - **Tee (Magenta)**: Branch connection point.
 - **Spindle (Dark Red)**: Valve handle/actuator orientation.
 
-### Geometry Elements
+### Geometry Elements {#geometry-elements}
 
 *   **Line:** Straight segment.
 *   **Arc/Circle:** Curved segment or closed loop.
 *   **Rectangle/Polygon:** Closed shapes that can be filled.
 *   **Text:** Labels.
 
-### Properties
+### Properties {#properties}
 
 - **Orientation:**
     - *0 (Symmetrical):* Same when rotated 180°.

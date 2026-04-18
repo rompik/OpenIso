@@ -2,11 +2,11 @@
 
 OpenIso stores all project data in a local SQLite database (`data/database/openiso.db`). This file contains symbol definitions, groups, settings, and change history.
 
-## 🗄️ Database Schema
+## 🗄️ Database Schema {#database-schema}
 
 The database is normalized to eliminate redundancy and uses foreign keys for relationships.
 
-### `skeys` Table (Symbol Keys)
+### `skeys` Table (Symbol Keys) {#skeys-table}
 This is the master table storing metadata for each isometric symbol (SKEY).
 
 | Column | Type | Constraints | Description |
@@ -21,7 +21,7 @@ This is the master table storing metadata for each isometric symbol (SKEY).
 | `tracing` | INTEGER | 0-2 | Heat tracing requirement. |
 | `insulation` | INTEGER | 0-2 | Insulation requirement. |
 
-### `geometry` Table
+### `geometry` Table {#geometry-table}
 Stores the actual drawing primitives that make up the symbol.
 
 | Column | Type | Description |
@@ -32,7 +32,7 @@ Stores the actual drawing primitives that make up the symbol.
 | `data` | TEXT | Serialized geometry data (JSON-like or comma-separated). |
 | `transaction_id` | INTEGER | FK to `transactions` table. |
 
-### `transactions` Table
+### `transactions` Table {#transactions-table}
 Stores the history of changes. This allows undo/redo functionality and auditing.
 
 | Column | Type | Description |
@@ -43,7 +43,7 @@ Stores the history of changes. This allows undo/redo functionality and auditing.
 | `timestamp` | DATETIME | When the change occurred. |
 | `user` | TEXT | Username who made the change. |
 
-### `spindles` Table
+### `spindles` Table {#spindles-table}
 Reusable definitions for valve handles/actuators.
 
 | Column | Type | Description |
@@ -51,7 +51,7 @@ Reusable definitions for valve handles/actuators.
 | `name` | TEXT | Unique name (e.g., `01SP`). |
 | `description` | TEXT | Human-readable name (e.g., Vertical Handle). |
 
-## 🔄 Data Flow
+## 🔄 Data Flow {#data-flow}
 
 1.  **Loading:** When OpenIso starts, it queries `skeys` to populate the tree view.
 2.  **Editing:** When a user opens a symbol, the application fetches the latest geometry based on the max `transaction_id` for that `skey_id`.

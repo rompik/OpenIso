@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QColorDialog,
-    QComboBox,
     QFrame,
     QGridLayout,
     QHBoxLayout,
@@ -37,6 +36,7 @@ class ColorSwatch(QPushButton):
 
 class FillColorPopup(QWidget):
     colorSelected = pyqtSignal(QColor)
+    customColorRequested = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -48,11 +48,6 @@ class FillColorPopup(QWidget):
         self.lbl_title = QLabel(_t("Fill Color"))
         self.lbl_title.setProperty("class", "ColorPopupTitle")
         self.layout.addWidget(self.lbl_title)
-
-        # Category/Theme Combo (Mockup)
-        self.cb_theme = QComboBox()
-        self.cb_theme.addItem("material")
-        self.layout.addWidget(self.cb_theme)
 
         # Color Grid
         self.grid = QGridLayout()
@@ -96,9 +91,7 @@ class FillColorPopup(QWidget):
         self.layout.addWidget(self.btn_custom)
 
     def _open_custom_color(self):
-        color = QColorDialog.getColor(Qt.GlobalColor.white, self)
-        if color.isValid():
-            self.colorSelected.emit(color)
+        self.customColorRequested.emit()
 
 def create_fill_color_menu(parent_button, callback):
     menu = QMenu(parent_button)
@@ -112,5 +105,14 @@ def create_fill_color_menu(parent_button, callback):
         menu.close()
         callback(color)
 
+    def on_custom_color_requested():
+        menu.close()
+        def open_dialog():
+            color = QColorDialog.getColor(Qt.GlobalColor.white, parent_button)
+            if color.isValid():
+                callback(color)
+        QTimer.singleShot(0, open_dialog)
+
     popup.colorSelected.connect(on_color_selected)
+    popup.customColorRequested.connect(on_custom_color_requested)
     return menu
