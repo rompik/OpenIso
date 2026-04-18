@@ -148,9 +148,29 @@ class SkeyService:
         """Get a SkeyData by name."""
         return self._repository.skeys.get(name)
 
-    def update_skey(self, name: str, group_key: str, subgroup_key: str, description_key: str,
-                   spindle_skey: str, orientation: int,
-                   flow_arrow: int, dimensioned: int, tracing: int, insulation: int, geometry: list, lang_code: Optional[str] = None):
+    def update_skey(
+        self,
+        name: str,
+        group_key: str,
+        subgroup_key: str,
+        description_key: str,
+        spindle_skey: str,
+        orientation: int,
+        flow_arrow: int,
+        dimensioned: int,
+        tracing: int,
+        insulation: int,
+        geometry: list,
+        lang_code: Optional[str] = None,
+        pcf_identification: str = "",
+        idf_record: str = "",
+        user_definable: int = 1,
+        flow_dependency: int = 0,
+        source_name: str = "",
+        source_type: str = "standard",
+        source_version: str = "",
+        isogen_standard: int = 0,
+    ):
         """Update or create a Skey in the database using hierarchical keys."""
         from openiso.core.i18n import save_json_translation
 
@@ -196,6 +216,14 @@ class SkeyService:
             dimensioned=dimensioned,
             tracing=tracing,
             insulation=insulation,
+            pcf_identification=pcf_identification,
+            idf_record=idf_record,
+            user_definable=user_definable,
+            flow_dependency=flow_dependency,
+            source_name=source_name,
+            source_type=source_type,
+            source_version=source_version,
+            isogen_standard=isogen_standard,
             geometry=geometry
         )
 

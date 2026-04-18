@@ -64,6 +64,17 @@ class SkeyDB:
 
         conn.executescript(
             """
+            CREATE TABLE IF NOT EXISTS symbol_sources (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                source_type TEXT NOT NULL DEFAULT 'standard',
+                version TEXT,
+                description TEXT,
+                url TEXT,
+                CHECK (source_type IN ('standard', 'company', 'project')),
+                UNIQUE(name, source_type, version)
+            );
+
             CREATE TABLE IF NOT EXISTS skey_groups (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 skey_group_key TEXT NOT NULL UNIQUE
@@ -92,13 +103,16 @@ class SkeyDB:
                 dimensioned INTEGER NOT NULL DEFAULT 0,
                 tracing INTEGER NOT NULL DEFAULT 0,
                 insulation INTEGER NOT NULL DEFAULT 0,
+                source_id INTEGER,
+                isogen_standard INTEGER NOT NULL DEFAULT 0,
                 CHECK (orientation IN (0, 1, 2, 3)),
                 CHECK (flow_arrow IN (0, 1, 2)),
                 CHECK (dimensioned IN (0, 1, 2)),
                 CHECK (tracing IN (0, 1, 2)),
                 CHECK (insulation IN (0, 1, 2)),
                 FOREIGN KEY (skey_group_key) REFERENCES skey_groups(skey_group_key) ON DELETE RESTRICT ON UPDATE CASCADE,
-                FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE
+                FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE,
+                FOREIGN KEY (source_id) REFERENCES symbol_sources(id) ON DELETE SET NULL ON UPDATE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS skeys (
@@ -113,6 +127,12 @@ class SkeyDB:
                 dimensioned INTEGER NOT NULL DEFAULT 0,
                 tracing INTEGER NOT NULL DEFAULT 0,
                 insulation INTEGER NOT NULL DEFAULT 0,
+                pcf_identification TEXT,
+                idf_record TEXT,
+                user_definable INTEGER NOT NULL DEFAULT 1,
+                flow_dependency INTEGER NOT NULL DEFAULT 0,
+                source_id INTEGER,
+                isogen_standard INTEGER NOT NULL DEFAULT 0,
                 CHECK (orientation IN (0, 1, 2, 3)),
                 CHECK (flow_arrow IN (0, 1, 2)),
                 CHECK (dimensioned IN (0, 1, 2)),
@@ -120,7 +140,8 @@ class SkeyDB:
                 CHECK (insulation IN (0, 1, 2)),
                 FOREIGN KEY (skey_group_key) REFERENCES skey_groups(skey_group_key) ON DELETE RESTRICT ON UPDATE CASCADE,
                 FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE,
-                FOREIGN KEY (spindle_skey) REFERENCES spindles(name) ON DELETE SET NULL ON UPDATE CASCADE
+                FOREIGN KEY (spindle_skey) REFERENCES spindles(name) ON DELETE SET NULL ON UPDATE CASCADE,
+                FOREIGN KEY (source_id) REFERENCES symbol_sources(id) ON DELETE SET NULL ON UPDATE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS transactions (
@@ -171,6 +192,11 @@ class SkeyDB:
         conn.commit()
         conn.close()
 
+    @staticmethod
+    def _column_exists(cur: sqlite3.Cursor, table: str, column: str) -> bool:
+        cur.execute(f"PRAGMA table_info({table})")
+        return any(row[1] == column for row in cur.fetchall())
+
     def _ensure_columns_exist(self):
         """Checks if all necessary columns exist and adds them if missing."""
         conn = self.connect()
@@ -200,8 +226,80 @@ class SkeyDB:
                 conn.commit()
             except Exception as e:
                 print(f"Failed to add 'insulation' column: {e}")
-        finally:
+
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS symbol_sources (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                source_type TEXT NOT NULL DEFAULT 'standard',
+                version TEXT,
+                description TEXT,
+                url TEXT,
+                CHECK (source_type IN ('standard', 'company', 'project')),
+                UNIQUE(name, source_type, version)
+            )
+            """
+        )
+
+        new_skey_columns = [
+            ("pcf_identification", "TEXT"),
+            ("idf_record", "TEXT"),
+            ("user_definable", "INTEGER NOT NULL DEFAULT 1"),
+            ("flow_dependency", "INTEGER NOT NULL DEFAULT 0"),
+            ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
+            ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
+        ]
+        for column_name, column_type in new_skey_columns:
+            if not self._column_exists(cur, "skeys", column_name):
+                cur.execute(f"ALTER TABLE skeys ADD COLUMN {column_name} {column_type}")
+
+        new_spindle_columns = [
+            ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
+            ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
+        ]
+        for column_name, column_type in new_spindle_columns:
+            if not self._column_exists(cur, "spindles", column_name):
+                cur.execute(f"ALTER TABLE spindles ADD COLUMN {column_name} {column_type}")
+
+        cur.execute(
+            """
+            INSERT OR IGNORE INTO symbol_sources (id, name, source_type, version, description, url)
+            VALUES (1, 'ISOGEN / Alias Limited', 'standard', '2008',
+                    'ISOGEN Symbol Key (SKEY) Definitions', 'http://www.alias.ltd.uk')
+            """
+        )
+        conn.commit()
+        conn.close()
+
+    def _ensure_symbol_source(self, name: str, source_type: str = "standard", version: str = "") -> int | None:
+        source_name = (name or "").strip()
+        if not source_name:
+            return None
+
+        source_type = (source_type or "standard").strip().lower()
+        if source_type not in ("standard", "company", "project"):
+            source_type = "standard"
+
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id FROM symbol_sources WHERE name = ? AND source_type = ? AND COALESCE(version, '') = COALESCE(?, '')",
+            (source_name, source_type, version),
+        )
+        row = cur.fetchone()
+        if row:
             conn.close()
+            return row[0]
+
+        cur.execute(
+            "INSERT INTO symbol_sources (name, source_type, version) VALUES (?, ?, ?)",
+            (source_name, source_type, version),
+        )
+        source_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return source_id if source_id is not None else None
 
     def connect(self):
         conn = sqlite3.connect(self.db_path)
@@ -211,26 +309,90 @@ class SkeyDB:
     def get_all_skeys(self) -> List[SkeyData]:
         conn = self.connect()
         cur = conn.cursor()
-        # Try to include columns if they exist
-        try:
-            cur.execute("SELECT id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation FROM skeys")
-        except sqlite3.OperationalError:
-            try:
-                cur.execute("SELECT id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing FROM skeys")
-            except sqlite3.OperationalError:
-                cur.execute("SELECT id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned FROM skeys")
+        has_tracing = self._column_exists(cur, "skeys", "tracing")
+        has_insulation = self._column_exists(cur, "skeys", "insulation")
+        has_pcf = self._column_exists(cur, "skeys", "pcf_identification")
+        has_idf = self._column_exists(cur, "skeys", "idf_record")
+        has_user_definable = self._column_exists(cur, "skeys", "user_definable")
+        has_flow_dependency = self._column_exists(cur, "skeys", "flow_dependency")
+        has_source_id = self._column_exists(cur, "skeys", "source_id")
+        has_isogen_standard = self._column_exists(cur, "skeys", "isogen_standard")
+
+        select_columns = [
+            "s.id", "s.name", "s.skey_group_key", "s.skey_subgroup_key", "s.skey_description_key",
+            "s.spindle_skey", "s.orientation", "s.flow_arrow", "s.dimensioned",
+        ]
+        if has_tracing:
+            select_columns.append("s.tracing")
+        if has_insulation:
+            select_columns.append("s.insulation")
+        if has_pcf:
+            select_columns.append("s.pcf_identification")
+        if has_idf:
+            select_columns.append("s.idf_record")
+        if has_user_definable:
+            select_columns.append("s.user_definable")
+        if has_flow_dependency:
+            select_columns.append("s.flow_dependency")
+        if has_source_id:
+            select_columns.extend(["s.source_id", "ss.name", "ss.source_type", "ss.version"])
+        if has_isogen_standard:
+            select_columns.append("s.isogen_standard")
+
+        query = f"SELECT {', '.join(select_columns)} FROM skeys s"
+        if has_source_id:
+            query += " LEFT JOIN symbol_sources ss ON ss.id = s.source_id"
+        query += " ORDER BY s.name"
+        cur.execute(query)
 
         rows = cur.fetchall()
         skeys = []
         for row in rows:
-            tracing = 0
-            insulation = 0
-            if len(row) == 11:
-                skey_id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation = row
-            elif len(row) == 10:
-                skey_id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing = row
-            else:
-                skey_id, name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned = row
+            idx = 0
+            skey_id = row[idx]; idx += 1
+            name = row[idx]; idx += 1
+            skey_group_key = row[idx]; idx += 1
+            skey_subgroup_key = row[idx]; idx += 1
+            skey_description_key = row[idx]; idx += 1
+            spindle_skey = row[idx]; idx += 1
+            orientation = row[idx]; idx += 1
+            flow_arrow = row[idx]; idx += 1
+            dimensioned = row[idx]; idx += 1
+
+            tracing = row[idx] if has_tracing else 0
+            if has_tracing:
+                idx += 1
+            insulation = row[idx] if has_insulation else 0
+            if has_insulation:
+                idx += 1
+
+            pcf_identification = row[idx] if has_pcf else ""
+            if has_pcf:
+                idx += 1
+            idf_record = row[idx] if has_idf else ""
+            if has_idf:
+                idx += 1
+            user_definable = row[idx] if has_user_definable else 1
+            if has_user_definable:
+                idx += 1
+            flow_dependency = row[idx] if has_flow_dependency else 0
+            if has_flow_dependency:
+                idx += 1
+
+            source_id = row[idx] if has_source_id else None
+            source_name = ""
+            source_type = "standard"
+            source_version = ""
+            if has_source_id:
+                idx += 1
+                source_name = row[idx] or ""
+                idx += 1
+                source_type = row[idx] or "standard"
+                idx += 1
+                source_version = row[idx] or ""
+                idx += 1
+
+            isogen_standard = row[idx] if has_isogen_standard else 0
 
             geometry = self.get_latest_geometry_for_skey(skey_id)
             skeys.append(SkeyData(
@@ -244,6 +406,15 @@ class SkeyDB:
                 dimensioned=dimensioned,
                 tracing=tracing,
                 insulation=insulation,
+                pcf_identification=pcf_identification or "",
+                idf_record=idf_record or "",
+                user_definable=user_definable,
+                flow_dependency=flow_dependency,
+                source_id=source_id,
+                source_name=source_name,
+                source_type=source_type,
+                source_version=source_version,
+                isogen_standard=isogen_standard,
                 geometry=geometry
             ))
         conn.close()
@@ -267,8 +438,26 @@ class SkeyDB:
         conn = self.connect()
         cur = conn.cursor()
         spindle_skey = skey.spindle_skey or None  # '' -> NULL for proper FK behavior
-        cur.execute("INSERT INTO skeys (name, skey_group_key, skey_subgroup_key, skey_description_key, spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (skey.name, skey.group_key, skey.subgroup_key, skey.description_key, spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation))
+        source_id = skey.source_id if skey.source_id is not None else self._ensure_symbol_source(
+            skey.source_name, skey.source_type, skey.source_version
+        )
+        cur.execute(
+            """
+            INSERT INTO skeys (
+                name, skey_group_key, skey_subgroup_key, skey_description_key,
+                spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
+                pcf_identification, idf_record, user_definable, flow_dependency,
+                source_id, isogen_standard
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
+                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                skey.tracing, skey.insulation,
+                skey.pcf_identification, skey.idf_record, skey.user_definable,
+                skey.flow_dependency, source_id, skey.isogen_standard,
+            ),
+        )
         skey_id = cur.lastrowid
         cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "create", comment))
         transaction_id = cur.lastrowid
@@ -301,8 +490,38 @@ class SkeyDB:
             return self.insert_skey(skey, user, comment)
         skey_id = row[0]
         spindle_skey = skey.spindle_skey or None  # '' → NULL
-        cur.execute("UPDATE skeys SET skey_group_key = ?, skey_subgroup_key = ?, skey_description_key = ?, spindle_skey = ?, orientation = ?, flow_arrow = ?, dimensioned = ?, tracing = ?, insulation = ? WHERE id = ?",
-            (skey.group_key, skey.subgroup_key, skey.description_key, spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned, skey.tracing, skey.insulation, skey_id))
+        source_id = skey.source_id if skey.source_id is not None else self._ensure_symbol_source(
+            skey.source_name, skey.source_type, skey.source_version
+        )
+        cur.execute(
+            """
+            UPDATE skeys SET
+                skey_group_key = ?,
+                skey_subgroup_key = ?,
+                skey_description_key = ?,
+                spindle_skey = ?,
+                orientation = ?,
+                flow_arrow = ?,
+                dimensioned = ?,
+                tracing = ?,
+                insulation = ?,
+                pcf_identification = ?,
+                idf_record = ?,
+                user_definable = ?,
+                flow_dependency = ?,
+                source_id = ?,
+                isogen_standard = ?
+            WHERE id = ?
+            """,
+            (
+                skey.group_key, skey.subgroup_key, skey.description_key,
+                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                skey.tracing, skey.insulation,
+                skey.pcf_identification, skey.idf_record, skey.user_definable,
+                skey.flow_dependency, source_id, skey.isogen_standard,
+                skey_id,
+            ),
+        )
         cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "edit", comment))
         transaction_id = cur.lastrowid
         for geom in skey.geometry:

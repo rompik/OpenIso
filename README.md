@@ -14,6 +14,9 @@
   <a href="https://crowdin.com/project/openiso">
     <img src="https://badges.crowdin.net/openiso/localized.svg" alt="Crowdin" />
   </a>
+  <a href="https://github.com/rompik/OpenIso/actions/workflows/tests.yml">
+    <img src="https://github.com/rompik/OpenIso/actions/workflows/tests.yml/badge.svg" alt="Tests" />
+  </a>
   <a href="https://pypi.org/project/openiso/">
     <img src="https://img.shields.io/pypi/v/openiso" alt="PyPI" />
   </a>

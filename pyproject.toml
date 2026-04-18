@@ -79,8 +79,13 @@ include = ["openiso", "openiso.*"]
 "share/openiso/po/ru/LC_MESSAGES" = ["po/ru/LC_MESSAGES/*.mo"]
 
 [tool.pytest.ini_options]
-testpaths = ["openiso"]
+testpaths = ["tests"]
 addopts = "-rf -s --cov=openiso --cov-report=xml --cov-report=html --cov-report=term-missing"
+markers = [
+    "unit: fast isolated tests for pure logic",
+    "integration: tests with filesystem/database/service integration",
+    "smoke: lightweight startup/bootstrap checks",
+]
 
 [tool.black]
 line-length = 120

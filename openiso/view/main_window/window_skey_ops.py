@@ -117,6 +117,15 @@ class SkeyOpsMixin:
             dimensioned = 2 if self.properties_widget.chk_dimensioned.isChecked() else 1
             tracing = 2 if self.properties_widget.chk_tracing.isChecked() else 1
             insulation = 2 if self.properties_widget.chk_insulation.isChecked() else 1
+            user_definable = 1 if self.properties_widget.chk_user_definable.isChecked() else 0
+            flow_dependency = 1 if self.properties_widget.chk_flow_dependency.isChecked() else 0
+            isogen_standard = 1 if self.properties_widget.chk_isogen_standard.isChecked() else 0
+
+            source_type = self.properties_widget.cb_source_type.currentData() or "standard"
+            source_name = self.properties_widget.txt_source_name.text().strip()
+            source_version = self.properties_widget.txt_source_version.text().strip()
+            pcf_identification = self.properties_widget.txt_pcf_identification.text().strip()
+            idf_record = self.properties_widget.txt_idf_record.text().strip()
 
             geometry = self._collect_geometry_from_scene()
 
@@ -133,6 +142,14 @@ class SkeyOpsMixin:
                 insulation=insulation,
                 geometry=geometry,
                 lang_code=get_current_language(),
+                pcf_identification=pcf_identification,
+                idf_record=idf_record,
+                user_definable=user_definable,
+                flow_dependency=flow_dependency,
+                source_name=source_name,
+                source_type=source_type,
+                source_version=source_version,
+                isogen_standard=isogen_standard,
             )
 
             self.skey_service.save_skeys()

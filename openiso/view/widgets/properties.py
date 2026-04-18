@@ -55,6 +55,24 @@ class PropertiesWidget(QGroupBox):
         self.cb_spindle_skey.setEditable(True)
         self.cb_spindle_skey.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
 
+        self.lbl_source_type = QLabel(_t("Source Type"))
+        self.cb_source_type = QComboBox()
+        self.cb_source_type.addItem(_t("Standard"), "standard")
+        self.cb_source_type.addItem(_t("Company"), "company")
+        self.cb_source_type.addItem(_t("Project"), "project")
+
+        self.lbl_source_name = QLabel(_t("Source Name"))
+        self.txt_source_name = QLineEdit("")
+
+        self.lbl_source_version = QLabel(_t("Source Version"))
+        self.txt_source_version = QLineEdit("")
+
+        self.lbl_pcf_identification = QLabel(_t("PCF Identification"))
+        self.txt_pcf_identification = QLineEdit("")
+
+        self.lbl_idf_record = QLabel(_t("IDF Record"))
+        self.txt_idf_record = QLineEdit("")
+
         # Description Group
         self.group_description = QGroupBox(_t("Description"))
         self.lyt_description = QVBoxLayout()
@@ -114,6 +132,13 @@ class PropertiesWidget(QGroupBox):
 
         self.chk_insulation = QCheckBox(_t("Insulation"))
 
+        self.chk_user_definable = QCheckBox(_t("User Definable"))
+        self.chk_user_definable.setChecked(True)
+
+        self.chk_flow_dependency = QCheckBox(_t("Flow Dependency"))
+
+        self.chk_isogen_standard = QCheckBox(_t("ISOGEN Standard"))
+
         self.lbl_geometry = QLabel(_t("Geometry"))
         self.lst_geometry = QListWidget()
         self.lst_geometry.setMaximumHeight(120)
@@ -134,17 +159,31 @@ class PropertiesWidget(QGroupBox):
         self.grid_properties.addWidget(self.lbl_spindle, 4, 0)
         self.grid_properties.addWidget(self.cb_spindle_skey, 4, 1)
 
-        self.grid_properties.addWidget(self.group_description, 5, 0, 1, 2)
-        self.grid_properties.addWidget(self.group_orientation, 6, 0, 1, 2)
+        self.grid_properties.addWidget(self.lbl_source_type, 5, 0)
+        self.grid_properties.addWidget(self.cb_source_type, 5, 1)
+        self.grid_properties.addWidget(self.lbl_source_name, 6, 0)
+        self.grid_properties.addWidget(self.txt_source_name, 6, 1)
+        self.grid_properties.addWidget(self.lbl_source_version, 7, 0)
+        self.grid_properties.addWidget(self.txt_source_version, 7, 1)
+        self.grid_properties.addWidget(self.lbl_pcf_identification, 8, 0)
+        self.grid_properties.addWidget(self.txt_pcf_identification, 8, 1)
+        self.grid_properties.addWidget(self.lbl_idf_record, 9, 0)
+        self.grid_properties.addWidget(self.txt_idf_record, 9, 1)
 
-        self.grid_properties.addWidget(self.chk_flow_arrow, 7, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_dimensioned, 8, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_tracing, 9, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_insulation, 10, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_description, 10, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_orientation, 11, 0, 1, 2)
+
+        self.grid_properties.addWidget(self.chk_flow_arrow, 12, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_dimensioned, 13, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_tracing, 14, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_insulation, 15, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_user_definable, 16, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_dependency, 17, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_isogen_standard, 18, 0, 1, 2)
         #self.grid_properties.addWidget(self.lbl_geometry, 10, 0)
         #self.grid_properties.addWidget(self.lst_geometry, 11, 0, 1, 2)
         #self.grid_properties.setRowStretch(10, 1)
-        self.grid_properties.addWidget(self.btn_save, 12, 0, 1, 2)
+        self.grid_properties.addWidget(self.btn_save, 19, 0, 1, 2)
 
     def clear_fields(self):
         """Clears all input fields in the properties widget."""
@@ -155,12 +194,20 @@ class PropertiesWidget(QGroupBox):
         self.cb_skey_subgroup.clear()
         self.cb_skey_subgroup.addItem("", "")
         self.cb_spindle_skey.setCurrentIndex(0)
+        self.cb_source_type.setCurrentIndex(0)
+        self.txt_source_name.clear()
+        self.txt_source_version.clear()
+        self.txt_pcf_identification.clear()
+        self.txt_idf_record.clear()
         self.txt_skey_desc.setPlainText("")
         self.radio_orientations[0].setChecked(True)
         self.chk_flow_arrow.setChecked(False)
         self.chk_dimensioned.setChecked(False)
         self.chk_tracing.setChecked(False)
         self.chk_insulation.setChecked(False)
+        self.chk_user_definable.setChecked(True)
+        self.chk_flow_dependency.setChecked(False)
+        self.chk_isogen_standard.setChecked(False)
         self.lst_geometry.clear()
 
     def update_translations(self, _t):
@@ -171,12 +218,35 @@ class PropertiesWidget(QGroupBox):
         self.lbl_skey_group.setText(_t("Group"))
         self.lbl_skey_subgroup.setText(_t("Subgroup"))
         self.lbl_spindle.setText(_t("Spindle"))
+        self.lbl_source_type.setText(_t("Source Type"))
+        self.lbl_source_name.setText(_t("Source Name"))
+        self.lbl_source_version.setText(_t("Source Version"))
+        self.lbl_pcf_identification.setText(_t("PCF Identification"))
+        self.lbl_idf_record.setText(_t("IDF Record"))
+
+        source_options = [
+            (_t("Standard"), "standard"),
+            (_t("Company"), "company"),
+            (_t("Project"), "project"),
+        ]
+        current_source_type = self.cb_source_type.currentData() or "standard"
+        self.cb_source_type.blockSignals(True)
+        self.cb_source_type.clear()
+        for text, value in source_options:
+            self.cb_source_type.addItem(text, value)
+        index = self.cb_source_type.findData(current_source_type)
+        self.cb_source_type.setCurrentIndex(index if index >= 0 else 0)
+        self.cb_source_type.blockSignals(False)
+
         self.group_description.setTitle(_t("Description"))
         self.group_orientation.setTitle(_t("Orientation"))
         self.chk_flow_arrow.setText(_t("Flow Arrow"))
         self.chk_dimensioned.setText(_t("Dimensioned"))
         self.chk_tracing.setText(_t("Tracing"))
         self.chk_insulation.setText(_t("Insulation"))
+        self.chk_user_definable.setText(_t("User Definable"))
+        self.chk_flow_dependency.setText(_t("Flow Dependency"))
+        self.chk_isogen_standard.setText(_t("ISOGEN Standard"))
         self.lbl_geometry.setText(_t("Geometry"))
         self.btn_save.setText(_t("Save Changes to Skey File"))
         self.btn_save.setToolTip(_t("Save Changes to Skey File"))
@@ -276,6 +346,13 @@ class PropertiesWidget(QGroupBox):
         subgroup_path = f"{skey_data.group_key}.{skey_data.subgroup_key}"
         self.cb_skey_subgroup.setCurrentText(_t(subgroup_path))
         self.cb_spindle_skey.setCurrentText(skey_data.spindle_skey or "")
+        source_type = getattr(skey_data, "source_type", "standard") or "standard"
+        source_index = self.cb_source_type.findData(source_type)
+        self.cb_source_type.setCurrentIndex(source_index if source_index >= 0 else 0)
+        self.txt_source_name.setText(getattr(skey_data, "source_name", "") or "")
+        self.txt_source_version.setText(getattr(skey_data, "source_version", "") or "")
+        self.txt_pcf_identification.setText(getattr(skey_data, "pcf_identification", "") or "")
+        self.txt_idf_record.setText(getattr(skey_data, "idf_record", "") or "")
         self.txt_skey_desc.setPlainText(_t(skey_data.description_key) or "")
 
         # Display geometry in the list
@@ -292,4 +369,7 @@ class PropertiesWidget(QGroupBox):
         self.chk_tracing.setChecked(hasattr(skey_data, 'tracing') and skey_data.tracing == 2)
         # Insulation: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
         self.chk_insulation.setChecked(hasattr(skey_data, 'insulation') and skey_data.insulation == 2)
+        self.chk_user_definable.setChecked(getattr(skey_data, "user_definable", 1) == 1)
+        self.chk_flow_dependency.setChecked(getattr(skey_data, "flow_dependency", 0) == 1)
+        self.chk_isogen_standard.setChecked(getattr(skey_data, "isogen_standard", 0) == 1)
         self.display_geometry(skey_data.geometry)

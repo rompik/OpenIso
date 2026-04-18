@@ -211,6 +211,7 @@ class SkeyTreeView(QWidget):
         self.txt_search.textChanged.connect(self._on_filter_text_changed)
         self.btn_filter_clear.clicked.connect(self._on_filter_clear_clicked)
         self.tree.currentItemChanged.connect(self.current_item_changed.emit)
+        self.tree.itemClicked.connect(lambda item, _col: self.current_item_changed.emit(item, None))
         self.tree.customContextMenuRequested.connect(self._on_context_menu)
 
         # Initial translations

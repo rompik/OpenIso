@@ -22,6 +22,15 @@ class SkeyData:
     dimensioned: int = Dimensioned.DEFAULT
     tracing: int = Tracing.DEFAULT
     insulation: int = Insulation.DEFAULT
+    pcf_identification: str = ""
+    idf_record: str = ""
+    user_definable: int = 1
+    flow_dependency: int = 0
+    source_id: int | None = None
+    source_name: str = ""
+    source_type: str = "standard"
+    source_version: str = ""
+    isogen_standard: int = 0
     geometry: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -35,6 +44,15 @@ class SkeyData:
             "dimensioned": self.dimensioned,
             "tracing": self.tracing,
             "insulation": self.insulation,
+            "pcf_identification": self.pcf_identification,
+            "idf_record": self.idf_record,
+            "user_definable": self.user_definable,
+            "flow_dependency": self.flow_dependency,
+            "source_id": self.source_id,
+            "source_name": self.source_name,
+            "source_type": self.source_type,
+            "source_version": self.source_version,
+            "isogen_standard": self.isogen_standard,
             "geometry": self.geometry
         }
     @classmethod
@@ -51,6 +69,15 @@ class SkeyData:
                 dimensioned=data.get("dimensioned", 0),
                 tracing=data.get("tracing", 0),
                 insulation=data.get("insulation", 0),
+                pcf_identification=data.get("pcf_identification", ""),
+                idf_record=data.get("idf_record", ""),
+                user_definable=data.get("user_definable", 1),
+                flow_dependency=data.get("flow_dependency", 0),
+                source_id=data.get("source_id"),
+                source_name=data.get("source_name", ""),
+                source_type=data.get("source_type", "standard"),
+                source_version=data.get("source_version", ""),
+                isogen_standard=data.get("isogen_standard", 0),
                 geometry=data.get("geometry", [])
             )
         elif isinstance(data, list) and len(data) >= 2:
