@@ -2,7 +2,7 @@
 
 This guide will walk you through the core functionality of the OpenIso editor.
 
-## The Interface
+## The Interface {#the-interface}
 
 The main window is divided into three primary areas:
 
@@ -10,15 +10,15 @@ The main window is divided into three primary areas:
 2. **Drawing Canvas (Center):** The main workspace where you draw geometry. It features a grid, zoom/pan controls, and visual feedback for coordinates.
 3. **Properties Panel (Right Panel):** Displays attributes of the selected symbol (Name, Description, Orientation, Connection Type) or the selected primitive.
 
-## detailed Operations
+## detailed Operations {#detailed-operations}
 
-### 📂 Navigating Symbols
+### 📂 Navigating Symbols {#navigating-symbols}
 
 - Expand the tree structure on the left to find a specific symbol.
 - Double-click a symbol (SKEY code) to open it in the canvas.
 - Right-click on a category to **Create New SKEY**.
 
-### ✏️ Editing Geometry
+### ✏️ Editing Geometry {#editing-geometry}
 
 - **Draw Primitives:** Use the toolbar on the left to select drawing tools (Line, Circle, Rectangle, etc.).
   - _Click-and-drag_ to define dimensions.
@@ -26,7 +26,7 @@ The main window is divided into three primary areas:
 - **Select & Move:** Use the **Select Tool** (Arrow icon) to click on existing shapes. Drag them to move or use the handles to resize.
 - **Delete:** Select an element and press `Del` or `Backspace`.
 
-### 🔗 Understanding Connections
+### 🔗 Understanding Connections {#understanding-connections}
 
 Piping symbols rely on specific connection points to define flow and orientation.
 
@@ -37,7 +37,7 @@ Piping symbols rely on specific connection points to define flow and orientation
 
 > **Note:** Ensure connection points align perfectly with the geometry for accurate export.
 
-### 💾 Saving Changes
+### 💾 Saving Changes {#saving-changes}
 
 - Click the **Save** button in the toolbar or press `Ctrl+S`.
 - This commits changes to the local database and creates a transaction record.
