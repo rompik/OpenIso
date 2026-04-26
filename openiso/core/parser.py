@@ -1,12 +1,6 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
-import sys
-
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QApplication, QLineEdit, QTextEdit, QVBoxLayout, QWidget
-
-
 class CommandParser:
     def __init__(self, canvas_interface):
         self.canvas = canvas_interface

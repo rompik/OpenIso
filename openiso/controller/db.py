@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
+import json
 import shutil
 import sqlite3
 from pathlib import Path
@@ -133,6 +134,16 @@ class SkeyDB:
                 flow_dependency INTEGER NOT NULL DEFAULT 0,
                 source_id INTEGER,
                 isogen_standard INTEGER NOT NULL DEFAULT 0,
+                origin_type TEXT NOT NULL DEFAULT 'official',
+                is_official INTEGER NOT NULL DEFAULT 1,
+                is_user_modified INTEGER NOT NULL DEFAULT 0,
+                upstream_symbol_code TEXT,
+                upstream_release_version TEXT,
+                upstream_symbol_version INTEGER NOT NULL DEFAULT 1,
+                last_synced_upstream_version INTEGER NOT NULL DEFAULT 1,
+                upstream_payload_hash TEXT,
+                local_revision INTEGER NOT NULL DEFAULT 1,
+                sync_state TEXT NOT NULL DEFAULT 'synced',
                 CHECK (orientation IN (0, 1, 2, 3)),
                 CHECK (flow_arrow IN (0, 1, 2)),
                 CHECK (dimensioned IN (0, 1, 2)),
@@ -182,6 +193,20 @@ class SkeyDB:
                 transaction_id INTEGER NOT NULL,
                 FOREIGN KEY (spindle_id) REFERENCES spindles(id),
                 FOREIGN KEY (transaction_id) REFERENCES spindle_transactions(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS app_metadata (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS catalog_symbols (
+                release_version TEXT NOT NULL,
+                symbol_code TEXT NOT NULL,
+                symbol_version INTEGER NOT NULL,
+                payload_hash TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY (release_version, symbol_code)
             );
 
             CREATE INDEX IF NOT EXISTS idx_geometry_skey_txn ON geometry(skey_id, transaction_id);
@@ -249,6 +274,16 @@ class SkeyDB:
             ("flow_dependency", "INTEGER NOT NULL DEFAULT 0"),
             ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
             ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
+            ("origin_type", "TEXT NOT NULL DEFAULT 'official'"),
+            ("is_official", "INTEGER NOT NULL DEFAULT 1"),
+            ("is_user_modified", "INTEGER NOT NULL DEFAULT 0"),
+            ("upstream_symbol_code", "TEXT"),
+            ("upstream_release_version", "TEXT"),
+            ("upstream_symbol_version", "INTEGER NOT NULL DEFAULT 1"),
+            ("last_synced_upstream_version", "INTEGER NOT NULL DEFAULT 1"),
+            ("upstream_payload_hash", "TEXT"),
+            ("local_revision", "INTEGER NOT NULL DEFAULT 1"),
+            ("sync_state", "TEXT NOT NULL DEFAULT 'synced'"),
         ]
         for column_name, column_type in new_skey_columns:
             if not self._column_exists(cur, "skeys", column_name):
@@ -267,6 +302,27 @@ class SkeyDB:
             INSERT OR IGNORE INTO symbol_sources (id, name, source_type, version, description, url)
             VALUES (1, 'ISOGEN / Alias Limited', 'standard', '2008',
                     'ISOGEN Symbol Key (SKEY) Definitions', 'http://www.alias.ltd.uk')
+            """
+        )
+
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS app_metadata (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            )
+            """
+        )
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS catalog_symbols (
+                release_version TEXT NOT NULL,
+                symbol_code TEXT NOT NULL,
+                symbol_version INTEGER NOT NULL,
+                payload_hash TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                PRIMARY KEY (release_version, symbol_code)
+            )
             """
         )
         conn.commit()
@@ -306,6 +362,264 @@ class SkeyDB:
         conn.execute("PRAGMA foreign_keys = ON")
         return conn
 
+    def get_metadata(self, key: str) -> str | None:
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute("SELECT value FROM app_metadata WHERE key = ?", (key,))
+        row = cur.fetchone()
+        conn.close()
+        return row[0] if row else None
+
+    def set_metadata(self, key: str, value: str) -> None:
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO app_metadata (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+            (key, value),
+        )
+        conn.commit()
+        conn.close()
+
+    def get_sync_conflicts(self) -> list[dict]:
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT name, origin_type, sync_state, upstream_symbol_code,
+                   upstream_release_version, upstream_symbol_version
+            FROM skeys
+            WHERE sync_state IN ('conflict', 'upstream_newer')
+            ORDER BY name
+            """
+        )
+        rows = cur.fetchall()
+        conn.close()
+        return [
+            {
+                "name": row[0],
+                "origin_type": row[1],
+                "sync_state": row[2],
+                "upstream_symbol_code": row[3] or "",
+                "upstream_release_version": row[4] or "",
+                "upstream_symbol_version": row[5] or 1,
+            }
+            for row in rows
+        ]
+
+    def get_catalog_symbol(self, release_version: str, symbol_code: str) -> dict | None:
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT symbol_version, payload_hash, payload_json
+            FROM catalog_symbols
+            WHERE release_version = ? AND symbol_code = ?
+            """,
+            (release_version, symbol_code),
+        )
+        row = cur.fetchone()
+        conn.close()
+        if not row:
+            return None
+        return {
+            "symbol_version": row[0],
+            "payload_hash": row[1],
+            "payload": json.loads(row[2]),
+        }
+
+    def upsert_catalog_symbol(
+        self,
+        release_version: str,
+        symbol_code: str,
+        symbol_version: int,
+        payload_hash: str,
+        payload: dict,
+    ) -> None:
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO catalog_symbols (release_version, symbol_code, symbol_version, payload_hash, payload_json)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(release_version, symbol_code) DO UPDATE SET
+                symbol_version=excluded.symbol_version,
+                payload_hash=excluded.payload_hash,
+                payload_json=excluded.payload_json
+            """,
+            (release_version, symbol_code, symbol_version, payload_hash, json.dumps(payload, ensure_ascii=False, sort_keys=True)),
+        )
+        conn.commit()
+        conn.close()
+
+    def upsert_official_skey(
+        self,
+        skey: SkeyData,
+        release_version: str,
+        upstream_symbol_code: str,
+        upstream_symbol_version: int,
+        upstream_payload_hash: str,
+    ) -> str:
+        """Upsert official symbol while preserving user-created and user-modified symbols."""
+        self.ensure_subgroup_exists(skey.group_key, skey.subgroup_key)
+
+        conn = self.connect()
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT id, origin_type, is_user_modified
+            FROM skeys
+            WHERE name = ?
+            """,
+            (skey.name,),
+        )
+        row = cur.fetchone()
+
+        if not row:
+            spindle_skey = skey.spindle_skey or None
+            source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
+            cur.execute(
+                """
+                INSERT INTO skeys (
+                    name, skey_group_key, skey_subgroup_key, skey_description_key,
+                    spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
+                    pcf_identification, idf_record, user_definable, flow_dependency,
+                    source_id, isogen_standard,
+                    origin_type, is_official, is_user_modified,
+                    upstream_symbol_code, upstream_release_version,
+                    upstream_symbol_version, last_synced_upstream_version,
+                    upstream_payload_hash, local_revision, sync_state
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
+                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    skey.tracing, skey.insulation, skey.pcf_identification, skey.idf_record,
+                    skey.user_definable, skey.flow_dependency, source_id, skey.isogen_standard,
+                    "official", 1, 0,
+                    upstream_symbol_code, release_version,
+                    upstream_symbol_version, upstream_symbol_version,
+                    upstream_payload_hash, 1, "synced",
+                ),
+            )
+            skey_id = cur.lastrowid
+            cur.execute(
+                "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
+                (skey_id, "system", "create", f"official sync {release_version}"),
+            )
+            transaction_id = cur.lastrowid
+            for geom in skey.geometry:
+                cur.execute(
+                    "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                    (skey_id, geom.split(":")[0], geom, transaction_id),
+                )
+            conn.commit()
+            conn.close()
+            return "inserted"
+
+        skey_id, origin_type, is_user_modified = row
+
+        if origin_type in ("user", "imported"):
+            cur.execute(
+                """
+                UPDATE skeys
+                SET upstream_symbol_code = ?,
+                    upstream_release_version = ?,
+                    upstream_symbol_version = ?,
+                    upstream_payload_hash = ?,
+                    sync_state = 'upstream_newer'
+                WHERE id = ?
+                """,
+                (
+                    upstream_symbol_code,
+                    release_version,
+                    upstream_symbol_version,
+                    upstream_payload_hash,
+                    skey_id,
+                ),
+            )
+            conn.commit()
+            conn.close()
+            return "skipped_user"
+
+        if is_user_modified:
+            cur.execute(
+                """
+                UPDATE skeys
+                SET upstream_symbol_code = ?,
+                    upstream_release_version = ?,
+                    upstream_symbol_version = ?,
+                    upstream_payload_hash = ?,
+                    sync_state = 'conflict'
+                WHERE id = ?
+                """,
+                (
+                    upstream_symbol_code,
+                    release_version,
+                    upstream_symbol_version,
+                    upstream_payload_hash,
+                    skey_id,
+                ),
+            )
+            conn.commit()
+            conn.close()
+            return "conflict"
+
+        spindle_skey = skey.spindle_skey or None
+        source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
+        cur.execute(
+            """
+            UPDATE skeys SET
+                skey_group_key = ?,
+                skey_subgroup_key = ?,
+                skey_description_key = ?,
+                spindle_skey = ?,
+                orientation = ?,
+                flow_arrow = ?,
+                dimensioned = ?,
+                tracing = ?,
+                insulation = ?,
+                pcf_identification = ?,
+                idf_record = ?,
+                user_definable = ?,
+                flow_dependency = ?,
+                source_id = ?,
+                isogen_standard = ?,
+                origin_type = 'official',
+                is_official = 1,
+                is_user_modified = 0,
+                upstream_symbol_code = ?,
+                upstream_release_version = ?,
+                upstream_symbol_version = ?,
+                last_synced_upstream_version = ?,
+                upstream_payload_hash = ?,
+                sync_state = 'synced'
+            WHERE id = ?
+            """,
+            (
+                skey.group_key, skey.subgroup_key, skey.description_key,
+                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                skey.tracing, skey.insulation,
+                skey.pcf_identification, skey.idf_record, skey.user_definable,
+                skey.flow_dependency, source_id, skey.isogen_standard,
+                upstream_symbol_code, release_version, upstream_symbol_version,
+                upstream_symbol_version, upstream_payload_hash,
+                skey_id,
+            ),
+        )
+        cur.execute(
+            "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
+            (skey_id, "system", "edit", f"official sync {release_version}"),
+        )
+        transaction_id = cur.lastrowid
+        for geom in skey.geometry:
+            cur.execute(
+                "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                (skey_id, geom.split(":")[0], geom, transaction_id),
+            )
+        conn.commit()
+        conn.close()
+        return "updated"
+
     def get_all_skeys(self) -> List[SkeyData]:
         conn = self.connect()
         cur = conn.cursor()
@@ -317,6 +631,16 @@ class SkeyDB:
         has_flow_dependency = self._column_exists(cur, "skeys", "flow_dependency")
         has_source_id = self._column_exists(cur, "skeys", "source_id")
         has_isogen_standard = self._column_exists(cur, "skeys", "isogen_standard")
+        has_origin_type = self._column_exists(cur, "skeys", "origin_type")
+        has_is_official = self._column_exists(cur, "skeys", "is_official")
+        has_is_user_modified = self._column_exists(cur, "skeys", "is_user_modified")
+        has_upstream_symbol_code = self._column_exists(cur, "skeys", "upstream_symbol_code")
+        has_upstream_release_version = self._column_exists(cur, "skeys", "upstream_release_version")
+        has_upstream_symbol_version = self._column_exists(cur, "skeys", "upstream_symbol_version")
+        has_last_synced_upstream_version = self._column_exists(cur, "skeys", "last_synced_upstream_version")
+        has_upstream_payload_hash = self._column_exists(cur, "skeys", "upstream_payload_hash")
+        has_local_revision = self._column_exists(cur, "skeys", "local_revision")
+        has_sync_state = self._column_exists(cur, "skeys", "sync_state")
 
         select_columns = [
             "s.id", "s.name", "s.skey_group_key", "s.skey_subgroup_key", "s.skey_description_key",
@@ -338,6 +662,26 @@ class SkeyDB:
             select_columns.extend(["s.source_id", "ss.name", "ss.source_type", "ss.version"])
         if has_isogen_standard:
             select_columns.append("s.isogen_standard")
+        if has_origin_type:
+            select_columns.append("s.origin_type")
+        if has_is_official:
+            select_columns.append("s.is_official")
+        if has_is_user_modified:
+            select_columns.append("s.is_user_modified")
+        if has_upstream_symbol_code:
+            select_columns.append("s.upstream_symbol_code")
+        if has_upstream_release_version:
+            select_columns.append("s.upstream_release_version")
+        if has_upstream_symbol_version:
+            select_columns.append("s.upstream_symbol_version")
+        if has_last_synced_upstream_version:
+            select_columns.append("s.last_synced_upstream_version")
+        if has_upstream_payload_hash:
+            select_columns.append("s.upstream_payload_hash")
+        if has_local_revision:
+            select_columns.append("s.local_revision")
+        if has_sync_state:
+            select_columns.append("s.sync_state")
 
         query = f"SELECT {', '.join(select_columns)} FROM skeys s"
         if has_source_id:
@@ -393,6 +737,37 @@ class SkeyDB:
                 idx += 1
 
             isogen_standard = row[idx] if has_isogen_standard else 0
+            if has_isogen_standard:
+                idx += 1
+
+            origin_type = row[idx] if has_origin_type else "user"
+            if has_origin_type:
+                idx += 1
+            is_official = row[idx] if has_is_official else 0
+            if has_is_official:
+                idx += 1
+            is_user_modified = row[idx] if has_is_user_modified else 0
+            if has_is_user_modified:
+                idx += 1
+            upstream_symbol_code = row[idx] if has_upstream_symbol_code else ""
+            if has_upstream_symbol_code:
+                idx += 1
+            upstream_release_version = row[idx] if has_upstream_release_version else ""
+            if has_upstream_release_version:
+                idx += 1
+            upstream_symbol_version = row[idx] if has_upstream_symbol_version else 1
+            if has_upstream_symbol_version:
+                idx += 1
+            last_synced_upstream_version = row[idx] if has_last_synced_upstream_version else 1
+            if has_last_synced_upstream_version:
+                idx += 1
+            upstream_payload_hash = row[idx] if has_upstream_payload_hash else ""
+            if has_upstream_payload_hash:
+                idx += 1
+            local_revision = row[idx] if has_local_revision else 1
+            if has_local_revision:
+                idx += 1
+            sync_state = row[idx] if has_sync_state else "synced"
 
             geometry = self.get_latest_geometry_for_skey(skey_id)
             skeys.append(SkeyData(
@@ -415,6 +790,16 @@ class SkeyDB:
                 source_type=source_type,
                 source_version=source_version,
                 isogen_standard=isogen_standard,
+                origin_type=origin_type or "user",
+                is_official=is_official or 0,
+                is_user_modified=is_user_modified or 0,
+                upstream_symbol_code=upstream_symbol_code or "",
+                upstream_release_version=upstream_release_version or "",
+                upstream_symbol_version=upstream_symbol_version or 1,
+                last_synced_upstream_version=last_synced_upstream_version or 1,
+                upstream_payload_hash=upstream_payload_hash or "",
+                local_revision=local_revision or 1,
+                sync_state=sync_state or "synced",
                 geometry=geometry
             ))
         conn.close()
@@ -447,8 +832,12 @@ class SkeyDB:
                 name, skey_group_key, skey_subgroup_key, skey_description_key,
                 spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
                 pcf_identification, idf_record, user_definable, flow_dependency,
-                source_id, isogen_standard
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                source_id, isogen_standard,
+                origin_type, is_official, is_user_modified,
+                upstream_symbol_code, upstream_release_version,
+                upstream_symbol_version, last_synced_upstream_version,
+                upstream_payload_hash, local_revision, sync_state
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
@@ -456,6 +845,10 @@ class SkeyDB:
                 skey.tracing, skey.insulation,
                 skey.pcf_identification, skey.idf_record, skey.user_definable,
                 skey.flow_dependency, source_id, skey.isogen_standard,
+                skey.origin_type, skey.is_official, skey.is_user_modified,
+                skey.upstream_symbol_code, skey.upstream_release_version,
+                skey.upstream_symbol_version, skey.last_synced_upstream_version,
+                skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
             ),
         )
         skey_id = cur.lastrowid
@@ -510,7 +903,17 @@ class SkeyDB:
                 user_definable = ?,
                 flow_dependency = ?,
                 source_id = ?,
-                isogen_standard = ?
+                isogen_standard = ?,
+                origin_type = ?,
+                is_official = ?,
+                is_user_modified = ?,
+                upstream_symbol_code = ?,
+                upstream_release_version = ?,
+                upstream_symbol_version = ?,
+                last_synced_upstream_version = ?,
+                upstream_payload_hash = ?,
+                local_revision = ?,
+                sync_state = ?
             WHERE id = ?
             """,
             (
@@ -519,6 +922,10 @@ class SkeyDB:
                 skey.tracing, skey.insulation,
                 skey.pcf_identification, skey.idf_record, skey.user_definable,
                 skey.flow_dependency, source_id, skey.isogen_standard,
+                skey.origin_type, skey.is_official, skey.is_user_modified,
+                skey.upstream_symbol_code, skey.upstream_release_version,
+                skey.upstream_symbol_version, skey.last_synced_upstream_version,
+                skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
                 skey_id,
             ),
         )

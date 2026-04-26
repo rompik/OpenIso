@@ -168,5 +168,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Scripts used for building or translating
-scripts/
+# Scripts are versioned in this repository.

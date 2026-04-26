@@ -20,7 +20,7 @@ from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QColor, QPen
 from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsItem
 
-from openiso.core.constants import POINT_COLORS
+from openiso.view.ui_constants import POINT_COLORS
 
 
 class PointItem(QGraphicsEllipseItem):

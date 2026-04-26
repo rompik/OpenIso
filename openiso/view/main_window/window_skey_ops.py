@@ -12,7 +12,13 @@ import os
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
+from openiso.controller.skey_request_mapper import (
+    build_export_payload,
+    build_save_payload,
+    resolve_skey_name,
+)
 from openiso.core.i18n import _t, get_current_language
+from openiso.view.main_window.window_error_handler import WindowErrorHandler
 
 
 class SkeyOpsMixin:
@@ -67,7 +73,7 @@ class SkeyOpsMixin:
         )
 
         if reply == QMessageBox.StandardButton.Yes:
-            if self.skey_service.delete_skey(skey_name):
+            if self.controller.delete_skey(skey_name):
                 self.refresh_skey_tree()
 
                 if target_path:
@@ -93,66 +99,22 @@ class SkeyOpsMixin:
     def save_current_skey(self):
         """Gathers form data and scene geometry, then saves the Skey to the database."""
         try:
-            skey_name = self.properties_widget.txt_alias_code.text().strip()
-            if not skey_name:
-                skey_name = self.properties_widget.txt_skey.text().strip()
+            form_data = self.form_adapter.collect_save_form_data()
+            skey_name = resolve_skey_name(form_data["alias_code"], form_data["skey_name"])
 
             if not skey_name:
                 QMessageBox.warning(self, _t("Error"), _t("Skey name cannot be empty"))
                 return False
 
-            group_key = (
-                self.properties_widget.cb_skey_group.currentData()
-                or self.properties_widget.cb_skey_group.currentText()
-            )
-            subgroup_key = (
-                self.properties_widget.cb_skey_subgroup.currentData()
-                or self.properties_widget.cb_skey_subgroup.currentText()
-            )
-            description_text = self.properties_widget.txt_skey_desc.toPlainText()
-            spindle_skey = self.properties_widget.cb_spindle_skey.currentText()
-
-            orientation = self.properties_widget.orientation_button_group.checkedId()
-            flow_arrow = 2 if self.properties_widget.chk_flow_arrow.isChecked() else 1
-            dimensioned = 2 if self.properties_widget.chk_dimensioned.isChecked() else 1
-            tracing = 2 if self.properties_widget.chk_tracing.isChecked() else 1
-            insulation = 2 if self.properties_widget.chk_insulation.isChecked() else 1
-            user_definable = 1 if self.properties_widget.chk_user_definable.isChecked() else 0
-            flow_dependency = 1 if self.properties_widget.chk_flow_dependency.isChecked() else 0
-            isogen_standard = 1 if self.properties_widget.chk_isogen_standard.isChecked() else 0
-
-            source_type = self.properties_widget.cb_source_type.currentData() or "standard"
-            source_name = self.properties_widget.txt_source_name.text().strip()
-            source_version = self.properties_widget.txt_source_version.text().strip()
-            pcf_identification = self.properties_widget.txt_pcf_identification.text().strip()
-            idf_record = self.properties_widget.txt_idf_record.text().strip()
-
             geometry = self._collect_geometry_from_scene()
-
-            self.skey_service.update_skey(
-                name=skey_name,
-                group_key=group_key,
-                subgroup_key=subgroup_key,
-                description_key=description_text,
-                spindle_skey=spindle_skey,
-                orientation=orientation,
-                flow_arrow=flow_arrow,
-                dimensioned=dimensioned,
-                tracing=tracing,
-                insulation=insulation,
+            save_payload = build_save_payload(
+                form_data,
+                skey_name=skey_name,
                 geometry=geometry,
                 lang_code=get_current_language(),
-                pcf_identification=pcf_identification,
-                idf_record=idf_record,
-                user_definable=user_definable,
-                flow_dependency=flow_dependency,
-                source_name=source_name,
-                source_type=source_type,
-                source_version=source_version,
-                isogen_standard=isogen_standard,
             )
 
-            self.skey_service.save_skeys()
+            self.controller.save_skey(**save_payload)
 
             print(f"Reloading Skey tree after saving '{skey_name}'")
             self.refresh_skey_tree()
@@ -165,10 +127,8 @@ class SkeyOpsMixin:
             print(f"Skey '{skey_name}' saved successfully")
             return True
 
-        except Exception as e:
-            print(f"Error saving Skey: {e}")
-            import traceback
-            traceback.print_exc()
+        except (RuntimeError, ValueError, TypeError, OSError) as e:
+            WindowErrorHandler.handle_save_error(e)
             return False
 
     def _select_skey_in_tree(self, skey_name: str):
@@ -215,43 +175,13 @@ class SkeyOpsMixin:
 
     def export_to_file(self):
         """Exports the current Skey data to an Intergraph ASCII (.asc) file."""
-        skey_name = self.properties_widget.txt_skey.text().strip()
+        form_data = self.form_adapter.collect_export_form_data()
+        skey_name = form_data["skey_name"]
         if not skey_name:
             QMessageBox.warning(self, _t("Export Error"), _t("No Skey selected or name is empty"))
             return
-
-        group_key = (
-            self.properties_widget.cb_skey_group.currentData()
-            or self.properties_widget.cb_skey_group.currentText()
-        )
-        subgroup_key = (
-            self.properties_widget.cb_skey_subgroup.currentData()
-            or self.properties_widget.cb_skey_subgroup.currentText()
-        )
-        description_text = self.properties_widget.txt_skey_desc.toPlainText()
-        spindle_skey = self.properties_widget.cb_spindle_skey.currentText()
-        orientation = self.properties_widget.orientation_button_group.checkedId()
-        flow_arrow = 2 if self.properties_widget.chk_flow_arrow.isChecked() else 1
-        dimensioned = 2 if self.properties_widget.chk_dimensioned.isChecked() else 1
-        tracing = 2 if self.properties_widget.chk_tracing.isChecked() else 1
-        insulation = 2 if self.properties_widget.chk_insulation.isChecked() else 1
         geometry = self._collect_geometry_from_scene()
-
-        from openiso.model.skey import SkeyData
-
-        skey = SkeyData(
-            name=skey_name,
-            group_key=group_key,
-            subgroup_key=subgroup_key,
-            description_key=description_text,
-            spindle_skey=spindle_skey,
-            orientation=orientation,
-            flow_arrow=flow_arrow,
-            dimensioned=dimensioned,
-            tracing=tracing,
-            insulation=insulation,
-            geometry=geometry,
-        )
+        skey_payload, geometry_payload = build_export_payload(form_data, geometry)
 
         file_path, _ = QFileDialog.getSaveFileName(
             self, _t("Export Skey as ASCII"),
@@ -262,18 +192,15 @@ class SkeyOpsMixin:
             return
 
         try:
-            ascii_content = self.skey_service.export_skey_to_ascii(skey)
+            ascii_content = self.controller.export_skey_to_ascii(skey_payload, geometry_payload)
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(ascii_content)
             self.status_bar_widget.showMessage(
                 _t("Skey '{0}' exported to {1}").format(skey_name, os.path.basename(file_path)), 3000
             )
             print(f"Skey '{skey_name}' exported to {file_path}")
-        except Exception as e:
-            QMessageBox.critical(
-                self, _t("Export Error"), _t("Failed to export Skey: {0}").format(str(e))
-            )
-            print(f"Export error: {e}")
+        except (RuntimeError, ValueError, TypeError, OSError) as e:
+            WindowErrorHandler.handle_export_error(self, e)
 
     def print_symbol(self):
         """Opens the printing dialog to output the current symbol design."""
@@ -285,7 +212,7 @@ class SkeyOpsMixin:
         if symbol_file_path is None:
             return
 
-        result = self.skey_service.import_from_ascii(symbol_file_path)
+        result = self.controller.import_from_ascii(symbol_file_path)
         if result.success:
             self.refresh_skey_tree()
         else:
@@ -297,6 +224,6 @@ class SkeyOpsMixin:
         if symbol_file_path is None:
             return
 
-        result = self.skey_service.import_from_idf(symbol_file_path)
+        result = self.controller.import_from_idf(symbol_file_path)
         if result.success:
             self.refresh_skey_tree()

@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
+import hashlib
+import json
+import os
 from typing import Optional
 
 from openiso.controller.db import SkeyDB
@@ -52,7 +55,6 @@ class SkeyService:
 
         # Build database path from data_path
         if data_path:
-            import os
             db_path = os.path.join(data_path, 'database', 'openiso.db')
             self._db = SkeyDB(db_path)
         else:
@@ -113,6 +115,220 @@ class SkeyService:
     def load_skeys(self) -> bool:
         """Alias for load_skeys_from_db to match expected interface."""
         return self.load_skeys_from_db()
+
+    def get_sync_conflicts(self) -> list[dict]:
+        return self._db.get_sync_conflicts()
+
+    def _normalize_catalog_geometry(self, symbol_code: str, payload: dict) -> list[str]:
+        raw_geometry = payload.get("geometry", [])
+        if not isinstance(raw_geometry, list):
+            return []
+
+        is_legacy_raw_geometry = any(not isinstance(item, str) for item in raw_geometry)
+        if not is_legacy_raw_geometry:
+            is_legacy_raw_geometry = any(
+                isinstance(item, str) and ":" not in item for item in raw_geometry if item
+            )
+
+        if is_legacy_raw_geometry:
+            return self._geometry_converter.convert_graphics(symbol_code, raw_geometry)
+
+        return [item for item in raw_geometry if isinstance(item, str) and item]
+
+    def _serialize_skey_snapshot(self, skey: SkeyData) -> dict:
+        return {
+            "name": skey.name,
+            "group_key": skey.group_key,
+            "subgroup_key": skey.subgroup_key,
+            "description_key": skey.description_key,
+            "origin_type": skey.origin_type,
+            "sync_state": skey.sync_state,
+            "orientation": skey.orientation,
+            "flow_arrow": skey.flow_arrow,
+            "dimensioned": skey.dimensioned,
+            "tracing": skey.tracing,
+            "insulation": skey.insulation,
+            "local_revision": skey.local_revision,
+            "upstream_release_version": skey.upstream_release_version,
+            "upstream_symbol_version": skey.upstream_symbol_version,
+            "geometry": list(skey.geometry),
+        }
+
+    def get_sync_conflict_details(self, skey_name: str) -> dict | None:
+        local_skey = self.get_skey(skey_name)
+        if not local_skey:
+            return None
+
+        upstream = None
+        upstream_code = local_skey.upstream_symbol_code or local_skey.name
+        release_version = local_skey.upstream_release_version
+        if release_version:
+            catalog_symbol = self._db.get_catalog_symbol(release_version, upstream_code)
+            if catalog_symbol:
+                upstream_skey = self._build_official_skey(
+                    symbol_code=local_skey.name,
+                    payload=catalog_symbol["payload"],
+                    release_version=release_version,
+                    symbol_version=int(catalog_symbol["symbol_version"]),
+                    payload_hash=catalog_symbol["payload_hash"],
+                )
+                upstream_skey.upstream_symbol_code = upstream_code
+                upstream = self._serialize_skey_snapshot(upstream_skey)
+
+        local_snapshot = self._serialize_skey_snapshot(local_skey)
+        local_geometry = local_snapshot["geometry"]
+        upstream_geometry = upstream["geometry"] if upstream else []
+
+        return {
+            "name": skey_name,
+            "sync_state": local_skey.sync_state,
+            "local": local_snapshot,
+            "upstream": upstream,
+            "summary": {
+                "local_geometry_count": len(local_geometry),
+                "upstream_geometry_count": len(upstream_geometry),
+                "shared_geometry_count": len(set(local_geometry).intersection(upstream_geometry)),
+            },
+        }
+
+    def _build_official_skey(
+        self,
+        symbol_code: str,
+        payload: dict,
+        release_version: str,
+        symbol_version: int,
+        payload_hash: str,
+        *,
+        local_revision: int = 1,
+    ) -> SkeyData:
+        return SkeyData(
+            name=symbol_code,
+            group_key=(payload.get("skey_group") or "unknown").lower().replace(" ", "_"),
+            subgroup_key=(payload.get("subgroup") or "unknown").lower().replace(" ", "_"),
+            description_key=payload.get("description") or "",
+            spindle_skey=payload.get("spindle_skey") or "",
+            orientation=int(payload.get("orientation", 0)),
+            flow_arrow=int(payload.get("flow_arrow", 0)),
+            dimensioned=int(payload.get("dimensioned", 0)),
+            tracing=int(payload.get("tracing", 0)),
+            insulation=int(payload.get("insulation", 0)),
+            geometry=self._normalize_catalog_geometry(symbol_code, payload),
+            origin_type="official",
+            is_official=1,
+            is_user_modified=0,
+            upstream_symbol_code=symbol_code,
+            upstream_release_version=release_version,
+            upstream_symbol_version=symbol_version,
+            last_synced_upstream_version=symbol_version,
+            upstream_payload_hash=payload_hash,
+            local_revision=local_revision,
+            sync_state="synced",
+        )
+
+    def resolve_sync_conflict_accept_upstream(self, skey_name: str) -> bool:
+        existing = self.get_skey(skey_name)
+        if not existing:
+            return False
+
+        upstream_code = existing.upstream_symbol_code or existing.name
+        release_version = existing.upstream_release_version
+        if not release_version:
+            return False
+
+        catalog_symbol = self._db.get_catalog_symbol(release_version, upstream_code)
+        if not catalog_symbol:
+            return False
+
+        official_skey = self._build_official_skey(
+            symbol_code=existing.name,
+            payload=catalog_symbol["payload"],
+            release_version=release_version,
+            symbol_version=int(catalog_symbol["symbol_version"]),
+            payload_hash=catalog_symbol["payload_hash"],
+            local_revision=existing.local_revision + 1,
+        )
+        official_skey.upstream_symbol_code = upstream_code
+
+        self._db.ensure_subgroup_exists(official_skey.group_key, official_skey.subgroup_key)
+        self._db.update_skey(official_skey, comment="resolve_accept_upstream")
+        self.load_skeys_from_db()
+        return True
+
+    def resolve_sync_conflict_keep_local(self, skey_name: str) -> bool:
+        existing = self.get_skey(skey_name)
+        if not existing:
+            return False
+
+        existing.last_synced_upstream_version = existing.upstream_symbol_version
+        existing.local_revision += 1
+        existing.sync_state = "synced"
+        self._db.ensure_subgroup_exists(existing.group_key, existing.subgroup_key)
+        self._db.update_skey(existing, comment="resolve_keep_local")
+        self.load_skeys_from_db()
+        return True
+
+    def sync_official_catalog(self, release_version: str) -> dict:
+        """Sync bundled official symbols into user DB without overwriting user content."""
+        if not self._data_path:
+            return {"synced": False, "reason": "no_data_path"}
+
+        catalog_path = os.path.join(self._data_path, "settings", "OpenIso.json")
+        manifest_path = os.path.join(self._data_path, "settings", "OpenIso.catalog.manifest.json")
+        if not os.path.exists(catalog_path):
+            return {"synced": False, "reason": "catalog_missing"}
+
+        manifest_data = {}
+        if os.path.exists(manifest_path):
+            with open(manifest_path, "r", encoding="utf-8") as manifest_file:
+                manifest_data = json.load(manifest_file)
+
+        symbol_versions = manifest_data.get("symbols", {})
+
+        last_synced = self._db.get_metadata("last_synced_release_version")
+        if last_synced == release_version:
+            return {"synced": False, "reason": "already_synced", "release": release_version}
+
+        with open(catalog_path, "r", encoding="utf-8") as catalog_file:
+            catalog_data = json.load(catalog_file)
+
+        stats = {"inserted": 0, "updated": 0, "conflict": 0, "skipped_user": 0}
+
+        for symbol_code, payload in catalog_data.items():
+            manifest_entry = symbol_versions.get(symbol_code, {})
+            symbol_version = int(manifest_entry.get("version", payload.get("symbol_version", 1)))
+            payload_hash = hashlib.sha256(
+                json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+            ).hexdigest()
+
+            self._db.upsert_catalog_symbol(
+                release_version=release_version,
+                symbol_code=symbol_code,
+                symbol_version=symbol_version,
+                payload_hash=payload_hash,
+                payload=payload,
+            )
+
+            skey = self._build_official_skey(
+                symbol_code=symbol_code,
+                payload=payload,
+                release_version=release_version,
+                symbol_version=symbol_version,
+                payload_hash=payload_hash,
+            )
+
+            result = self._db.upsert_official_skey(
+                skey=skey,
+                release_version=release_version,
+                upstream_symbol_code=symbol_code,
+                upstream_symbol_version=symbol_version,
+                upstream_payload_hash=payload_hash,
+            )
+            if result in stats:
+                stats[result] += 1
+
+        self._db.set_metadata("last_synced_release_version", release_version)
+        self.load_skeys_from_db()
+        return {"synced": True, "release": release_version, **stats}
 
     def delete_skey(self, skey_name: str) -> bool:
         """Delete a skey from the database and refresh the groups."""
@@ -205,6 +421,36 @@ class SkeyService:
         if description_key and "." not in description_key and not description_key.startswith("description."):
             save_json_translation(desc_i18n_key, description_key, lang_code)
 
+        existing = self.get_skey(name)
+        if existing:
+            if existing.origin_type in ("official", "forked_official"):
+                origin_type = "forked_official"
+                is_official = 0
+                is_user_modified = 1
+                sync_state = existing.sync_state
+            else:
+                origin_type = existing.origin_type
+                is_official = existing.is_official
+                is_user_modified = existing.is_user_modified
+                sync_state = existing.sync_state
+            upstream_symbol_code = existing.upstream_symbol_code
+            upstream_release_version = existing.upstream_release_version
+            upstream_symbol_version = existing.upstream_symbol_version
+            last_synced_upstream_version = existing.last_synced_upstream_version
+            upstream_payload_hash = existing.upstream_payload_hash
+            local_revision = existing.local_revision + 1
+        else:
+            origin_type = "user"
+            is_official = 0
+            is_user_modified = 0
+            sync_state = "synced"
+            upstream_symbol_code = ""
+            upstream_release_version = ""
+            upstream_symbol_version = 1
+            last_synced_upstream_version = 1
+            upstream_payload_hash = ""
+            local_revision = 1
+
         skey = SkeyData(
             name=name,
             group_key=g_id,
@@ -224,6 +470,16 @@ class SkeyService:
             source_type=source_type,
             source_version=source_version,
             isogen_standard=isogen_standard,
+            origin_type=origin_type,
+            is_official=is_official,
+            is_user_modified=is_user_modified,
+            upstream_symbol_code=upstream_symbol_code,
+            upstream_release_version=upstream_release_version,
+            upstream_symbol_version=upstream_symbol_version,
+            last_synced_upstream_version=last_synced_upstream_version,
+            upstream_payload_hash=upstream_payload_hash,
+            local_revision=local_revision,
+            sync_state=sync_state,
             geometry=geometry
         )
 
@@ -255,6 +511,11 @@ class SkeyService:
         result = importer.import_from_file(file_path)
         if result.success:
             for name, skey in result.skeys.items():
+                skey.origin_type = "imported"
+                skey.is_official = 0
+                skey.is_user_modified = 0
+                skey.local_revision = 1
+                skey.sync_state = "synced"
                 self._db.update_skey(skey)
                 self._repository.skeys[name] = skey
             self._groups = self._repository.build_groups()

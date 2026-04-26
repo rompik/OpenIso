@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openiso.dev/schema/canonical-symbols-v1.json",
+  "title": "OpenIso Canonical Symbols v1",
+  "type": "object",
+  "required": ["format", "schema_version", "format_version", "generated_at", "source", "symbols"],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "OpenIso.Canonical"
+    },
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "format_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "required": ["type", "name"],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "release_version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["symbol_code", "group_key", "subgroup_key", "versioning", "geometry"],
+        "properties": {
+          "symbol_code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "group_key": {
+            "type": "string"
+          },
+          "subgroup_key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "versioning": {
+            "type": "object",
+            "required": ["upstream_symbol_version", "payload_hash"],
+            "properties": {
+              "upstream_symbol_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "local_revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "payload_hash": {
+                "type": "string",
+                "pattern": "^sha256:[a-fA-F0-9]+$"
+              },
+              "last_synced_release_version": {
+                "type": "string"
+              },
+              "sync_state": {
+                "type": "string",
+                "enum": ["synced", "conflict", "upstream_newer", "deprecated_upstream"]
+              }
+            },
+            "additionalProperties": true
+          },
+          "connectors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "x", "y"],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": ["arrive", "leave", "tee", "spindle"]
+                },
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "geometry": {
+            "type": "object",
+            "required": ["segments"],
+            "properties": {
+              "units": {
+                "type": "string"
+              },
+              "segments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["type"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["line", "arc", "polyline", "polygon", "ellipse"]
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          },
+          "attributes": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

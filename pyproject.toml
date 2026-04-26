@@ -46,6 +46,7 @@ dev = [
     "coverage",
     "coveralls",
     "flake8",
+    "jsonschema",
     "pytest",
     "pytest-cov",
     "pytest-qt",

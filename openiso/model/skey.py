@@ -31,6 +31,16 @@ class SkeyData:
     source_type: str = "standard"
     source_version: str = ""
     isogen_standard: int = 0
+    origin_type: str = "user"
+    is_official: int = 0
+    is_user_modified: int = 0
+    upstream_symbol_code: str = ""
+    upstream_release_version: str = ""
+    upstream_symbol_version: int = 1
+    last_synced_upstream_version: int = 1
+    upstream_payload_hash: str = ""
+    local_revision: int = 1
+    sync_state: str = "synced"
     geometry: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -53,6 +63,16 @@ class SkeyData:
             "source_type": self.source_type,
             "source_version": self.source_version,
             "isogen_standard": self.isogen_standard,
+            "origin_type": self.origin_type,
+            "is_official": self.is_official,
+            "is_user_modified": self.is_user_modified,
+            "upstream_symbol_code": self.upstream_symbol_code,
+            "upstream_release_version": self.upstream_release_version,
+            "upstream_symbol_version": self.upstream_symbol_version,
+            "last_synced_upstream_version": self.last_synced_upstream_version,
+            "upstream_payload_hash": self.upstream_payload_hash,
+            "local_revision": self.local_revision,
+            "sync_state": self.sync_state,
             "geometry": self.geometry
         }
     @classmethod
@@ -78,6 +98,16 @@ class SkeyData:
                 source_type=data.get("source_type", "standard"),
                 source_version=data.get("source_version", ""),
                 isogen_standard=data.get("isogen_standard", 0),
+                origin_type=data.get("origin_type", "user"),
+                is_official=data.get("is_official", 0),
+                is_user_modified=data.get("is_user_modified", 0),
+                upstream_symbol_code=data.get("upstream_symbol_code", ""),
+                upstream_release_version=data.get("upstream_release_version", ""),
+                upstream_symbol_version=data.get("upstream_symbol_version", 1),
+                last_synced_upstream_version=data.get("last_synced_upstream_version", 1),
+                upstream_payload_hash=data.get("upstream_payload_hash", ""),
+                local_revision=data.get("local_revision", 1),
+                sync_state=data.get("sync_state", "synced"),
                 geometry=data.get("geometry", [])
             )
         elif isinstance(data, list) and len(data) >= 2:

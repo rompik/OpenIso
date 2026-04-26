@@ -1,0 +1,63 @@
+{
+  "format": "OpenIso.Canonical",
+  "schema_version": 1,
+  "format_version": "1.0.0",
+  "generated_at": "2026-04-22T12:00:00Z",
+  "source": {
+    "type": "official_catalog",
+    "name": "OpenIso",
+    "release_version": "0.8.0"
+  },
+  "symbols": [
+    {
+      "symbol_code": "VAVW",
+      "name": "Gate Valve",
+      "group_key": "valves",
+      "subgroup_key": "gate",
+      "description": "Gate valve symbol",
+      "versioning": {
+        "upstream_symbol_version": 7,
+        "local_revision": 1,
+        "payload_hash": "sha256:9f2ca1bcd5",
+        "last_synced_release_version": "0.8.0",
+        "sync_state": "synced"
+      },
+      "connectors": [
+        {
+          "kind": "arrive",
+          "x": -22.5,
+          "y": 17.625
+        },
+        {
+          "kind": "leave",
+          "x": 22.5,
+          "y": 17.625
+        }
+      ],
+      "geometry": {
+        "units": "mm",
+        "segments": [
+          {
+            "type": "line",
+            "x1": -22.5,
+            "y1": 17.625,
+            "x2": -15.0,
+            "y2": 17.625
+          },
+          {
+            "type": "line",
+            "x1": 19.9,
+            "y1": 25.925,
+            "x2": 22.05,
+            "y2": 20.575
+          }
+        ]
+      },
+      "attributes": {
+        "orientation": 0,
+        "flow_arrow": 1,
+        "dimensioned": 1
+      }
+    }
+  ]
+}

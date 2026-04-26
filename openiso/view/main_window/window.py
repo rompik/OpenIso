@@ -24,7 +24,6 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
-    QMessageBox,
     QSizePolicy,
     QStatusBar,
     QVBoxLayout,
@@ -32,14 +31,15 @@ from PyQt6.QtWidgets import (
 )
 
 from openiso import __version__
-from openiso.controller.services import SkeyService
 from openiso.core.constants import SHEET_SIZE
-from openiso.core.i18n import get_current_language, setup_i18n
+from openiso.core.i18n import setup_i18n
 from openiso.core.parser import CommandParser
 from openiso.view.base_classes.base_popup_menu_grouped import BasePopupMenuGrouped
 from openiso.view.graphics.scene import SheetLayout
 from openiso.view.main_window.window_canvas import CanvasMixin
+from openiso.view.main_window.window_controller import WindowController
 from openiso.view.main_window.window_dialogs import DialogsMixin
+from openiso.view.main_window.window_form_adapter import WindowFormAdapter
 
 # --- Mixin imports ---
 from openiso.view.main_window.window_draw_tools import DrawToolsMixin
@@ -92,7 +92,7 @@ class SkeyEditor(
 
         print(f"[debug] Tree selection changed to: {current.text(0)} (raw: {skey_name})")
 
-        skey_data = self.skey_service.get_skey(skey_name)
+        skey_data = self.controller.get_skey(skey_name)
         if not skey_data:
             print(f"[error] Skey not found in repository: {skey_name}")
             return
@@ -124,7 +124,7 @@ class SkeyEditor(
             return
 
         self.properties_widget.cb_skey_subgroup.clear()
-        subgroups = self.skey_service.get_subgroup_names(group_key)
+        subgroups = self.controller.get_subgroup_names(group_key)
         for subgroup in subgroups:
             path = f"{group_key}.{subgroup}"
             self.properties_widget.cb_skey_subgroup.addItem(_t(path), subgroup)
@@ -155,15 +155,17 @@ class SkeyEditor(
 
         self._load_styles(data_path)
 
-        self.skey_service = SkeyService(data_path, use_db=True)
-        self.skey_service.load_descriptions()
+        self.controller = WindowController(data_path, use_db=True)
+        # Keep backward-compatible access for existing mixins during incremental migration.
+        self.skey_service = self.controller.skey_service
         self.help_window = None
 
         self._setup_ui()
         print("Calling load_skeys to populate tree...")
-        if self.skey_service.load_skeys():
+        if self.controller.load_initial_data(__version__):
             print("Successfully loaded skeys, populating tree...")
             self.refresh_skey_tree()
+            self._handle_catalog_sync_feedback(self.controller.get_last_sync_result())
         else:
             print("Failed to load skeys from database")
 
@@ -189,6 +191,7 @@ class SkeyEditor(
         self.group_editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.properties_widget = PropertiesWidget(_t("Properties"), self.icons_library_path)
+        self.form_adapter = WindowFormAdapter(self.properties_widget)
         self.preview_widget = PreviewWidget(_t("Preview"))
         self.menu_toolbar_widget = MenuToolbarWidget(self.icons_library_path)
         self.draw_toolbar_widget = DrawToolbarWidget(self.icons_library_path)
@@ -303,7 +306,7 @@ class SkeyEditor(
         )
 
         # Spindle popup
-        all_spindles = self.skey_service.get_all_spindles()
+        all_spindles = self.controller.get_all_spindles()
         self.properties_widget.update_spindles(all_spindles)
         spindle_groups: dict = {}
         for spindle in all_spindles:
@@ -355,20 +358,20 @@ class SkeyEditor(
 
     def _change_language(self, lang_code):
         """Switches the application's interface language and updates all translatable UI strings."""
-        global _t
-        _t = setup_i18n(lang_code)
+        translator = setup_i18n(lang_code)
+        globals()["_t"] = translator
 
-        self.setWindowTitle(_t("OpenIso - Skey Editor"))
-        self.status_label.setText(_t("Ready"))
-        self.group_skeys.setTitle(_t("Skeys List"))
-        self.group_editor.setTitle(_t("Shape"))
-        self.properties_widget.update_translations(_t)
-        self.preview_widget.setTitle(_t("Preview"))
-        self.menu_toolbar_widget.update_translations(_t)
-        self.draw_toolbar_widget.update_translations(_t)
-        self.tree_skeys.update_translations(_t)
+        self.setWindowTitle(translator("OpenIso - Skey Editor"))
+        self.status_label.setText(translator("Ready"))
+        self.group_skeys.setTitle(translator("Skeys List"))
+        self.group_editor.setTitle(translator("Shape"))
+        self.properties_widget.update_translations(translator)
+        self.preview_widget.setTitle(translator("Preview"))
+        self.menu_toolbar_widget.update_translations(translator)
+        self.draw_toolbar_widget.update_translations(translator)
+        self.tree_skeys.update_translations(translator)
 
-        if self.skey_service.load_skeys():
+        if self.controller.load_skeys():
             self.refresh_skey_tree()
 
     def _load_styles(self, data_path):
@@ -378,17 +381,17 @@ class SkeyEditor(
             try:
                 with open(style_path, "r", encoding="utf-8") as f:
                     self.setStyleSheet(f.read())
-            except Exception as e:
+            except (OSError, UnicodeError) as e:
                 print(f"Error loading CSS: {e}")
 
     def refresh_skey_tree(self):
         """Rebuilds the Skey tree view from the latest service data."""
         _t = setup_i18n()
-        self.skey_service.reload_groups()
+        self.controller.reload_groups()
 
         self.properties_widget.cb_skey_group.clear()
         self.properties_widget.cb_skey_group.addItem("", "")
-        groups = self.skey_service.groups
+        groups = self.controller.get_groups()
         for group in groups.get_groups():
             self.properties_widget.cb_skey_group.addItem(_t(group), group)
 

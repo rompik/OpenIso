@@ -5,9 +5,6 @@ import os
 import sys
 import sysconfig
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor
-
 from openiso.model.enums import IsometricView
 
 # ============================================================================
@@ -32,13 +29,13 @@ from openiso.model.enums import IsometricView
 # To modify colors:
 # - Edit the values in this file for global changes
 # - Or use the Settings dialog (Colors tab) to customize at runtime
-# - Colors use QColor(R, G, B) or hex strings depending on context
+# - Colors use RGB tuples (R, G, B) or hex strings depending on context
 #
 # Usage Example:
 # --------------
 #     from openiso.core.constants import SCENE_COLORS, POINT_COLORS
 #
-#     pen = QPen(SCENE_COLORS["highlight"])
+#     highlight_rgb = SCENE_COLORS["highlight"]
 #     arrive_point = ArrivePoint()  # Uses POINT_COLORS["arrive"]
 #     # Preview widget also uses POINT_COLORS for arrive/leave lines
 # ============================================================================
@@ -65,23 +62,23 @@ ISO_VIEW_NAMES = {
 
 # Point colors (connection points)
 POINT_COLORS = {
-    "arrive": QColor(51, 51, 255),      # Blue - incoming connection
-    "leave": QColor(255, 0, 0),          # Red - outgoing connection
-    "tee": Qt.GlobalColor.magenta,       # Magenta - T-junction
-    "spindle": QColor(111, 0, 0),        # Dark red - spindle
+    "arrive": (51, 51, 255),      # Blue - incoming connection
+    "leave": (255, 0, 0),         # Red - outgoing connection
+    "tee": (255, 0, 255),         # Magenta - T-junction
+    "spindle": (111, 0, 0),       # Dark red - spindle
 }
 
 # Scene colors
 SCENE_COLORS = {
-    "background": QColor(255, 255, 255),     # White - scene background
-    "sheet_border": QColor(0, 0, 0),         # Black - sheet border
-    "grid_origin": QColor(100, 100, 100),    # Gray - origin lines
-    "grid_major": QColor(180, 180, 180),     # Light gray - major grid
-    "grid_middle": QColor(210, 210, 210),    # Very light gray - middle grid
-    "grid_minor": QColor(230, 230, 230),     # Nearly white - minor grid
-    "grid_label": QColor(100, 100, 100),     # Gray - grid labels
-    "highlight": QColor(0, 200, 0),          # Green - selection highlight
-    "default_pen": QColor(0, 0, 0),          # Black - default drawing pen
+    "background": (255, 255, 255),    # White - scene background
+    "sheet_border": (0, 0, 0),        # Black - sheet border
+    "grid_origin": (100, 100, 100),   # Gray - origin lines
+    "grid_major": (180, 180, 180),    # Light gray - major grid
+    "grid_middle": (210, 210, 210),   # Very light gray - middle grid
+    "grid_minor": (230, 230, 230),    # Nearly white - minor grid
+    "grid_label": (100, 100, 100),    # Gray - grid labels
+    "highlight": (0, 200, 0),         # Green - selection highlight
+    "default_pen": (0, 0, 0),         # Black - default drawing pen
 }
 
 # UI Element colors (for styling)

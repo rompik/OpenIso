@@ -22,11 +22,15 @@ from openiso.core.constants import (
     AVAILABLE_LANGUAGES,
     DEFAULT_ISO_VIEW,
     ISO_VIEW_NAMES,
-    POINT_COLORS,
-    SCENE_COLORS,
 )
 from openiso.core.i18n import get_current_language, setup_i18n
 from openiso.model.enums import IsometricView
+from openiso.view.ui_constants import (
+    POINT_COLORS,
+    SCENE_COLORS,
+    reset_point_colors,
+    reset_scene_colors,
+)
 
 
 class ColorButton(QPushButton):
@@ -235,31 +239,16 @@ class SettingsDialog(QDialog):
 
     def reset_colors(self):
         """Reset all colors to defaults."""
-        # Reset point colors
-        defaults = {
-            'arrive': QColor(51, 51, 255),
-            'leave': QColor(255, 0, 0),
-            'tee': QColor(255, 0, 255),
-            'spindle': QColor(111, 0, 0),
-        }
+        # Reset runtime adapter colors first, then refresh button views.
+        reset_point_colors()
+        reset_scene_colors()
+
         for key, btn in self.color_buttons['point'].items():
-            btn.color = defaults[key]
+            btn.color = QColor(POINT_COLORS[key])
             btn.update_color()
 
-        # Reset scene colors
-        scene_defaults = {
-            'background': QColor(255, 255, 255),
-            'sheet_border': QColor(0, 0, 0),
-            'grid_origin': QColor(100, 100, 100),
-            'grid_major': QColor(180, 180, 180),
-            'grid_middle': QColor(210, 210, 210),
-            'grid_minor': QColor(230, 230, 230),
-            'grid_label': QColor(100, 100, 100),
-            'highlight': QColor(0, 200, 0),
-            'default_pen': QColor(0, 0, 0),
-        }
         for key, btn in self.color_buttons['scene'].items():
-            btn.color = scene_defaults[key]
+            btn.color = QColor(SCENE_COLORS[key])
             btn.update_color()
 
     def get_selected_language(self):

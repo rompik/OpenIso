@@ -6,7 +6,6 @@ import math
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import QPainter, QPen, QPolygonF
 from PyQt6.QtWidgets import (
-    QGraphicsEllipseItem,
     QGraphicsLineItem,
     QGraphicsPathItem,
     QGraphicsPolygonItem,
@@ -19,11 +18,10 @@ from PyQt6.QtWidgets import (
 
 from openiso.core.constants import (
     DEFAULT_ISO_VIEW,
-    POINT_COLORS,
     PREVIEW_HEIGHT,
     PREVIEW_WIDTH,
-    SCENE_COLORS,
 )
+from openiso.view.ui_constants import POINT_COLORS, SCENE_COLORS
 from openiso.model.enums import IsometricView
 from openiso.view.graphics.geometry_items import (
     ArrivePoint,

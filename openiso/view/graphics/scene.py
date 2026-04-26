@@ -18,7 +18,8 @@ from PyQt6.QtWidgets import (
     QGraphicsSimpleTextItem,
 )
 
-from openiso.core.constants import SCENE_COLORS, SHEET_SIZE
+from openiso.core.constants import SHEET_SIZE
+from openiso.view.ui_constants import SCENE_COLORS
 from openiso.view.graphics.geometry_items import (
     ArrivePoint,
     LeavePoint,
