@@ -81,7 +81,7 @@ include = ["openiso", "openiso.*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-rf -s --cov=openiso --cov-report=xml --cov-report=html --cov-report=term-missing"
+addopts = "-rf -s -p no:pytestqt --cov=openiso --cov-report=xml --cov-report=html --cov-report=term-missing"
 markers = [
     "unit: fast isolated tests for pure logic",
     "integration: tests with filesystem/database/service integration",
