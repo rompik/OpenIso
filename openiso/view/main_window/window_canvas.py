@@ -7,16 +7,36 @@
 
 from __future__ import annotations
 
+import logging
+from typing import Any
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from openiso.core.i18n import _t
-from openiso.view.graphics.geometry_items import PointItem
+
+
+logger = logging.getLogger(__name__)
 
 
 class CanvasMixin:
     """Mixin providing keyboard shortcuts, canvas manipulation and transform helpers for SkeyEditor."""
+
+    # Attributes/methods are provided by the concrete main window composing this mixin.
+    scene: Any
+    view_editor: Any
+    status_bar_widget: Any
+    import_external_file: Any
+    export_to_file: Any
+    save_current_skey: Any
+    print_symbol: Any
+    _on_settings_clicked: Any
+    _on_about_clicked: Any
+    _on_draw_line_clicked: Any
+    _on_draw_polyline_clicked: Any
+    _on_draw_rect_clicked: Any
+    _on_draw_circle_clicked: Any
+    _on_help_clicked: Any
 
     # -----------------------------------------------------------------
     # Keyboard events
@@ -30,63 +50,84 @@ class CanvasMixin:
 
         if modifiers == Qt.KeyboardModifier.ControlModifier:
             if text == 'i':
-                self.import_external_file(); return
+                self.import_external_file()
+                return
             elif text == 'e':
-                self.export_to_file(); return
+                self.export_to_file()
+                return
             elif text == 's':
-                self.save_current_skey(); return
+                self.save_current_skey()
+                return
             elif text == 'p':
-                self.print_symbol(); return
+                self.print_symbol()
+                return
             elif text == 'z':
-                self.undo_last_action(); return
+                self.undo_last_action()
+                return
             elif text == 'y':
-                self.redo_next_action(); return
+                self.redo_next_action()
+                return
             elif text == 'a':
-                self.select_all_items(); return
+                self.select_all_items()
+                return
             elif text == ',':
-                self._on_settings_clicked(); return
+                self._on_settings_clicked()
+                return
             elif text == 'h':
-                self._on_about_clicked(); return
+                self._on_about_clicked()
+                return
             elif key == Qt.Key.Key_Plus or text == '+':
-                self.zoom_in(); return
+                self.zoom_in()
+                return
             elif key == Qt.Key.Key_Minus or text == '-':
-                self.zoom_out(); return
+                self.zoom_out()
+                return
 
         elif modifiers == Qt.KeyboardModifier.NoModifier:
             if text.lower() == 'l':
-                self._on_draw_line_clicked(); return
+                self._on_draw_line_clicked()
+                return
             elif text.lower() == 'p':
-                self._on_draw_polyline_clicked(); return
+                self._on_draw_polyline_clicked()
+                return
             elif text.lower() == 'r':
-                self._on_draw_rect_clicked(); return
+                self._on_draw_rect_clicked()
+                return
             elif text.lower() == 'c':
-                self._on_draw_circle_clicked(); return
+                self._on_draw_circle_clicked()
+                return
             elif text.lower() == 'f':
-                self.fit_to_view(); return
+                self.fit_to_view()
+                return
             elif key == Qt.Key.Key_Home:
-                self.reset_view(); return
+                self.reset_view()
+                return
             elif key == Qt.Key.Key_Delete:
-                self.clear_canvas(); return
+                self.clear_canvas()
+                return
 
         if key == Qt.Key.Key_F1:
-            self._on_help_clicked(); return
+            self._on_help_clicked()
+            return
 
         if key == Qt.Key.Key_Escape:
             if hasattr(self.scene, 'selected_for_highlight'):
                 for item in self.scene.selected_for_highlight:
-                    if hasattr(item, '_original_pen'):
-                        item.setPen(item._original_pen)
-                        del item._original_pen
-                    if hasattr(item, '_original_brush'):
-                        item.setBrush(item._original_brush)
-                        del item._original_brush
+                    original_pen = getattr(item, '_original_pen', None)
+                    if original_pen is not None:
+                        item.setPen(original_pen)
+                        delattr(item, '_original_pen')
+                    original_brush = getattr(item, '_original_brush', None)
+                    if original_brush is not None:
+                        item.setBrush(original_brush)
+                        delattr(item, '_original_brush')
                 self.scene.selected_for_highlight.clear()
             self.scene.clearSelection()
             QApplication.restoreOverrideCursor()
             self.scene.current_action = ""
             return
 
-        QMainWindow.keyPressEvent(self, event)
+        QMainWindow.keyPressEvent(self, event)  # type: ignore[arg-type]
 
     def _on_focus_item_changed(self, newItem, _oldItem, reason):
         """Slot to handle focus changes between items (currently a placeholder)."""
@@ -102,6 +143,8 @@ class CanvasMixin:
         for item in self.scene.symbol_drawlist:
             self.scene.removeItem(item)
         self.scene.symbol_drawlist.clear()
+        if hasattr(self, 'preview_widget'):
+            self.preview_widget.update_preview([], self.origin_x, self.origin_y)
 
     def select_all_items(self):
         """Select all items on the canvas."""
@@ -111,12 +154,14 @@ class CanvasMixin:
         """Clears current selection on the canvas."""
         if hasattr(self.scene, 'selected_for_highlight'):
             for item in self.scene.selected_for_highlight:
-                if hasattr(item, '_original_pen'):
-                    item.setPen(item._original_pen)
-                    del item._original_pen
-                if hasattr(item, '_original_brush'):
-                    item.setBrush(item._original_brush)
-                    del item._original_brush
+                original_pen = getattr(item, '_original_pen', None)
+                if original_pen is not None:
+                    item.setPen(original_pen)
+                    delattr(item, '_original_pen')
+                original_brush = getattr(item, '_original_brush', None)
+                if original_brush is not None:
+                    item.setBrush(original_brush)
+                    delattr(item, '_original_brush')
             self.scene.selected_for_highlight.clear()
         self.scene.clearSelection()
         return "Выделение снято"
@@ -127,11 +172,11 @@ class CanvasMixin:
 
     def undo_last_action(self):
         """Reverts the last drawing or editing operation performed."""
-        print("Undo clicked")
+        logger.info("Undo clicked")
 
     def redo_next_action(self):
         """Re-applies the operation that was previously undone."""
-        print("Redo clicked")
+        logger.info("Redo clicked")
 
     # -----------------------------------------------------------------
     # Transform operations

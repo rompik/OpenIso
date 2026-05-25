@@ -79,8 +79,8 @@ class ASCIISkeyImporter(BaseSkeyImporter):
         try:
             with open(file_path, 'r', encoding='utf-8') as symbol_file:
                 contents = symbol_file.readlines()
-        except Exception as e:
-            self._errors.append(f"Failed to read file: {e}")
+        except (OSError, UnicodeError) as err:
+            self._errors.append(f"Failed to read file: {err}")
             return ImportResult(success=False, skeys={}, groups=SkeyGroup(), errors=self._errors)
 
         skip_line = False
@@ -200,8 +200,8 @@ class IDFSkeyImporter(BaseSkeyImporter):
         try:
             with open(file_path, 'r', encoding='utf-8') as symbol_file:
                 contents = symbol_file.readlines()
-        except Exception as e:
-            self._errors.append(f"Failed to read file: {e}")
+        except (OSError, UnicodeError) as err:
+            self._errors.append(f"Failed to read file: {err}")
             return ImportResult(success=False, skeys={}, groups=SkeyGroup(), errors=self._errors)
 
         skip_line = False

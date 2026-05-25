@@ -14,8 +14,9 @@ imported below.
 # --- Patch sys.path for direct script execution ---
 import os
 import sys
+import logging
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QEvent, Qt
 from PyQt6.QtGui import QPainter
 from PyQt6.QtWidgets import (
     QApplication,
@@ -24,13 +25,15 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QSplitter,
     QSizePolicy,
     QStatusBar,
     QVBoxLayout,
     QWidget,
 )
 
-from openiso import __version__
+from openiso import __app_id__, __version__
+from openiso.core.app_context import AppContext
 from openiso.core.constants import SHEET_SIZE
 from openiso.core.i18n import setup_i18n
 from openiso.core.parser import CommandParser
@@ -65,6 +68,7 @@ if __name__ == "__main__":
 
 # Initialize translations
 _t = setup_i18n()
+logger = logging.getLogger(__name__)
 
 
 class SkeyEditor(
@@ -78,6 +82,16 @@ class SkeyEditor(
 ):
     """SkeyEditor main window."""
 
+    _CHECKBOX_FLAG_MAP = {
+        "flow_arrow": (2, 1),
+        "dimensioned": (2, 1),
+        "tracing": (2, 1),
+        "insulation": (2, 1),
+        "user_definable": (1, 0),
+        "flow_dependency": (1, 0),
+        "isogen_standard": (1, 0),
+    }
+
     def _on_tree_skey_changed(self, current, _previous=None):
         """Handles the selection change in the Skey tree, loading the selected symbol's data."""
         if not current:
@@ -90,28 +104,30 @@ class SkeyEditor(
         if not skey_name:
             skey_name = current.text(0)
 
-        print(f"[debug] Tree selection changed to: {current.text(0)} (raw: {skey_name})")
+        logger.debug("Tree selection changed to: %s (raw: %s)", current.text(0), skey_name)
 
         skey_data = self.controller.get_skey(skey_name)
         if not skey_data:
-            print(f"[error] Skey not found in repository: {skey_name}")
+            logger.error("Skey not found in repository: %s", skey_name)
             return
 
+        self.current_skey_data = skey_data
         self.scene.clear_symbol_drawlist()
         self.properties_widget.load_skey_data(skey_data)
 
         if skey_data.geometry:
-            print(f"Loading {len(skey_data.geometry)} geometry items")
+            logger.debug("Loading %d geometry items", len(skey_data.geometry))
             self._load_geometry_to_scene(skey_data.geometry)
         else:
-            print("No geometry data found")
+            logger.debug("No geometry data found")
 
-        self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
-        print(f"Skey {skey_name} loaded successfully")
+        self._update_all_previews()
+        logger.debug("Skey %s loaded successfully", skey_name)
 
     def _on_group_changed(self, index):
         """Updates the subgroup selection list whenever the main Skey group is changed."""
         if index < 0:
+            self._sync_current_skey_form_fields()
             return
 
         group_key = (
@@ -121,6 +137,7 @@ class SkeyEditor(
         if not group_key:
             self.properties_widget.cb_skey_subgroup.clear()
             self.properties_widget.cb_skey_subgroup.addItem("", "")
+            self._sync_current_skey_form_fields()
             return
 
         self.properties_widget.cb_skey_subgroup.clear()
@@ -133,6 +150,60 @@ class SkeyEditor(
         if model:
             model.sort(0)
 
+        self._sync_current_skey_form_fields()
+
+    def _refresh_current_skey_json_preview(self):
+        """Refresh JSON panel from current in-memory skey data."""
+        skey_data = getattr(self, "current_skey_data", None)
+        if skey_data is None:
+            return
+
+        self.properties_widget.display_geometry(getattr(skey_data, "geometry", []))
+
+    def _sync_current_skey_form_fields(self):
+        """Sync editable form fields to current SkeyData object."""
+        skey_data = getattr(self, "current_skey_data", None)
+        if skey_data is None:
+            return
+
+        props = self.properties_widget
+        skey_data.group_key = props.cb_skey_group.currentData() or props.cb_skey_group.currentText() or ""
+        skey_data.subgroup_key = (
+            props.cb_skey_subgroup.currentData() or props.cb_skey_subgroup.currentText() or ""
+        )
+        skey_data.spindle_skey = props.cb_spindle_skey.currentText() or ""
+        orientation = props.orientation_button_group.checkedId()
+        if orientation >= 0:
+            skey_data.orientation = orientation
+
+        self._refresh_current_skey_json_preview()
+
+    def _on_subgroup_changed(self, _index):
+        """Sync subgroup changes to current SkeyData."""
+        self._sync_current_skey_form_fields()
+
+    def _on_spindle_changed(self, _text):
+        """Sync spindle changes to current SkeyData."""
+        self._sync_current_skey_form_fields()
+
+    def _on_orientation_changed(self, _id):
+        """Sync orientation changes to current SkeyData."""
+        self._sync_current_skey_form_fields()
+
+    def _on_property_checkbox_toggled(self, field_name: str, checked: bool):
+        """Keep current SkeyData flags synchronized with checkbox state."""
+        skey_data = getattr(self, "current_skey_data", None)
+        if skey_data is None:
+            return
+
+        mapping = self._CHECKBOX_FLAG_MAP.get(field_name)
+        if mapping is None:
+            return
+
+        on_value, off_value = mapping
+        setattr(skey_data, field_name, on_value if checked else off_value)
+        self._refresh_current_skey_json_preview()
+
     def __init__(self, parent=None, application=None):
         """Initializes the SkeyEditor window, sets up data paths and business logic services."""
         QMainWindow.__init__(self, parent)
@@ -142,32 +213,32 @@ class SkeyEditor(
         self.sheet_height = SHEET_SIZE
         self.origin_x = self.sheet_width / 2
         self.origin_y = self.sheet_height / 2
+        self.current_skey_data = None
 
         if self._application is not None:
-            data_path = str(self._application.pkgdatadir)
+            context = self._application.context
         else:
-            data_path = os.path.abspath(
-                os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data')
-            )
+            context = AppContext.build(__app_id__, __version__)
+        self._context = context
 
-        self.icons_library_path = os.path.join(data_path, 'icons')
-        print(f"Initializing with data_path: {data_path}")
+        self.icons_library_path = str(context.paths.icons)
+        logger.info("Initializing with data_path: %s", context.data_dir)
 
-        self._load_styles(data_path)
+        self._load_styles(context.data_dir)
 
-        self.controller = WindowController(data_path, use_db=True)
+        self.controller = WindowController(context, use_db=True)
         # Keep backward-compatible access for existing mixins during incremental migration.
         self.skey_service = self.controller.skey_service
         self.help_window = None
 
         self._setup_ui()
-        print("Calling load_skeys to populate tree...")
+        logger.debug("Calling load_skeys to populate tree...")
         if self.controller.load_initial_data(__version__):
-            print("Successfully loaded skeys, populating tree...")
+            logger.debug("Successfully loaded skeys, populating tree...")
             self.refresh_skey_tree()
             self._handle_catalog_sync_feedback(self.controller.get_last_sync_result())
         else:
-            print("Failed to load skeys from database")
+            logger.error("Failed to load skeys from database")
 
     def _setup_ui(self):
         """Sets up the user interface components, layouts and initial widget states."""
@@ -177,12 +248,12 @@ class SkeyEditor(
 
         # --- Widgets ---
         self.tree_skeys = SkeyTreeView(self.icons_library_path)
-        self.group_skeys = QGroupBox(_t("Skeys"))
+        self.group_skeys = QGroupBox()
         self.group_skeys.setFixedWidth(320)
         self.vbox_lay_skeys = QVBoxLayout()
         self.group_skeys.setLayout(self.vbox_lay_skeys)
 
-        self.group_editor = QGroupBox(_t("Shape"))
+        self.group_editor = QGroupBox()
         self.vbox_lay_editor = QVBoxLayout()
         self.group_editor.setLayout(self.vbox_lay_editor)
         self.hbox_lay_editor = QHBoxLayout()
@@ -190,9 +261,8 @@ class SkeyEditor(
         self.group_editor.setMinimumSize(self.sheet_width + 140, self.sheet_height + 100)
         self.group_editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        self.properties_widget = PropertiesWidget(_t("Properties"), self.icons_library_path)
+        self.properties_widget = PropertiesWidget("", self.icons_library_path)
         self.form_adapter = WindowFormAdapter(self.properties_widget)
-        self.preview_widget = PreviewWidget(_t("Preview"))
         self.menu_toolbar_widget = MenuToolbarWidget(self.icons_library_path)
         self.draw_toolbar_widget = DrawToolbarWidget(self.icons_library_path)
 
@@ -216,10 +286,10 @@ class SkeyEditor(
         if viewport is not None:
             viewport.installEventFilter(self)
         self.scene.symbol_changed.connect(
-            lambda: self.preview_widget.update_preview(
-                self.scene.symbol_drawlist, self.origin_x, self.origin_y
-            )
+            self._update_all_previews
         )
+
+        self._create_overlay_preview()
 
         self.hbox_lay_editor.addWidget(self.draw_toolbar_widget)
         self.hbox_lay_editor.addWidget(self.view_editor, stretch=1)
@@ -227,16 +297,19 @@ class SkeyEditor(
         if tuple(int(x) for x in __version__.split(".")) > (0, 9, 0):
             self.vbox_lay_editor.addWidget(self.terminal_widget)
 
-        self.vbox_lay_right = QVBoxLayout()
-        self.vbox_lay_right.addWidget(self.properties_widget)
-        self.vbox_lay_right.addStretch()
-        self.vbox_lay_right.addWidget(self.preview_widget)
+        self.properties_widget.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+
+        self.form_properties_splitter = QSplitter(Qt.Orientation.Horizontal)
+        self.form_properties_splitter.setChildrenCollapsible(False)
+        self.form_properties_splitter.addWidget(self.group_editor)
+        self.form_properties_splitter.addWidget(self.properties_widget)
+        self.form_properties_splitter.setStretchFactor(0, 1)
+        self.form_properties_splitter.setStretchFactor(1, 0)
+        self.form_properties_splitter.setSizes([self.sheet_width + 220, 360])
 
         self.hbox_lay_main = QHBoxLayout()
         self.hbox_lay_main.addWidget(self.group_skeys, alignment=Qt.AlignmentFlag.AlignLeft)
-        self.hbox_lay_main.addWidget(self.group_editor, stretch=1)
-        self.hbox_lay_main.addStretch()
-        self.hbox_lay_main.addLayout(self.vbox_lay_right)
+        self.hbox_lay_main.addWidget(self.form_properties_splitter, stretch=1)
 
         self.vbox_lay_main = QVBoxLayout()
         self.vbox_lay_main.addWidget(self.menu_toolbar_widget)
@@ -263,6 +336,8 @@ class SkeyEditor(
         self.primitive_dimensions_label = QLabel("")
         self.primitive_dimensions_label.setMinimumWidth(100)
         self.status_bar_widget.addPermanentWidget(self.primitive_dimensions_label)
+
+        self._update_all_previews()
 
         # --- Signal connections ---
         self.menu_toolbar_widget.btn_settings.clicked.connect(self._on_settings_clicked)
@@ -348,8 +423,141 @@ class SkeyEditor(
         self.tree_skeys.create_skey_requested.connect(self._on_create_skey_requested)
         self.tree_skeys.delete_skey_requested.connect(self._on_delete_skey_requested)
         self.properties_widget.cb_skey_group.currentIndexChanged.connect(self._on_group_changed)
+        self.properties_widget.cb_skey_subgroup.currentIndexChanged.connect(self._on_subgroup_changed)
+        self.properties_widget.cb_spindle_skey.currentTextChanged.connect(self._on_spindle_changed)
+        self.properties_widget.orientation_button_group.idClicked.connect(self._on_orientation_changed)
+        self.properties_widget.chk_flow_arrow.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("flow_arrow", checked)
+        )
+        self.properties_widget.chk_dimensioned.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("dimensioned", checked)
+        )
+        self.properties_widget.chk_tracing.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("tracing", checked)
+        )
+        self.properties_widget.chk_insulation.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("insulation", checked)
+        )
+        self.properties_widget.chk_user_definable.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("user_definable", checked)
+        )
+        self.properties_widget.chk_flow_dependency.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("flow_dependency", checked)
+        )
+        self.properties_widget.chk_isogen_standard.toggled.connect(
+            lambda checked: self._on_property_checkbox_toggled("isogen_standard", checked)
+        )
         self.scene.spindle_point_placed.connect(self._on_spindle_point_placed)
         self.scene.primitive_info_updated.connect(self._update_primitive_info_status)
+
+    def _create_overlay_preview(self):
+        """Create a lightweight preview overlay anchored to the top-right of the drawing area."""
+        self.overlay_preview_widget = PreviewWidget(
+            "",
+            self.view_editor.viewport(),
+            widget_size=(230, 160),
+            scene_size=(190, 110),
+        )
+        self.overlay_preview_widget.setObjectName("OverlayPreview")
+        self.overlay_preview_widget.setStyleSheet(self._build_overlay_preview_style(230))
+        self._set_overlay_preview_opacity(0.7)
+        self.overlay_preview_widget.setVisible(False)
+
+        self.overlay_preview_widget.raise_()
+        self._position_overlay_preview()
+
+    def _build_overlay_preview_style(self, alpha: int):
+        alpha = max(0, min(255, alpha))
+        return (
+            "QGroupBox#OverlayPreview {"
+            f"background-color: rgba(255, 255, 255, {alpha});"
+            "border: 1px solid rgba(60, 60, 60, 120);"
+            "border-radius: 6px;"
+            "margin-top: 0px;"
+            "padding-top: 0px;"
+            "}"
+        )
+
+    def set_overlay_preview_visible(self, visible: bool):
+        """Show or hide the overlay preview panel."""
+        overlay = getattr(self, "overlay_preview_widget", None)
+        if overlay is None:
+            return
+
+        overlay.setVisible(visible)
+
+    def _set_overlay_preview_visible(self, visible: bool):
+        self.set_overlay_preview_visible(visible)
+
+    def set_overlay_preview_opacity(self, opacity: float):
+        """Set overlay preview opacity in the 0.0-1.0 range."""
+        overlay = getattr(self, "overlay_preview_widget", None)
+        if overlay is None:
+            return
+
+        alpha = int(round(max(0.0, min(1.0, opacity)) * 255))
+        overlay.setStyleSheet(self._build_overlay_preview_style(alpha))
+
+    def _set_overlay_preview_opacity(self, opacity: float):
+        self.set_overlay_preview_opacity(opacity)
+
+    def _position_overlay_preview(self):
+        """Position overlay preview with a small margin from viewport edges."""
+        overlay = getattr(self, "overlay_preview_widget", None)
+        if overlay is None:
+            return
+
+        viewport = self.view_editor.viewport()
+        margin = 8
+
+        overlay_x = max(margin, viewport.width() - overlay.width() - margin)
+        overlay_y = margin
+        overlay.move(overlay_x, overlay_y)
+
+    def _toggle_overlay_preview(self):
+        """Toggle visibility of overlay preview panel in the drawing area."""
+        overlay = getattr(self, "overlay_preview_widget", None)
+        if overlay is None:
+            return
+
+        overlay.setVisible(not overlay.isVisible())
+        if overlay.isVisible():
+            self._position_overlay_preview()
+
+    def _get_preview_widgets(self):
+        """Return all preview widgets that must stay synchronized."""
+        widgets = []
+        overlay = getattr(self, "overlay_preview_widget", None)
+        if overlay is not None:
+            widgets.append(overlay)
+        return widgets
+
+    def _set_isometric_view_for_previews(self, iso_view):
+        """Apply selected isometric orientation to all preview widgets."""
+        for widget in self._get_preview_widgets():
+            widget.set_isometric_view(iso_view)
+
+    def _update_all_previews(self):
+        """Keep all preview widgets synchronized with current scene geometry."""
+        for widget in self._get_preview_widgets():
+            widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
+
+    def resizeEvent(self, event):
+        """Reposition overlay preview whenever main window layout changes."""
+        super().resizeEvent(event)
+        self._position_overlay_preview()
+
+    def eventFilter(self, watched, event):
+        """Track viewport resizes so the overlay stays anchored to the top-right corner."""
+        if watched is getattr(self.view_editor, "viewport", lambda: None)():
+            if event.type() == QEvent.Type.Resize:
+                self._position_overlay_preview()
+        return super().eventFilter(watched, event)
+
+    def showEvent(self, event):
+        """Position the overlay after the main window becomes visible."""
+        super().showEvent(event)
+        self._position_overlay_preview()
 
     def _update_primitive_info_status(self, coords_str, dimensions_str):
         """Update status bar with primitive coordinates and dimensions."""
@@ -361,12 +569,13 @@ class SkeyEditor(
         translator = setup_i18n(lang_code)
         globals()["_t"] = translator
 
-        self.setWindowTitle(translator("OpenIso - Skey Editor"))
+        self.setWindowTitle(translator("OpenIso - Iso Symbols Library Editor"))
         self.status_label.setText(translator("Ready"))
-        self.group_skeys.setTitle(translator("Skeys List"))
-        self.group_editor.setTitle(translator("Shape"))
+        self.group_skeys.setTitle("")
+        self.group_editor.setTitle("")
         self.properties_widget.update_translations(translator)
-        self.preview_widget.setTitle(translator("Preview"))
+        if hasattr(self, "overlay_preview_widget"):
+            self.overlay_preview_widget.setTitle("")
         self.menu_toolbar_widget.update_translations(translator)
         self.draw_toolbar_widget.update_translations(translator)
         self.tree_skeys.update_translations(translator)
@@ -381,8 +590,8 @@ class SkeyEditor(
             try:
                 with open(style_path, "r", encoding="utf-8") as f:
                     self.setStyleSheet(f.read())
-            except (OSError, UnicodeError) as e:
-                print(f"Error loading CSS: {e}")
+            except (OSError, UnicodeError) as err:
+                logger.warning("Error loading CSS: %s", err)
 
     def refresh_skey_tree(self):
         """Rebuilds the Skey tree view from the latest service data."""

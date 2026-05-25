@@ -27,3 +27,19 @@ def test_example_matches_canonical_json_schema():
     payload = json.loads((root / "docs" / "roadmap" / "canonical-symbols-v1.example.json").read_text(encoding="utf-8"))
 
     Draft202012Validator(schema).validate(payload)
+
+
+def test_human_readable_json_schema_is_valid():
+    schema_path = _repo_root() / "docs" / "roadmap" / "human-readable-symbol-v1.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+
+    # Ensures the schema itself is valid draft-2020-12 JSON Schema.
+    Draft202012Validator.check_schema(schema)
+
+
+def test_example_matches_human_readable_json_schema():
+    root = _repo_root()
+    schema = json.loads((root / "docs" / "roadmap" / "human-readable-symbol-v1.schema.json").read_text(encoding="utf-8"))
+    payload = json.loads((root / "docs" / "roadmap" / "human-readable-symbol-v1.example.json").read_text(encoding="utf-8"))
+
+    Draft202012Validator(schema).validate(payload)

@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+from openiso.core.app_context import AppContext
 from openiso.controller.services import SkeyService
 from openiso.model.skey import SkeyData
 
@@ -12,8 +13,9 @@ from openiso.model.skey import SkeyData
 class WindowController:
     """Thin orchestration layer between SkeyEditor UI and SkeyService."""
 
-    def __init__(self, data_path: str, use_db: bool = True):
-        self.skey_service = SkeyService(data_path, use_db=use_db)
+    def __init__(self, context: AppContext, use_db: bool = True):
+        self._context = context
+        self.skey_service = SkeyService(use_db=use_db, context=context)
         self._last_sync_result: dict | None = None
 
     def load_initial_data(self, release_version: str | None = None) -> bool:

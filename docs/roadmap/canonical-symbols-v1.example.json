@@ -15,10 +15,21 @@
       "group_key": "valves",
       "subgroup_key": "gate",
       "description": "Gate valve symbol",
+      "origin": {
+        "kind": "standard",
+        "standard_ref": "ISO-14617",
+        "note": "Imported from official standard pack"
+      },
+      "last_change": {
+        "date": "2026-05-23T09:30:00Z",
+        "reason": "Added hatch area and updated flow behavior",
+        "author": "openiso-team"
+      },
       "versioning": {
         "upstream_symbol_version": 7,
         "local_revision": 1,
         "payload_hash": "sha256:9f2ca1bcd5",
+        "change_ticket": "OPENISO-241",
         "last_synced_release_version": "0.8.0",
         "sync_state": "synced"
       },
@@ -51,12 +62,40 @@
             "x2": 22.05,
             "y2": 20.575
           }
+        ],
+        "areas": [
+          {
+            "id": "area_body_fill",
+            "kind": "fill",
+            "boundary": [[-8.0, -6.0], [8.0, -6.0], [8.0, 6.0], [-8.0, 6.0]],
+            "style": {
+              "fill": "#D9D9D9",
+              "fill_opacity": 0.35
+            }
+          },
+          {
+            "id": "area_body_hatch",
+            "kind": "hatch",
+            "boundary": [[-7.0, -5.0], [7.0, -5.0], [7.0, 5.0], [-7.0, 5.0]],
+            "hatch": {
+              "pattern": "diag_45",
+              "spacing": 1.4,
+              "angle": 45.0
+            }
+          }
         ]
       },
+      "iso_behavior": {
+        "orientation_deg": 0,
+        "show_flow_arrow": true,
+        "depends_on_flow": false,
+        "show_dimensions": true,
+        "user_can_edit": true
+      },
+      "attribute_schema_version": 1,
       "attributes": {
-        "orientation": 0,
-        "flow_arrow": 1,
-        "dimensioned": 1
+        "insulation_required": false,
+        "project_rating": "PN16"
       }
     }
   ]

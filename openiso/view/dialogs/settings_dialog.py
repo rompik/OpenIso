@@ -5,6 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QColorDialog,
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -14,6 +15,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
     QScrollArea,
+    QSlider,
     QVBoxLayout,
     QWidget,
 )
@@ -27,9 +29,7 @@ from openiso.core.i18n import get_current_language, setup_i18n
 from openiso.model.enums import IsometricView
 from openiso.view.ui_constants import (
     POINT_COLORS,
-    SCENE_COLORS,
     reset_point_colors,
-    reset_scene_colors,
 )
 
 
@@ -81,6 +81,7 @@ class SettingsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._t = setup_i18n()
+        self._main_window = parent
         self.setWindowTitle(self._t("Settings"))
         self.setMinimumSize(600, 500)
 
@@ -150,6 +151,33 @@ class SettingsDialog(QDialog):
 
         content_layout.addWidget(self.groupIsoView)
 
+        self.groupPreview = QGroupBox(self._t("Preview"))
+        preview_layout = QVBoxLayout(self.groupPreview)
+
+        self.preview_button_row = QHBoxLayout()
+        self.chkPreviewVisible = QCheckBox(self._t("Show Preview"))
+        self.chkPreviewVisible.toggled.connect(self._toggle_preview_visibility)
+        self.preview_button_row.addWidget(self.chkPreviewVisible)
+        self.preview_button_row.addStretch()
+        preview_layout.addLayout(self.preview_button_row)
+
+        self.preview_opacity_row = QHBoxLayout()
+        self.lblPreviewOpacity = QLabel(self._t("Transparency:"))
+        self.sliderPreviewOpacity = QSlider(Qt.Orientation.Horizontal)
+        self.sliderPreviewOpacity.setRange(0, 100)
+        self.sliderPreviewOpacity.setTickInterval(10)
+        self.sliderPreviewOpacity.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.sliderPreviewOpacity.valueChanged.connect(self._on_preview_opacity_changed)
+        self.lblPreviewOpacityValue = QLabel("")
+
+        self.preview_opacity_row.addWidget(self.lblPreviewOpacity)
+        self.preview_opacity_row.addWidget(self.sliderPreviewOpacity)
+        self.preview_opacity_row.addWidget(self.lblPreviewOpacityValue)
+        preview_layout.addLayout(self.preview_opacity_row)
+
+        self._initialize_preview_controls()
+        content_layout.addWidget(self.groupPreview)
+
         # Color Settings Groups (below Language Settings)
         self._add_color_groups(content_layout)
 
@@ -174,6 +202,66 @@ class SettingsDialog(QDialog):
         button_layout.addWidget(self.buttonBox)
 
         layout.addLayout(button_layout)
+
+    def _get_preview_overlay(self):
+        main_window = getattr(self, "_main_window", None)
+        if main_window is None:
+            return None
+        return getattr(main_window, "overlay_preview_widget", None)
+
+    def _initialize_preview_controls(self):
+        overlay = self._get_preview_overlay()
+        visible = False
+        opacity = 70
+
+        if overlay is not None:
+            visible = overlay.isVisible()
+            effect = overlay.graphicsEffect()
+            if effect is not None and hasattr(effect, "opacity"):
+                opacity = max(0, min(100, int(round(effect.opacity() * 100))))
+
+        self._preview_visible = visible
+        self._preview_opacity = opacity
+
+        self.chkPreviewVisible.setChecked(visible)
+        self.sliderPreviewOpacity.setValue(opacity)
+        self.lblPreviewOpacityValue.setText(f"{opacity}%")
+        self._original_preview_visible = visible
+        self._original_preview_opacity = opacity
+
+    def _toggle_preview_visibility(self, checked):
+        self._preview_visible = bool(checked)
+        overlay = self._get_preview_overlay()
+        if overlay is not None:
+            overlay.setVisible(self._preview_visible)
+
+    def _on_preview_opacity_changed(self, value):
+        self._preview_opacity = value
+        self.lblPreviewOpacityValue.setText(f"{value}%")
+
+        main_window = getattr(self, "_main_window", None)
+        if main_window is not None and hasattr(main_window, "set_overlay_preview_opacity"):
+            main_window.set_overlay_preview_opacity(value / 100.0)
+
+    def _restore_preview_state(self):
+        self._preview_visible = getattr(self, "_original_preview_visible", False)
+        self._preview_opacity = getattr(self, "_original_preview_opacity", 70)
+
+        overlay = self._get_preview_overlay()
+        if overlay is not None:
+            overlay.setVisible(self._preview_visible)
+
+        main_window = getattr(self, "_main_window", None)
+        if main_window is not None and hasattr(main_window, "set_overlay_preview_opacity"):
+            main_window.set_overlay_preview_opacity(self._preview_opacity / 100.0)
+
+        self.chkPreviewVisible.setChecked(self._preview_visible)
+        self.sliderPreviewOpacity.setValue(self._preview_opacity)
+        self.lblPreviewOpacityValue.setText(f"{self._preview_opacity}%")
+
+    def reject(self):
+        self._restore_preview_state()
+        super().reject()
 
     def _add_color_groups(self, layout):
         """Add color settings groups below language settings."""
@@ -203,37 +291,6 @@ class SettingsDialog(QDialog):
 
         layout.addWidget(point_group)
 
-        # Scene Colors Group
-        scene_group = QGroupBox(self._t("Scene and Grid Colors"))
-        scene_layout = QGridLayout(scene_group)
-        scene_layout.setColumnStretch(2, 1)
-
-        scene_colors = [
-            ("background", self._t("Background"), SCENE_COLORS["background"], self._t("Scene background color")),
-            ("sheet_border", self._t("Sheet Border"), SCENE_COLORS["sheet_border"], self._t("Border around drawing sheet")),
-            ("grid_origin", self._t("Grid Origin"), SCENE_COLORS["grid_origin"], self._t("Origin axis lines")),
-            ("grid_major", self._t("Major Grid"), SCENE_COLORS["grid_major"], self._t("Major grid lines (1.0 units)")),
-            ("grid_middle", self._t("Middle Grid"), SCENE_COLORS["grid_middle"], self._t("Middle grid lines (0.5 units)")),
-            ("grid_minor", self._t("Minor Grid"), SCENE_COLORS["grid_minor"], self._t("Minor grid lines (0.1 units)")),
-            ("grid_label", self._t("Grid Labels"), SCENE_COLORS["grid_label"], self._t("Grid coordinate labels")),
-            ("highlight", self._t("Selection Highlight"), SCENE_COLORS["highlight"], self._t("Selected items color")),
-            ("default_pen", self._t("Default Pen"), SCENE_COLORS["default_pen"], self._t("Default drawing pen color")),
-        ]
-
-        for row, (key, label, color, desc_text) in enumerate(scene_colors):
-            lbl = QLabel(label + ":")
-            btn = ColorButton(color)
-            desc = QLabel(desc_text)
-            desc.setProperty("class", "SettingsDescriptionText")
-
-            scene_layout.addWidget(lbl, row, 0)
-            scene_layout.addWidget(btn, row, 1)
-            scene_layout.addWidget(desc, row, 2)
-
-            self.color_buttons['scene'][key] = btn
-
-        layout.addWidget(scene_group)
-
         # Note: Preview widget now uses the same colors as connection points
         # (arrive and leave colors from POINT_COLORS)
 
@@ -241,14 +298,9 @@ class SettingsDialog(QDialog):
         """Reset all colors to defaults."""
         # Reset runtime adapter colors first, then refresh button views.
         reset_point_colors()
-        reset_scene_colors()
 
         for key, btn in self.color_buttons['point'].items():
             btn.color = QColor(POINT_COLORS[key])
-            btn.update_color()
-
-        for key, btn in self.color_buttons['scene'].items():
-            btn.color = QColor(SCENE_COLORS[key])
             btn.update_color()
 
     def get_selected_language(self):
@@ -259,10 +311,18 @@ class SettingsDialog(QDialog):
         """Returns the selected isometric view."""
         return self.cbIsoView.currentData()
 
+    def get_preview_visibility(self):
+        """Returns the preview visibility state."""
+        return getattr(self, "_preview_visible", False)
+
+    def get_preview_opacity(self):
+        """Returns the preview opacity as a 0.0-1.0 float."""
+        return getattr(self, "_preview_opacity", 70) / 100.0
+
     def get_point_colors(self):
         """Returns dictionary of point colors."""
         return {key: btn.get_color() for key, btn in self.color_buttons['point'].items()}
 
     def get_scene_colors(self):
-        """Returns dictionary of scene colors."""
-        return {key: btn.get_color() for key, btn in self.color_buttons['scene'].items()}
+        """Scene colors are no longer configurable from settings dialog."""
+        return {}

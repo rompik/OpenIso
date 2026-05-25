@@ -7,6 +7,9 @@
 
 from __future__ import annotations
 
+import logging
+from typing import Any, TYPE_CHECKING
+
 from PyQt6.QtCore import QPointF
 from PyQt6.QtGui import QBrush, QColor, QPen, QPolygonF
 from PyQt6.QtWidgets import (
@@ -25,8 +28,21 @@ from openiso.view.graphics.geometry_items import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from openiso.controller.services import SkeyService
+
+
 class GeometryIOMixin:
-    """Mixin providing geometry loading, serialisation and coordinate helpers for SkeyEditor."""
+    """Mixin providing geometry loading, serialisation
+    and coordinate helpers for SkeyEditor."""
+
+    # Populated by the concrete main-window class that composes this mixin.
+    scene: Any
+    skey_service: "SkeyService"
+    origin_x: float
+    origin_y: float
 
     # -----------------------------------------------------------------
     # Spindle geometry
@@ -46,7 +62,7 @@ class GeometryIOMixin:
 
         geometry_list = self.skey_service.get_spindle_geometry(spindle_skey_name)
         if not geometry_list:
-            print(f"No geometry found for spindle: {spindle_skey_name}")
+            logger.debug("No geometry found for spindle: %s", spindle_skey_name)
             return
 
         for point in spindle_points:
@@ -60,14 +76,17 @@ class GeometryIOMixin:
         if not spindle_name:
             return
 
-        print(f"Loading spindle geometry for '{spindle_name}' at {pos.x()}, {pos.y()}")
+        logger.debug("Loading spindle geometry for '%s' at %s, %s", spindle_name, pos.x(), pos.y())
         geometry_list = self.skey_service.get_spindle_geometry(spindle_name)
         if not geometry_list:
-            print(f"No geometry found for spindle: {spindle_name}")
+            logger.debug("No geometry found for spindle: %s", spindle_name)
             return
 
         self._load_spindle_geometry_to_scene(geometry_list, pos.x(), pos.y())
-        self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
+        if hasattr(self, "_update_all_previews"):
+            self._update_all_previews()
+        else:
+            self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
 
     def _load_spindle_geometry_to_scene(self, geometry, base_x, base_y):
         """Loads and positions spindle geometry onto the scene based on a reference point."""
@@ -122,8 +141,8 @@ class GeometryIOMixin:
                     circle.setPen(QPen(QColor(0, 0, 0), 2))
                     self._add_graphics_element(circle)
 
-            except Exception as e:
-                print(f"Error drawing spindle item {item_str}: {e}")
+            except (ValueError, KeyError, IndexError) as err:
+                logger.warning("Error drawing spindle item %s: %s", item_str, err)
 
     # -----------------------------------------------------------------
     # Scene geometry loading
@@ -248,11 +267,14 @@ class GeometryIOMixin:
                     circle.setPen(pen)
                     self._add_graphics_element(circle)
 
-            except Exception as e:
-                print(f"Error loading geometry item '{item_str}': {e}")
+            except (ValueError, KeyError, IndexError) as err:
+                logger.warning("Error loading geometry item '%s': %s", item_str, err)
                 continue
 
-        self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
+        if hasattr(self, "_update_all_previews"):
+            self._update_all_previews()
+        else:
+            self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
 
     # -----------------------------------------------------------------
     # Geometry serialisation
@@ -311,95 +333,6 @@ class GeometryIOMixin:
                     geometry.append(f"Polygon: {' '.join(parts)}")
 
         return geometry
-
-    # -----------------------------------------------------------------
-    # Legacy raw graphics conversion
-    # -----------------------------------------------------------------
-
-    def _parse_geometry_coordinate(self, item, index):
-        """Extracts a numeric coordinate value from a formatted geometry parameter string."""
-        return round(float(item.split(":")[1].split(" ")[index].split("=")[1]), 3) * 100.0
-
-    def _parse_raw_coordinate_pair(self, geometry: list, index: int) -> tuple:
-        """Extracts X and Y floating-point coordinates from a raw geometry data array."""
-        return float(geometry[index + 1]), float(geometry[index + 2])
-
-    def _scale_and_offset_point(
-        self, x: float, y: float, scale: float, symbol_width: float, symbol_height: float
-    ) -> tuple:
-        """Scales relative coordinates to scene units and applies centering offsets."""
-        scaled_x = round(x * scale - symbol_width / 2, 0) / 100.0
-        scaled_y = round(y * scale - symbol_height / 2, 0) / 100.0
-        return scaled_x, scaled_y
-
-    def convert_raw_graphics_data(self, skey: str, geometry: list) -> list:
-        """Converts legacy numeric graphics codes into the modern geometry string format."""
-        self.scene.set_grid_center()
-
-        min_x, min_y = float('inf'), float('inf')
-        max_x, max_y = float('-inf'), float('-inf')
-
-        for i in range(0, len(geometry), 3):
-            code = geometry[i]
-            if code in ("1", "2", "3", "6"):
-                x, y = self._parse_raw_coordinate_pair(geometry, i)
-                min_x, min_y = min(min_x, x), min(min_y, y)
-                max_x, max_y = max(max_x, x), max(max_y, y)
-
-        scale = 0.05
-        symbol_width = max_x * scale
-        symbol_height = max_y * scale
-
-        end_index = len(geometry)
-        for i in range(0, len(geometry), 3):
-            if geometry[i] == "0":
-                end_index = i
-                break
-
-        new_geometry = []
-        start_x, start_y = 0.0, 0.0
-        is_spindle = "SP" in skey
-
-        for i in range(0, len(geometry), 3):
-            code = geometry[i]
-
-            if code == "1":
-                start_x, start_y = self._parse_raw_coordinate_pair(geometry, i)
-                start_x, start_y = self._scale_and_offset_point(
-                    start_x, start_y, scale, symbol_width, symbol_height
-                )
-                if i == 0:
-                    point_type = "SpindlePoint" if is_spindle else "ArrivePoint"
-                    new_geometry.append(f"{point_type}: x0={start_x} y0={start_y}")
-                elif i == len(geometry) - 3 or i == end_index - 3:
-                    if not is_spindle:
-                        new_geometry.append(f"LeavePoint: x0={start_x} y0={start_y}")
-
-            elif code == "2":
-                end_x, end_y = self._parse_raw_coordinate_pair(geometry, i)
-                end_x, end_y = self._scale_and_offset_point(
-                    end_x, end_y, scale, symbol_width, symbol_height
-                )
-                new_geometry.append(f"Line: x1={start_x} y1={start_y} x2={end_x} y2={end_y}")
-                start_x, start_y = end_x, end_y
-
-            elif code == "3":
-                end_x, end_y = self._parse_raw_coordinate_pair(geometry, i)
-                end_x, end_y = self._scale_and_offset_point(
-                    end_x, end_y, scale, symbol_width, symbol_height
-                )
-                new_geometry.append(f"TeePoint: x0={end_x} y0={end_y}")
-                start_x, start_y = end_x, end_y
-
-            elif code == "6":
-                end_x, end_y = self._parse_raw_coordinate_pair(geometry, i)
-                end_x, end_y = self._scale_and_offset_point(
-                    end_x, end_y, scale, symbol_width, symbol_height
-                )
-                new_geometry.append(f"SpindlePoint: x0={end_x} y0={end_y}")
-                start_x, start_y = end_x, end_y
-
-        return new_geometry
 
     # -----------------------------------------------------------------
     # Internal helpers

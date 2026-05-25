@@ -2,9 +2,8 @@
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
 import os
-import sys
-import sysconfig
 
+from openiso.core.app_context import resolve_data_dir, resolve_project_root
 from openiso.model.enums import IsometricView
 
 # ============================================================================
@@ -49,7 +48,7 @@ PREVIEW_WIDTH = 300
 PREVIEW_HEIGHT = 300
 
 # Isometric View Settings
-DEFAULT_ISO_VIEW = IsometricView.NW
+DEFAULT_ISO_VIEW = IsometricView.SE
 ISO_VIEW_NAMES = {
     IsometricView.NE: "North-East (NE)",
     IsometricView.NW: "North-West (NW)",
@@ -173,40 +172,15 @@ GEOMETRY_CODES = {
 
 AVAILABLE_LANGUAGES = [
     ("Русский", "ru"),
-    ("English", "en")
+    ("English", "en"),
+    ("简体中文", "zh_CN")
 ]
 
-def _find_project_root() -> str:
-    """Resolve project root for source checkout (development mode)."""
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-
-def _find_data_root() -> str:
-    """Resolve runtime data root for source, venv, user and system installs."""
-    project_root = _find_project_root()
-    source_data = os.path.join(project_root, 'data')
-    if os.path.exists(source_data):
-        return source_data
-
-    data_root = sysconfig.get_path('data')
-    if data_root:
-        candidate = os.path.join(data_root, 'share', 'openiso')
-        if os.path.exists(candidate):
-            return candidate
-
-    prefix_candidate = os.path.join(sys.prefix, 'share', 'openiso')
-    if os.path.exists(prefix_candidate):
-        return prefix_candidate
-
-    for prefix in ('/usr/local', '/usr', os.path.join(os.path.expanduser('~'), '.local')):
-        candidate = os.path.join(prefix, 'share', 'openiso')
-        if os.path.exists(candidate):
-            return candidate
-
-    return os.path.join(project_root, 'data')
-
-
 # Path constants
-PROJECT_ROOT = _find_project_root()
-DATA_ROOT = _find_data_root()
-LOCALEDIR = os.path.join(os.path.dirname(DATA_ROOT), 'po') if os.path.basename(DATA_ROOT) == 'data' else os.path.join(DATA_ROOT, 'po')
+PROJECT_ROOT = str(resolve_project_root())
+DATA_ROOT = str(resolve_data_dir())
+LOCALEDIR = (
+    os.path.join(os.path.dirname(DATA_ROOT), 'po')
+    if os.path.basename(DATA_ROOT) == 'data'
+    else os.path.join(DATA_ROOT, 'po')
+)

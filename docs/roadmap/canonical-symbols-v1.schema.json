@@ -40,7 +40,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["symbol_code", "group_key", "subgroup_key", "versioning", "geometry"],
+        "required": ["symbol_code", "group_key", "subgroup_key", "origin", "iso_behavior", "last_change", "geometry"],
         "properties": {
           "symbol_code": {
             "type": "string",
@@ -58,9 +58,28 @@
           "description": {
             "type": "string"
           },
+          "origin": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": ["standard", "project"]
+              },
+              "standard_ref": {
+                "type": "string"
+              },
+              "project_ref": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
           "versioning": {
             "type": "object",
-            "required": ["upstream_symbol_version", "payload_hash"],
             "properties": {
               "upstream_symbol_version": {
                 "type": "integer",
@@ -73,6 +92,17 @@
               "payload_hash": {
                 "type": "string",
                 "pattern": "^sha256:[a-fA-F0-9]+$"
+              },
+              "changed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "change_reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "change_ticket": {
+                "type": "string"
               },
               "last_synced_release_version": {
                 "type": "string"
@@ -124,12 +154,94 @@
                   },
                   "additionalProperties": true
                 }
+              },
+              "areas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["kind", "boundary"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": ["fill", "hatch"]
+                    },
+                    "boundary": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                      },
+                      "minItems": 3
+                    },
+                    "style": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "hatch": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "additionalProperties": true
+                }
               }
             },
             "additionalProperties": true
           },
+          "iso_behavior": {
+            "type": "object",
+            "properties": {
+              "orientation_deg": {
+                "type": "number"
+              },
+              "show_flow_arrow": {
+                "type": "boolean"
+              },
+              "depends_on_flow": {
+                "type": "boolean"
+              },
+              "show_dimensions": {
+                "type": "boolean"
+              },
+              "user_can_edit": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "last_change": {
+            "type": "object",
+            "required": ["date", "reason"],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "author": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "attribute_schema_version": {
+            "type": "integer",
+            "minimum": 1
+          },
           "attributes": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": true
           }
         },
         "additionalProperties": true

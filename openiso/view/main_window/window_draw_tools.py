@@ -7,12 +7,17 @@
 
 from __future__ import annotations
 
+import logging
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QApplication, QGraphicsItem, QInputDialog
 
 from openiso.core.i18n import _t
 from openiso.view.graphics.geometry_items import PointItem
+
+
+logger = logging.getLogger(__name__)
 
 
 class DrawToolsMixin:
@@ -66,7 +71,7 @@ class DrawToolsMixin:
     # Line tool menu handler
     # -----------------------------------------------------------------
 
-    def _on_line_tool_selected(self, category, tool_name):
+    def _on_line_tool_selected(self, _category, tool_name):
         """Handle line tool selection from grouped popup menu.
 
         Args:
@@ -77,18 +82,21 @@ class DrawToolsMixin:
             "Line": self._on_draw_line_clicked,
             "Polyline": self._on_draw_polyline_clicked,
             "Orthogonal Polyline": self._on_draw_polyline_orthogonal_clicked,
+            _t("Line"): self._on_draw_line_clicked,
+            _t("Polyline"): self._on_draw_polyline_clicked,
+            _t("Orthogonal Polyline"): self._on_draw_polyline_orthogonal_clicked,
         }
         handler = tool_map.get(tool_name)
         if handler:
             handler()
         else:
-            print(f"[warning] Unknown line tool: {tool_name}")
+            logger.warning("Unknown line tool: %s", tool_name)
 
     # -----------------------------------------------------------------
     # Shape tool menu handler
     # -----------------------------------------------------------------
 
-    def _on_shape_tool_selected(self, category, tool_name):
+    def _on_shape_tool_selected(self, _category, tool_name):
         """Handle shape tool selection from grouped popup menu.
 
         Args:
@@ -106,12 +114,22 @@ class DrawToolsMixin:
             "Pentagon": self._on_draw_pentagon_clicked,
             "Octagon": self._on_draw_octagon_clicked,
             "Dodecagon": self._on_draw_dodecagon_clicked,
+            _t("Square"): self._on_draw_square_clicked,
+            _t("Rectangle"): self._on_draw_rect_clicked,
+            _t("Circle"): self._on_draw_circle_clicked,
+            _t("Triangle"): self._on_draw_triangle_clicked,
+            _t("Diamond"): self._on_draw_diamond_clicked,
+            _t("Cap"): self._on_draw_cap_clicked,
+            _t("Hexagon"): self._on_draw_hexagon_clicked,
+            _t("Pentagon"): self._on_draw_pentagon_clicked,
+            _t("Octagon"): self._on_draw_octagon_clicked,
+            _t("Dodecagon"): self._on_draw_dodecagon_clicked,
         }
         handler = tool_map.get(tool_name)
         if handler:
             handler()
         else:
-            print(f"[warning] Unknown shape tool: {tool_name}")
+            logger.warning("Unknown shape tool: %s", tool_name)
 
     # -----------------------------------------------------------------
     # Connection / spindle popup handlers
@@ -119,7 +137,7 @@ class DrawToolsMixin:
 
     def _on_spindle_from_popup_selected(self, spindle_name):
         """Callback for spindle selection from the popup menu."""
-        print(f"Spindle selected from popup: {spindle_name}")
+        logger.debug("Spindle selected from popup: %s", spindle_name)
         self.scene.last_selected_spindle = spindle_name
         self._on_draw_spindle_point_clicked()
         self.status_bar_widget.showMessage(
@@ -128,21 +146,21 @@ class DrawToolsMixin:
 
     def _on_connection_popup_selected(self, connection_type, action):
         """Callback for connection type selection from the popup menu."""
-        print(f"[debug] Connection selected: type={connection_type}, action/method={action}")
+        logger.debug("Connection selected: type=%s, action/method=%s", connection_type, action)
         self.scene.last_selected_connection_type = connection_type
 
         if hasattr(self, action):
             method = getattr(self, action)
             if callable(method):
                 method()
-                print(f"[debug] Called method: {action}")
+                logger.debug("Called method: %s", action)
             else:
-                print(f"[error] Symbol '{action}' is not callable")
+                logger.error("Symbol '%s' is not callable", action)
         elif action.startswith("draw_"):
             self._set_draw_action(action)
-            print(f"[debug] Fallback: Set draw action to {action}")
+            logger.debug("Fallback: Set draw action to %s", action)
         else:
-            print(f"[error] Unknown action or method: {action}")
+            logger.error("Unknown action or method: %s", action)
 
         self.status_bar_widget.showMessage(
             _t("Connection point: {0} ({1})").format(_t(connection_type), connection_type), 3000
@@ -216,12 +234,14 @@ class DrawToolsMixin:
         self.scene.clearSelection()
         if hasattr(self.scene, 'selected_for_highlight'):
             for item in self.scene.selected_for_highlight:
-                if hasattr(item, '_original_pen'):
-                    item.setPen(item._original_pen)
-                    del item._original_pen
-                if hasattr(item, '_original_brush'):
-                    item.setBrush(item._original_brush)
-                    del item._original_brush
+                original_pen = getattr(item, '_original_pen', None)
+                if original_pen is not None:
+                    item.setPen(original_pen)
+                    delattr(item, '_original_pen')
+                original_brush = getattr(item, '_original_brush', None)
+                if original_brush is not None:
+                    item.setBrush(original_brush)
+                    delattr(item, '_original_brush')
             self.scene.selected_for_highlight.clear()
         for item in self.scene.symbol_drawlist:
             if not isinstance(item, PointItem):

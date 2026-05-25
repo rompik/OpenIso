@@ -5,12 +5,15 @@ import math
 
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import QPainter, QPen, QPolygonF
+from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
+    QFrame,
     QGraphicsLineItem,
     QGraphicsPathItem,
     QGraphicsPolygonItem,
     QGraphicsRectItem,
     QGraphicsScene,
+    QGraphicsTextItem,
     QGraphicsView,
     QGroupBox,
     QVBoxLayout,
@@ -35,7 +38,7 @@ class PreviewWidget(QGroupBox):
     """
     Component for displaying an isometric preview of a Skey shape.
     """
-    def __init__(self, title, parent=None):
+    def __init__(self, title, parent=None, *, widget_size=(340, 250), scene_size=(PREVIEW_WIDTH, PREVIEW_HEIGHT)):
         """
         Initialize the PreviewWidget.
 
@@ -44,16 +47,21 @@ class PreviewWidget(QGroupBox):
             parent (QWidget, optional): Parent widget. Defaults to None.
         """
         super().__init__(title, parent)
-        self.setFixedSize(340, 250)
+        self.preview_width, self.preview_height = scene_size
+        self.setFixedSize(*widget_size)
         self.vbox_lay_preview = QVBoxLayout()
         self.setLayout(self.vbox_lay_preview)
 
         self.scene_preview = QGraphicsScene(self)
-        self.scene_preview.setSceneRect(0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT)
+        self.scene_preview.setSceneRect(0, 0, self.preview_width, self.preview_height)
         self.view_preview = QGraphicsView(self.scene_preview, self)
         self.view_preview.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.view_preview.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.view_preview.setFrameShape(QFrame.Shape.NoFrame)
         self.view_preview.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self.view_preview.setStyleSheet("background: transparent; border: none;")
+        self.view_preview.setBackgroundBrush(Qt.GlobalColor.transparent)
+        self.scene_preview.setBackgroundBrush(Qt.GlobalColor.transparent)
         self.vbox_lay_preview.addWidget(self.view_preview)
 
         # Set default isometric view
@@ -81,6 +89,7 @@ class PreviewWidget(QGroupBox):
             origin_y (float): Y-coordinate of the symbol's origin.
         """
         self.scene_preview.clear()
+        self._draw_iso_axes()
 
         points = self._collect_preview_points(symbol_drawlist, origin_x, origin_y)
         if not points:
@@ -97,10 +106,10 @@ class PreviewWidget(QGroupBox):
         # Draw all items except points, but record Arrive/Leave point positions
         for item in symbol_drawlist:
             if isinstance(item, ArrivePoint):
-                x, y = item.x() - origin_x, item.y() - origin_y
+                x, y = item.scenePos().x() - origin_x, item.scenePos().y() - origin_y
                 arrive_point_pos = self._to_preview_coord(x, y, scale, center_x, center_y)
             elif isinstance(item, LeavePoint):
-                x, y = item.x() - origin_x, item.y() - origin_y
+                x, y = item.scenePos().x() - origin_x, item.scenePos().y() - origin_y
                 leave_point_pos = self._to_preview_coord(x, y, scale, center_x, center_y)
             elif isinstance(item, (TeePoint, SpindlePoint)):
                 continue  # Do not draw points in preview
@@ -113,37 +122,18 @@ class PreviewWidget(QGroupBox):
             elif isinstance(item, QGraphicsPathItem):
                 self._draw_preview_path(item, scale, center_x, center_y, pen, origin_x, origin_y)
 
-        # Draw line from outside to ArrivePoint (using same color as editor)
+        # Direction of the isometric X axis in preview screen coords (unit vector)
+        iso_dx, iso_dy = self._to_isometric(1, 0)
+
+        # Arrive arrow: tip AT the arrive point, shaft along iso X direction
         if arrive_point_pos:
             ax, ay = arrive_point_pos
-            cx, cy = PREVIEW_WIDTH / 2, PREVIEW_HEIGHT / 2
-            dx, dy = - ax + cx, - ay + cy
-            length = (dx ** 2 + dy ** 2) ** 0.5
-            if length == 0:
-                dx, dy = 0, -1
-                length = 1
-            dx, dy = dx / length, dy / length
-            start_x = ax - dx * 30
-            start_y = ay - dy * 30
-            preview_line = QGraphicsLineItem(start_x, start_y, ax, ay)
-            preview_line.setPen(QPen(POINT_COLORS["arrive"], 2, Qt.PenStyle.SolidLine))
-            self.scene_preview.addItem(preview_line)
+            self._draw_preview_arrow(ax - iso_dx * 28, ay - iso_dy * 28, ax, ay, POINT_COLORS["arrive"])
 
-        # Draw line from LeavePoint to outside (using same color as editor)
+        # Leave arrow: tail AT the leave point, shaft along iso X direction
         if leave_point_pos:
             lx, ly = leave_point_pos
-            cx, cy = PREVIEW_WIDTH / 2, PREVIEW_HEIGHT / 2
-            dx, dy = lx - cx, ly - cy
-            length = (dx ** 2 + dy ** 2) ** 0.5
-            if length == 0:
-                dx, dy = 0, 1
-                length = 1
-            dx, dy = dx / length, dy / length
-            end_x = lx + dx * 30
-            end_y = ly + dy * 30
-            preview_line = QGraphicsLineItem(lx, ly, end_x, end_y)
-            preview_line.setPen(QPen(POINT_COLORS["leave"], 2, Qt.PenStyle.SolidLine))
-            self.scene_preview.addItem(preview_line)
+            self._draw_preview_arrow(lx, ly, lx + iso_dx * 28, ly + iso_dy * 28, POINT_COLORS["leave"])
 
     def _to_isometric(self, x, y):
         """
@@ -159,24 +149,24 @@ class PreviewWidget(QGroupBox):
         iso_angle = math.pi / 6
 
         if self.iso_view == IsometricView.NE:
-            # North-East (default): X right-up, Y left-up
+            # NE: canvas X (→) → lower-right on screen, canvas Y (↓) → lower-left on screen
             iso_x = (x - y) * math.cos(iso_angle)
             iso_y = (x + y) * math.sin(iso_angle)
         elif self.iso_view == IsometricView.NW:
-            # North-West: X left-up, Y right-up (mirror horizontally)
+            # NW (default): canvas X (→) → lower-left on screen, canvas Y (↓) → lower-right on screen
             iso_x = -(x - y) * math.cos(iso_angle)
             iso_y = (x + y) * math.sin(iso_angle)
         elif self.iso_view == IsometricView.SE:
-            # South-East: X right-down, Y left-down (mirror vertically)
+            # SE: canvas X (→) → upper-right on screen, canvas Y (↓) → upper-left on screen (vertical flip of NE)
             iso_x = (x - y) * math.cos(iso_angle)
             iso_y = -(x + y) * math.sin(iso_angle)
         elif self.iso_view == IsometricView.SW:
-            # South-West: X left-down, Y right-down (rotate 180°)
+            # SW: canvas X (→) → upper-left on screen, canvas Y (↓) → upper-right on screen (vertical flip of NW)
             iso_x = -(x - y) * math.cos(iso_angle)
             iso_y = -(x + y) * math.sin(iso_angle)
         else:
-            # Fallback to NE
-            iso_x = (x - y) * math.cos(iso_angle)
+            # Fallback to NW
+            iso_x = -(x - y) * math.cos(iso_angle)
             iso_y = (x + y) * math.sin(iso_angle)
 
         return iso_x, iso_y
@@ -196,21 +186,35 @@ class PreviewWidget(QGroupBox):
         points = []
         for item in symbol_drawlist:
             if isinstance(item, (ArrivePoint, LeavePoint, TeePoint, SpindlePoint)):
-                points.append((item.x() - origin_x, item.y() - origin_y))
+                points.append((item.scenePos().x() - origin_x, item.scenePos().y() - origin_y))
             elif isinstance(item, QGraphicsLineItem):
                 line = item.line()
-                points.append((line.p1().x() - origin_x, line.p1().y() - origin_y))
-                points.append((line.p2().x() - origin_x, line.p2().y() - origin_y))
+                p1 = item.mapToScene(line.p1())
+                p2 = item.mapToScene(line.p2())
+                points.append((p1.x() - origin_x, p1.y() - origin_y))
+                points.append((p2.x() - origin_x, p2.y() - origin_y))
             elif isinstance(item, QGraphicsRectItem):
                 rect = item.rect()
-                x, y = rect.x() - origin_x, rect.y() - origin_y
-                points.append((x, y))
-                points.append((x + rect.width(), y + rect.height()))
+                corners = [
+                    rect.topLeft(),
+                    rect.topRight(),
+                    rect.bottomRight(),
+                    rect.bottomLeft(),
+                ]
+                for corner in corners:
+                    p = item.mapToScene(corner)
+                    points.append((p.x() - origin_x, p.y() - origin_y))
             elif isinstance(item, QGraphicsPolygonItem):
                 polygon = item.polygon()
                 for i in range(polygon.count()):
-                    point = polygon.at(i)
-                    points.append((point.x() - origin_x, point.y() - origin_y))
+                    p = item.mapToScene(polygon.at(i))
+                    points.append((p.x() - origin_x, p.y() - origin_y))
+            elif isinstance(item, QGraphicsPathItem):
+                path = item.path()
+                for t in range(41):
+                    sample = path.pointAtPercent(t / 40.0)
+                    p = item.mapToScene(sample)
+                    points.append((p.x() - origin_x, p.y() - origin_y))
         return points
 
     def _calculate_preview_params(self, points):
@@ -232,7 +236,14 @@ class PreviewWidget(QGroupBox):
 
         width = max(max_x - min_x, 1)
         height = max(max_y - min_y, 1)
-        scale = min((PREVIEW_WIDTH - 40) / width, (PREVIEW_HEIGHT - 60) / height) * 0.8
+
+        # Keep a dynamic inner padding so large symbols do not stick to edges.
+        pad_x = max(8.0, min(24.0, self.preview_width * 0.08))
+        pad_y = max(8.0, min(24.0, self.preview_height * 0.08))
+        available_width = max(1.0, self.preview_width - 2.0 * pad_x)
+        available_height = max(1.0, self.preview_height - 2.0 * pad_y)
+        scale = min(available_width / width, available_height / height)
+
         center_x = (min_x + max_x) / 2
         center_y = (min_y + max_y) / 2
         return scale, center_x, center_y
@@ -249,7 +260,7 @@ class PreviewWidget(QGroupBox):
         Returns:
             tuple: (px, py) coordinates in the preview scene.
         """
-        preview_cx, preview_cy = PREVIEW_WIDTH / 2, PREVIEW_HEIGHT / 2
+        preview_cx, preview_cy = self.preview_width / 2, self.preview_height / 2
         iso_x, iso_y = self._to_isometric(x, y)
         px = preview_cx + (iso_x - center_x) * scale
         py = preview_cy + (iso_y - center_y) * scale
@@ -258,8 +269,10 @@ class PreviewWidget(QGroupBox):
     def _draw_preview_line(self, item, scale, center_x, center_y, pen, origin_x, origin_y):
         """Draw a line primitive in the preview scene."""
         line = item.line()
-        px1, py1 = self._to_preview_coord(line.p1().x() - origin_x, line.p1().y() - origin_y, scale, center_x, center_y)
-        px2, py2 = self._to_preview_coord(line.p2().x() - origin_x, line.p2().y() - origin_y, scale, center_x, center_y)
+        p1 = item.mapToScene(line.p1())
+        p2 = item.mapToScene(line.p2())
+        px1, py1 = self._to_preview_coord(p1.x() - origin_x, p1.y() - origin_y, scale, center_x, center_y)
+        px2, py2 = self._to_preview_coord(p2.x() - origin_x, p2.y() - origin_y, scale, center_x, center_y)
         preview_line = QGraphicsLineItem(px1, py1, px2, py2)
         preview_line.setPen(pen)
         self.scene_preview.addItem(preview_line)
@@ -267,10 +280,16 @@ class PreviewWidget(QGroupBox):
     def _draw_preview_rect(self, item, scale, center_x, center_y, pen, origin_x, origin_y):
         """Draw a rectangle primitive in the preview scene."""
         rect = item.rect()
-        x, y = rect.x() - origin_x, rect.y() - origin_y
-        w, h = rect.width(), rect.height()
-        corners = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
-        preview_corners = [self._to_preview_coord(cx, cy, scale, center_x, center_y) for cx, cy in corners]
+        scene_corners = [
+            item.mapToScene(rect.topLeft()),
+            item.mapToScene(rect.topRight()),
+            item.mapToScene(rect.bottomRight()),
+            item.mapToScene(rect.bottomLeft()),
+        ]
+        preview_corners = [
+            self._to_preview_coord(p.x() - origin_x, p.y() - origin_y, scale, center_x, center_y)
+            for p in scene_corners
+        ]
         for i in range(4):
             px1, py1 = preview_corners[i]
             px2, py2 = preview_corners[(i + 1) % 4]
@@ -285,19 +304,123 @@ class PreviewWidget(QGroupBox):
             return
         iso_polygon = []
         for i in range(polygon.count()):
-            point = polygon.at(i)
+            point = item.mapToScene(polygon.at(i))
             px, py = self._to_preview_coord(point.x() - origin_x, point.y() - origin_y, scale, center_x, center_y)
             iso_polygon.append(QPointF(px, py))
         poly_item = QGraphicsPolygonItem(QPolygonF(iso_polygon))
         poly_item.setPen(pen)
         self.scene_preview.addItem(poly_item)
 
+    def _draw_iso_axes(self):
+        """Draw isometric X/Y/Z axis indicator anchored to the bottom-left corner of the preview."""
+        arm = 24
+        label_pad = 14   # extra space reserved for axis labels
+        margin = 5      # minimum gap from widget edges
+
+        cos30 = math.cos(math.pi / 6)
+        sin30 = math.sin(math.pi / 6)
+
+        if self.iso_view == IsometricView.NE:
+            x_dir = (cos30, sin30)
+            y_dir = (-cos30, sin30)
+        elif self.iso_view == IsometricView.NW:
+            x_dir = (-cos30, sin30)
+            y_dir = (cos30, sin30)
+        elif self.iso_view == IsometricView.SE:
+            x_dir = (cos30, -sin30)
+            y_dir = (-cos30, -sin30)
+        elif self.iso_view == IsometricView.SW:
+            x_dir = (-cos30, -sin30)
+            y_dir = (cos30, -sin30)
+        else:
+            x_dir = (cos30, sin30)
+            y_dir = (-cos30, sin30)
+
+        z_dir = (0.0, -1.0)  # Z always points up on screen (elevation)
+
+        dirs = [x_dir, y_dir, z_dir]
+
+        # Bounding box of all arm+label extents relative to a local origin (0, 0)
+        reach = arm + label_pad
+        offsets_x = [0.0] + [d[0] * reach for d in dirs]
+        offsets_y = [0.0] + [d[1] * reach for d in dirs]
+        min_ox = min(offsets_x)
+        max_oy = max(offsets_y)
+
+        # Anchor: left extent at `margin`, bottom extent at `preview_height - margin`
+        ox = margin - min_ox
+        oy = self.preview_height - margin - max_oy
+
+        font = QFont()
+        font.setPointSize(7)
+        font.setBold(True)
+
+        head_len = 5.0
+        head_angle = math.pi / 5
+
+        for (dx, dy), hex_color, label in [
+            (x_dir, "#D04040", "X"),
+            (y_dir, "#40B040", "Y"),
+            (z_dir, "#4080D0", "Z"),
+        ]:
+            color = QColor(hex_color)
+            pen = QPen(color, 1.5, Qt.PenStyle.SolidLine)
+            ex = ox + dx * arm
+            ey = oy + dy * arm
+
+            shaft = QGraphicsLineItem(ox, oy, ex, ey)
+            shaft.setPen(pen)
+            self.scene_preview.addItem(shaft)
+
+            length = math.hypot(dx, dy)
+            if length > 0:
+                ux, uy = dx / length, dy / length
+                for sign in (1, -1):
+                    ax = ex - head_len * (ux * math.cos(head_angle) - sign * uy * math.sin(head_angle))
+                    ay = ey - head_len * (uy * math.cos(head_angle) + sign * ux * math.sin(head_angle))
+                    wing = QGraphicsLineItem(ex, ey, ax, ay)
+                    wing.setPen(pen)
+                    self.scene_preview.addItem(wing)
+
+            text = QGraphicsTextItem(label)
+            text.setFont(font)
+            text.setDefaultTextColor(color)
+            text.setPos(ex + dx * 2 - 4, ey + dy * 2 - 6)
+            self.scene_preview.addItem(text)
+
+    def _draw_preview_arrow(self, x1, y1, x2, y2, color):
+        """Draw a line with an arrowhead at (x2, y2) in the given color."""
+        arrow_pen = QPen(color, 2, Qt.PenStyle.SolidLine)
+
+        # Shaft
+        shaft = QGraphicsLineItem(x1, y1, x2, y2)
+        shaft.setPen(arrow_pen)
+        self.scene_preview.addItem(shaft)
+
+        # Arrowhead: two short lines branching back from the tip
+        head_len = 7.0
+        head_angle = math.pi / 6  # 30°
+
+        # Direction from start to end
+        dx, dy = x2 - x1, y2 - y1
+        length = math.hypot(dx, dy)
+        if length == 0:
+            return
+        ux, uy = dx / length, dy / length
+
+        for sign in (1, -1):
+            ax = x2 - head_len * (ux * math.cos(head_angle) - sign * uy * math.sin(head_angle))
+            ay = y2 - head_len * (uy * math.cos(head_angle) + sign * ux * math.sin(head_angle))
+            wing = QGraphicsLineItem(x2, y2, ax, ay)
+            wing.setPen(arrow_pen)
+            self.scene_preview.addItem(wing)
+
     def _draw_preview_path(self, item, scale, center_x, center_y, pen, origin_x, origin_y):
         """Draw a path primitive in the preview scene."""
         path = item.path()
         prev_point = None
         for t in range(21):
-            point = path.pointAtPercent(t / 20.0)
+            point = item.mapToScene(path.pointAtPercent(t / 20.0))
             px, py = self._to_preview_coord(point.x() - origin_x, point.y() - origin_y, scale, center_x, center_y)
             if prev_point is not None:
                 line = QGraphicsLineItem(prev_point[0], prev_point[1], px, py)

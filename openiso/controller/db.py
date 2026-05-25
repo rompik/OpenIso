@@ -1,16 +1,21 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
+import contextlib
 import os
 import json
+import logging
 import shutil
 import sqlite3
 from pathlib import Path
 from typing import List
 
 from openiso.model.skey import SkeyData
+from openiso.core.app_context import resolve_data_dir
 
-DB_PATH = "data/database/openiso.db"
+DB_PATH = str(resolve_data_dir() / "database" / "openiso.db")
+
+logger = logging.getLogger(__name__)
 
 class SkeyDB:
     def __init__(self, db_path: str = DB_PATH):
@@ -55,16 +60,14 @@ class SkeyDB:
 
     def _ensure_schema_exists(self):
         """Create minimal schema for first run if DB file is empty/new."""
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='skeys'")
-        has_skeys = cur.fetchone() is not None
-        if has_skeys:
-            conn.close()
-            return
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='skeys'")
+            if cur.fetchone() is not None:
+                return
 
-        conn.executescript(
-            """
+            conn.executescript(
+                """
             CREATE TABLE IF NOT EXISTS symbol_sources (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -212,10 +215,8 @@ class SkeyDB:
             CREATE INDEX IF NOT EXISTS idx_geometry_skey_txn ON geometry(skey_id, transaction_id);
             CREATE INDEX IF NOT EXISTS idx_transactions_skey ON transactions(skey_id);
             CREATE INDEX IF NOT EXISTS idx_spindle_geometry_spindle_txn ON spindle_geometry(spindle_id, transaction_id);
-            """
-        )
-        conn.commit()
-        conn.close()
+                """
+            )
 
     @staticmethod
     def _column_exists(cur: sqlite3.Cursor, table: str, column: str) -> bool:
@@ -224,109 +225,106 @@ class SkeyDB:
 
     def _ensure_columns_exist(self):
         """Checks if all necessary columns exist and adds them if missing."""
-        conn = self.connect()
-        cur = conn.cursor()
+        with self._transaction() as conn:
+            cur = conn.cursor()
 
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='skeys'")
-        if cur.fetchone() is None:
-            conn.close()
-            return
+            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='skeys'")
+            if cur.fetchone() is None:
+                return
 
-        try:
-            cur.execute("SELECT tracing FROM skeys LIMIT 1")
-        except sqlite3.OperationalError:
-            print("Adding 'tracing' column to 'skeys' table...")
             try:
-                cur.execute("ALTER TABLE skeys ADD COLUMN tracing INTEGER DEFAULT 0")
-                conn.commit()
-            except Exception as e:
-                print(f"Failed to add 'tracing' column: {e}")
+                cur.execute("SELECT tracing FROM skeys LIMIT 1")
+            except sqlite3.OperationalError:
+                logger.info("Adding 'tracing' column to 'skeys' table...")
+                try:
+                    cur.execute("ALTER TABLE skeys ADD COLUMN tracing INTEGER DEFAULT 0")
+                    conn.commit()
+                except sqlite3.Error as err:
+                    logger.warning("Failed to add 'tracing' column: %s", err)
 
-        try:
-            cur.execute("SELECT insulation FROM skeys LIMIT 1")
-        except sqlite3.OperationalError:
-            print("Adding 'insulation' column to 'skeys' table...")
             try:
-                cur.execute("ALTER TABLE skeys ADD COLUMN insulation INTEGER DEFAULT 0")
-                conn.commit()
-            except Exception as e:
-                print(f"Failed to add 'insulation' column: {e}")
+                cur.execute("SELECT insulation FROM skeys LIMIT 1")
+            except sqlite3.OperationalError:
+                logger.info("Adding 'insulation' column to 'skeys' table...")
+                try:
+                    cur.execute("ALTER TABLE skeys ADD COLUMN insulation INTEGER DEFAULT 0")
+                    conn.commit()
+                except sqlite3.Error as err:
+                    logger.warning("Failed to add 'insulation' column: %s", err)
 
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS symbol_sources (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                source_type TEXT NOT NULL DEFAULT 'standard',
-                version TEXT,
-                description TEXT,
-                url TEXT,
-                CHECK (source_type IN ('standard', 'company', 'project')),
-                UNIQUE(name, source_type, version)
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS symbol_sources (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    source_type TEXT NOT NULL DEFAULT 'standard',
+                    version TEXT,
+                    description TEXT,
+                    url TEXT,
+                    CHECK (source_type IN ('standard', 'company', 'project')),
+                    UNIQUE(name, source_type, version)
+                )
+                """
             )
-            """
-        )
 
-        new_skey_columns = [
-            ("pcf_identification", "TEXT"),
-            ("idf_record", "TEXT"),
-            ("user_definable", "INTEGER NOT NULL DEFAULT 1"),
-            ("flow_dependency", "INTEGER NOT NULL DEFAULT 0"),
-            ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
-            ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
-            ("origin_type", "TEXT NOT NULL DEFAULT 'official'"),
-            ("is_official", "INTEGER NOT NULL DEFAULT 1"),
-            ("is_user_modified", "INTEGER NOT NULL DEFAULT 0"),
-            ("upstream_symbol_code", "TEXT"),
-            ("upstream_release_version", "TEXT"),
-            ("upstream_symbol_version", "INTEGER NOT NULL DEFAULT 1"),
-            ("last_synced_upstream_version", "INTEGER NOT NULL DEFAULT 1"),
-            ("upstream_payload_hash", "TEXT"),
-            ("local_revision", "INTEGER NOT NULL DEFAULT 1"),
-            ("sync_state", "TEXT NOT NULL DEFAULT 'synced'"),
-        ]
-        for column_name, column_type in new_skey_columns:
-            if not self._column_exists(cur, "skeys", column_name):
-                cur.execute(f"ALTER TABLE skeys ADD COLUMN {column_name} {column_type}")
+            new_skey_columns = [
+                ("pcf_identification", "TEXT"),
+                ("idf_record", "TEXT"),
+                ("user_definable", "INTEGER NOT NULL DEFAULT 1"),
+                ("flow_dependency", "INTEGER NOT NULL DEFAULT 0"),
+                ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
+                ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
+                ("origin_type", "TEXT NOT NULL DEFAULT 'official'"),
+                ("is_official", "INTEGER NOT NULL DEFAULT 1"),
+                ("is_user_modified", "INTEGER NOT NULL DEFAULT 0"),
+                ("upstream_symbol_code", "TEXT"),
+                ("upstream_release_version", "TEXT"),
+                ("upstream_symbol_version", "INTEGER NOT NULL DEFAULT 1"),
+                ("last_synced_upstream_version", "INTEGER NOT NULL DEFAULT 1"),
+                ("upstream_payload_hash", "TEXT"),
+                ("local_revision", "INTEGER NOT NULL DEFAULT 1"),
+                ("sync_state", "TEXT NOT NULL DEFAULT 'synced'"),
+            ]
+            for column_name, column_type in new_skey_columns:
+                if not self._column_exists(cur, "skeys", column_name):
+                    cur.execute(f"ALTER TABLE skeys ADD COLUMN {column_name} {column_type}")
 
-        new_spindle_columns = [
-            ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
-            ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
-        ]
-        for column_name, column_type in new_spindle_columns:
-            if not self._column_exists(cur, "spindles", column_name):
-                cur.execute(f"ALTER TABLE spindles ADD COLUMN {column_name} {column_type}")
+            new_spindle_columns = [
+                ("source_id", "INTEGER REFERENCES symbol_sources(id) ON DELETE SET NULL"),
+                ("isogen_standard", "INTEGER NOT NULL DEFAULT 0"),
+            ]
+            for column_name, column_type in new_spindle_columns:
+                if not self._column_exists(cur, "spindles", column_name):
+                    cur.execute(f"ALTER TABLE spindles ADD COLUMN {column_name} {column_type}")
 
-        cur.execute(
-            """
-            INSERT OR IGNORE INTO symbol_sources (id, name, source_type, version, description, url)
-            VALUES (1, 'ISOGEN / Alias Limited', 'standard', '2008',
-                    'ISOGEN Symbol Key (SKEY) Definitions', 'http://www.alias.ltd.uk')
-            """
-        )
-
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS app_metadata (
-                key TEXT PRIMARY KEY,
-                value TEXT NOT NULL
+            cur.execute(
+                """
+                INSERT OR IGNORE INTO symbol_sources (id, name, source_type, version, description, url)
+                VALUES (1, 'ISOGEN / Alias Limited', 'standard', '2008',
+                        'ISOGEN Symbol Key (SKEY) Definitions', 'http://www.alias.ltd.uk')
+                """
             )
-            """
-        )
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS catalog_symbols (
-                release_version TEXT NOT NULL,
-                symbol_code TEXT NOT NULL,
-                symbol_version INTEGER NOT NULL,
-                payload_hash TEXT NOT NULL,
-                payload_json TEXT NOT NULL,
-                PRIMARY KEY (release_version, symbol_code)
+
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS app_metadata (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                )
+                """
             )
-            """
-        )
-        conn.commit()
-        conn.close()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS catalog_symbols (
+                    release_version TEXT NOT NULL,
+                    symbol_code TEXT NOT NULL,
+                    symbol_version INTEGER NOT NULL,
+                    payload_hash TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    PRIMARY KEY (release_version, symbol_code)
+                )
+                """
+            )
 
     def _ensure_symbol_source(self, name: str, source_type: str = "standard", version: str = "") -> int | None:
         source_name = (name or "").strip()
@@ -337,95 +335,97 @@ class SkeyDB:
         if source_type not in ("standard", "company", "project"):
             source_type = "standard"
 
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT id FROM symbol_sources WHERE name = ? AND source_type = ? AND COALESCE(version, '') = COALESCE(?, '')",
-            (source_name, source_type, version),
-        )
-        row = cur.fetchone()
-        if row:
-            conn.close()
-            return row[0]
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT id FROM symbol_sources WHERE name = ? AND source_type = ? AND COALESCE(version, '') = COALESCE(?, '')",
+                (source_name, source_type, version),
+            )
+            row = cur.fetchone()
+            if row:
+                return row[0]
 
-        cur.execute(
-            "INSERT INTO symbol_sources (name, source_type, version) VALUES (?, ?, ?)",
-            (source_name, source_type, version),
-        )
-        source_id = cur.lastrowid
-        conn.commit()
-        conn.close()
-        return source_id if source_id is not None else None
+            cur.execute(
+                "INSERT INTO symbol_sources (name, source_type, version) VALUES (?, ?, ?)",
+                (source_name, source_type, version),
+            )
+            return cur.lastrowid
 
     def connect(self):
         conn = sqlite3.connect(self.db_path)
         conn.execute("PRAGMA foreign_keys = ON")
         return conn
 
-    def get_metadata(self, key: str) -> str | None:
+    @contextlib.contextmanager
+    def _transaction(self, commit: bool = True):
+        """Context manager that opens a connection, optionally commits, and always closes."""
         conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT value FROM app_metadata WHERE key = ?", (key,))
-        row = cur.fetchone()
-        conn.close()
-        return row[0] if row else None
+        try:
+            yield conn
+            if commit:
+                conn.commit()
+        finally:
+            conn.close()
+
+    def get_metadata(self, key: str) -> str | None:
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT value FROM app_metadata WHERE key = ?", (key,))
+            row = cur.fetchone()
+            return row[0] if row else None
 
     def set_metadata(self, key: str, value: str) -> None:
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO app_metadata (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
-            (key, value),
-        )
-        conn.commit()
-        conn.close()
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO app_metadata (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                (key, value),
+            )
 
     def get_sync_conflicts(self) -> list[dict]:
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT name, origin_type, sync_state, upstream_symbol_code,
-                   upstream_release_version, upstream_symbol_version
-            FROM skeys
-            WHERE sync_state IN ('conflict', 'upstream_newer')
-            ORDER BY name
-            """
-        )
-        rows = cur.fetchall()
-        conn.close()
-        return [
-            {
-                "name": row[0],
-                "origin_type": row[1],
-                "sync_state": row[2],
-                "upstream_symbol_code": row[3] or "",
-                "upstream_release_version": row[4] or "",
-                "upstream_symbol_version": row[5] or 1,
-            }
-            for row in rows
-        ]
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT name, origin_type, sync_state, upstream_symbol_code,
+                       upstream_release_version, upstream_symbol_version
+                FROM skeys
+                WHERE sync_state IN ('conflict', 'upstream_newer')
+                ORDER BY name
+                """
+            )
+            rows = cur.fetchall()
+            return [
+                {
+                    "name": row[0],
+                    "origin_type": row[1],
+                    "sync_state": row[2],
+                    "upstream_symbol_code": row[3] or "",
+                    "upstream_release_version": row[4] or "",
+                    "upstream_symbol_version": row[5] or 1,
+                }
+                for row in rows
+            ]
 
     def get_catalog_symbol(self, release_version: str, symbol_code: str) -> dict | None:
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT symbol_version, payload_hash, payload_json
-            FROM catalog_symbols
-            WHERE release_version = ? AND symbol_code = ?
-            """,
-            (release_version, symbol_code),
-        )
-        row = cur.fetchone()
-        conn.close()
-        if not row:
-            return None
-        return {
-            "symbol_version": row[0],
-            "payload_hash": row[1],
-            "payload": json.loads(row[2]),
-        }
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT symbol_version, payload_hash, payload_json
+                FROM catalog_symbols
+                WHERE release_version = ? AND symbol_code = ?
+                """,
+                (release_version, symbol_code),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            return {
+                "symbol_version": row[0],
+                "payload_hash": row[1],
+                "payload": json.loads(row[2]),
+            }
 
     def upsert_catalog_symbol(
         self,
@@ -435,21 +435,19 @@ class SkeyDB:
         payload_hash: str,
         payload: dict,
     ) -> None:
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            """
-            INSERT INTO catalog_symbols (release_version, symbol_code, symbol_version, payload_hash, payload_json)
-            VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(release_version, symbol_code) DO UPDATE SET
-                symbol_version=excluded.symbol_version,
-                payload_hash=excluded.payload_hash,
-                payload_json=excluded.payload_json
-            """,
-            (release_version, symbol_code, symbol_version, payload_hash, json.dumps(payload, ensure_ascii=False, sort_keys=True)),
-        )
-        conn.commit()
-        conn.close()
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                INSERT INTO catalog_symbols (release_version, symbol_code, symbol_version, payload_hash, payload_json)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(release_version, symbol_code) DO UPDATE SET
+                    symbol_version=excluded.symbol_version,
+                    payload_hash=excluded.payload_hash,
+                    payload_json=excluded.payload_json
+                """,
+                (release_version, symbol_code, symbol_version, payload_hash, json.dumps(payload, ensure_ascii=False, sort_keys=True)),
+            )
 
     def upsert_official_skey(
         self,
@@ -462,21 +460,222 @@ class SkeyDB:
         """Upsert official symbol while preserving user-created and user-modified symbols."""
         self.ensure_subgroup_exists(skey.group_key, skey.subgroup_key)
 
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT id, origin_type, is_user_modified
-            FROM skeys
-            WHERE name = ?
-            """,
-            (skey.name,),
-        )
-        row = cur.fetchone()
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT id, origin_type, is_user_modified
+                FROM skeys
+                WHERE name = ?
+                """,
+                (skey.name,),
+            )
+            row = cur.fetchone()
 
-        if not row:
+            if not row:
+                spindle_skey = skey.spindle_skey or None
+                source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
+                cur.execute(
+                    """
+                    INSERT INTO skeys (
+                        name, skey_group_key, skey_subgroup_key, skey_description_key,
+                        spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
+                        pcf_identification, idf_record, user_definable, flow_dependency,
+                        source_id, isogen_standard,
+                        origin_type, is_official, is_user_modified,
+                        upstream_symbol_code, upstream_release_version,
+                        upstream_symbol_version, last_synced_upstream_version,
+                        upstream_payload_hash, local_revision, sync_state
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
+                        spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                        skey.tracing, skey.insulation, skey.pcf_identification, skey.idf_record,
+                        skey.user_definable, skey.flow_dependency, source_id, skey.isogen_standard,
+                        "official", 1, 0,
+                        upstream_symbol_code, release_version,
+                        upstream_symbol_version, upstream_symbol_version,
+                        upstream_payload_hash, 1, "synced",
+                    ),
+                )
+                skey_id = cur.lastrowid
+                cur.execute(
+                    "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
+                    (skey_id, "system", "create", f"official sync {release_version}"),
+                )
+                transaction_id = cur.lastrowid
+                for geom in skey.geometry:
+                    cur.execute(
+                        "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                        (skey_id, geom.split(":")[0], geom, transaction_id),
+                    )
+                return "inserted"
+
+            skey_id, origin_type, is_user_modified = row
+
+            if origin_type in ("user", "imported"):
+                cur.execute(
+                    """
+                    UPDATE skeys
+                    SET upstream_symbol_code = ?,
+                        upstream_release_version = ?,
+                        upstream_symbol_version = ?,
+                        upstream_payload_hash = ?,
+                        sync_state = 'upstream_newer'
+                    WHERE id = ?
+                    """,
+                    (upstream_symbol_code, release_version, upstream_symbol_version, upstream_payload_hash, skey_id),
+                )
+                return "skipped_user"
+
+            if is_user_modified:
+                cur.execute(
+                    """
+                    UPDATE skeys
+                    SET upstream_symbol_code = ?,
+                        upstream_release_version = ?,
+                        upstream_symbol_version = ?,
+                        upstream_payload_hash = ?,
+                        sync_state = 'conflict'
+                    WHERE id = ?
+                    """,
+                    (upstream_symbol_code, release_version, upstream_symbol_version, upstream_payload_hash, skey_id),
+                )
+                return "conflict"
+
             spindle_skey = skey.spindle_skey or None
             source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
+            cur.execute(
+                """
+                UPDATE skeys SET
+                    skey_group_key = ?,
+                    skey_subgroup_key = ?,
+                    skey_description_key = ?,
+                    spindle_skey = ?,
+                    orientation = ?,
+                    flow_arrow = ?,
+                    dimensioned = ?,
+                    tracing = ?,
+                    insulation = ?,
+                    pcf_identification = ?,
+                    idf_record = ?,
+                    user_definable = ?,
+                    flow_dependency = ?,
+                    source_id = ?,
+                    isogen_standard = ?,
+                    origin_type = 'official',
+                    is_official = 1,
+                    is_user_modified = 0,
+                    upstream_symbol_code = ?,
+                    upstream_release_version = ?,
+                    upstream_symbol_version = ?,
+                    last_synced_upstream_version = ?,
+                    upstream_payload_hash = ?,
+                    sync_state = 'synced'
+                WHERE id = ?
+                """,
+                (
+                    skey.group_key, skey.subgroup_key, skey.description_key,
+                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    skey.tracing, skey.insulation,
+                    skey.pcf_identification, skey.idf_record, skey.user_definable,
+                    skey.flow_dependency, source_id, skey.isogen_standard,
+                    upstream_symbol_code, release_version, upstream_symbol_version,
+                    upstream_symbol_version, upstream_payload_hash,
+                    skey_id,
+                ),
+            )
+            cur.execute(
+                "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
+                (skey_id, "system", "edit", f"official sync {release_version}"),
+            )
+            transaction_id = cur.lastrowid
+            for geom in skey.geometry:
+                cur.execute(
+                    "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                    (skey_id, geom.split(":")[0], geom, transaction_id),
+                )
+            return "updated"
+
+    def get_all_skeys(self) -> List[SkeyData]:
+        # All columns are guaranteed by _ensure_columns_exist() called at __init__.
+        # sqlite3.Row allows named column access, eliminating index tracking.
+        with self._transaction(commit=False) as conn:
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+            cur.execute(
+                """
+                SELECT
+                    s.id, s.name, s.skey_group_key, s.skey_subgroup_key, s.skey_description_key,
+                    s.spindle_skey, s.orientation, s.flow_arrow, s.dimensioned, s.tracing, s.insulation,
+                    s.pcf_identification, s.idf_record, s.user_definable, s.flow_dependency,
+                    s.source_id, s.isogen_standard, s.origin_type, s.is_official, s.is_user_modified,
+                    s.upstream_symbol_code, s.upstream_release_version, s.upstream_symbol_version,
+                    s.last_synced_upstream_version, s.upstream_payload_hash, s.local_revision, s.sync_state,
+                    COALESCE(ss.name, '')             AS source_name,
+                    COALESCE(ss.source_type, 'standard') AS source_type,
+                    COALESCE(ss.version, '')          AS source_version
+                FROM skeys s
+                LEFT JOIN symbol_sources ss ON ss.id = s.source_id
+                ORDER BY s.name
+                """
+            )
+            rows = cur.fetchall()
+            return [
+                SkeyData(
+                    name=row["name"],
+                    group_key=row["skey_group_key"],
+                    subgroup_key=row["skey_subgroup_key"],
+                    description_key=row["skey_description_key"],
+                    spindle_skey=row["spindle_skey"] or "",
+                    orientation=row["orientation"],
+                    flow_arrow=row["flow_arrow"],
+                    dimensioned=row["dimensioned"],
+                    tracing=row["tracing"],
+                    insulation=row["insulation"],
+                    pcf_identification=row["pcf_identification"] or "",
+                    idf_record=row["idf_record"] or "",
+                    user_definable=row["user_definable"],
+                    flow_dependency=row["flow_dependency"],
+                    source_id=row["source_id"],
+                    source_name=row["source_name"],
+                    source_type=row["source_type"],
+                    source_version=row["source_version"],
+                    isogen_standard=row["isogen_standard"],
+                    origin_type=row["origin_type"],
+                    is_official=row["is_official"],
+                    is_user_modified=row["is_user_modified"],
+                    upstream_symbol_code=row["upstream_symbol_code"] or "",
+                    upstream_release_version=row["upstream_release_version"] or "",
+                    upstream_symbol_version=row["upstream_symbol_version"],
+                    last_synced_upstream_version=row["last_synced_upstream_version"],
+                    upstream_payload_hash=row["upstream_payload_hash"] or "",
+                    local_revision=row["local_revision"],
+                    sync_state=row["sync_state"],
+                    geometry=self.get_latest_geometry_for_skey(row["id"]),
+                )
+                for row in rows
+            ]
+
+    def get_latest_geometry_for_skey(self, skey_id: int) -> List[str]:
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT MAX(transaction_id) FROM geometry WHERE skey_id = ?", (skey_id,))
+            row = cur.fetchone()
+            if not row or row[0] is None:
+                return []
+            transaction_id = row[0]
+            cur.execute("SELECT data FROM geometry WHERE skey_id = ? AND transaction_id = ? ORDER BY id ASC", (skey_id, transaction_id))
+            return [r[0] for r in cur.fetchall()]
+
+    def insert_skey(self, skey: SkeyData, user: str = "system", comment: str = "create") -> int:
+        spindle_skey = skey.spindle_skey or None  # '' -> NULL for proper FK behavior
+        source_id = skey.source_id if skey.source_id is not None else self._ensure_symbol_source(
+            skey.source_name, skey.source_type, skey.source_version
+        )
+        with self._transaction() as conn:
+            cur = conn.cursor()
             cur.execute(
                 """
                 INSERT INTO skeys (
@@ -493,566 +692,200 @@ class SkeyDB:
                 (
                     skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
                     spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
-                    skey.tracing, skey.insulation, skey.pcf_identification, skey.idf_record,
-                    skey.user_definable, skey.flow_dependency, source_id, skey.isogen_standard,
-                    "official", 1, 0,
-                    upstream_symbol_code, release_version,
-                    upstream_symbol_version, upstream_symbol_version,
-                    upstream_payload_hash, 1, "synced",
+                    skey.tracing, skey.insulation,
+                    skey.pcf_identification, skey.idf_record, skey.user_definable,
+                    skey.flow_dependency, source_id, skey.isogen_standard,
+                    skey.origin_type, skey.is_official, skey.is_user_modified,
+                    skey.upstream_symbol_code, skey.upstream_release_version,
+                    skey.upstream_symbol_version, skey.last_synced_upstream_version,
+                    skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
                 ),
             )
             skey_id = cur.lastrowid
-            cur.execute(
-                "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
-                (skey_id, "system", "create", f"official sync {release_version}"),
-            )
+            cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "create", comment))
             transaction_id = cur.lastrowid
             for geom in skey.geometry:
-                cur.execute(
-                    "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
-                    (skey_id, geom.split(":")[0], geom, transaction_id),
-                )
-            conn.commit()
-            conn.close()
-            return "inserted"
-
-        skey_id, origin_type, is_user_modified = row
-
-        if origin_type in ("user", "imported"):
-            cur.execute(
-                """
-                UPDATE skeys
-                SET upstream_symbol_code = ?,
-                    upstream_release_version = ?,
-                    upstream_symbol_version = ?,
-                    upstream_payload_hash = ?,
-                    sync_state = 'upstream_newer'
-                WHERE id = ?
-                """,
-                (
-                    upstream_symbol_code,
-                    release_version,
-                    upstream_symbol_version,
-                    upstream_payload_hash,
-                    skey_id,
-                ),
-            )
-            conn.commit()
-            conn.close()
-            return "skipped_user"
-
-        if is_user_modified:
-            cur.execute(
-                """
-                UPDATE skeys
-                SET upstream_symbol_code = ?,
-                    upstream_release_version = ?,
-                    upstream_symbol_version = ?,
-                    upstream_payload_hash = ?,
-                    sync_state = 'conflict'
-                WHERE id = ?
-                """,
-                (
-                    upstream_symbol_code,
-                    release_version,
-                    upstream_symbol_version,
-                    upstream_payload_hash,
-                    skey_id,
-                ),
-            )
-            conn.commit()
-            conn.close()
-            return "conflict"
-
-        spindle_skey = skey.spindle_skey or None
-        source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
-        cur.execute(
-            """
-            UPDATE skeys SET
-                skey_group_key = ?,
-                skey_subgroup_key = ?,
-                skey_description_key = ?,
-                spindle_skey = ?,
-                orientation = ?,
-                flow_arrow = ?,
-                dimensioned = ?,
-                tracing = ?,
-                insulation = ?,
-                pcf_identification = ?,
-                idf_record = ?,
-                user_definable = ?,
-                flow_dependency = ?,
-                source_id = ?,
-                isogen_standard = ?,
-                origin_type = 'official',
-                is_official = 1,
-                is_user_modified = 0,
-                upstream_symbol_code = ?,
-                upstream_release_version = ?,
-                upstream_symbol_version = ?,
-                last_synced_upstream_version = ?,
-                upstream_payload_hash = ?,
-                sync_state = 'synced'
-            WHERE id = ?
-            """,
-            (
-                skey.group_key, skey.subgroup_key, skey.description_key,
-                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
-                skey.tracing, skey.insulation,
-                skey.pcf_identification, skey.idf_record, skey.user_definable,
-                skey.flow_dependency, source_id, skey.isogen_standard,
-                upstream_symbol_code, release_version, upstream_symbol_version,
-                upstream_symbol_version, upstream_payload_hash,
-                skey_id,
-            ),
-        )
-        cur.execute(
-            "INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)",
-            (skey_id, "system", "edit", f"official sync {release_version}"),
-        )
-        transaction_id = cur.lastrowid
-        for geom in skey.geometry:
-            cur.execute(
-                "INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
-                (skey_id, geom.split(":")[0], geom, transaction_id),
-            )
-        conn.commit()
-        conn.close()
-        return "updated"
-
-    def get_all_skeys(self) -> List[SkeyData]:
-        conn = self.connect()
-        cur = conn.cursor()
-        has_tracing = self._column_exists(cur, "skeys", "tracing")
-        has_insulation = self._column_exists(cur, "skeys", "insulation")
-        has_pcf = self._column_exists(cur, "skeys", "pcf_identification")
-        has_idf = self._column_exists(cur, "skeys", "idf_record")
-        has_user_definable = self._column_exists(cur, "skeys", "user_definable")
-        has_flow_dependency = self._column_exists(cur, "skeys", "flow_dependency")
-        has_source_id = self._column_exists(cur, "skeys", "source_id")
-        has_isogen_standard = self._column_exists(cur, "skeys", "isogen_standard")
-        has_origin_type = self._column_exists(cur, "skeys", "origin_type")
-        has_is_official = self._column_exists(cur, "skeys", "is_official")
-        has_is_user_modified = self._column_exists(cur, "skeys", "is_user_modified")
-        has_upstream_symbol_code = self._column_exists(cur, "skeys", "upstream_symbol_code")
-        has_upstream_release_version = self._column_exists(cur, "skeys", "upstream_release_version")
-        has_upstream_symbol_version = self._column_exists(cur, "skeys", "upstream_symbol_version")
-        has_last_synced_upstream_version = self._column_exists(cur, "skeys", "last_synced_upstream_version")
-        has_upstream_payload_hash = self._column_exists(cur, "skeys", "upstream_payload_hash")
-        has_local_revision = self._column_exists(cur, "skeys", "local_revision")
-        has_sync_state = self._column_exists(cur, "skeys", "sync_state")
-
-        select_columns = [
-            "s.id", "s.name", "s.skey_group_key", "s.skey_subgroup_key", "s.skey_description_key",
-            "s.spindle_skey", "s.orientation", "s.flow_arrow", "s.dimensioned",
-        ]
-        if has_tracing:
-            select_columns.append("s.tracing")
-        if has_insulation:
-            select_columns.append("s.insulation")
-        if has_pcf:
-            select_columns.append("s.pcf_identification")
-        if has_idf:
-            select_columns.append("s.idf_record")
-        if has_user_definable:
-            select_columns.append("s.user_definable")
-        if has_flow_dependency:
-            select_columns.append("s.flow_dependency")
-        if has_source_id:
-            select_columns.extend(["s.source_id", "ss.name", "ss.source_type", "ss.version"])
-        if has_isogen_standard:
-            select_columns.append("s.isogen_standard")
-        if has_origin_type:
-            select_columns.append("s.origin_type")
-        if has_is_official:
-            select_columns.append("s.is_official")
-        if has_is_user_modified:
-            select_columns.append("s.is_user_modified")
-        if has_upstream_symbol_code:
-            select_columns.append("s.upstream_symbol_code")
-        if has_upstream_release_version:
-            select_columns.append("s.upstream_release_version")
-        if has_upstream_symbol_version:
-            select_columns.append("s.upstream_symbol_version")
-        if has_last_synced_upstream_version:
-            select_columns.append("s.last_synced_upstream_version")
-        if has_upstream_payload_hash:
-            select_columns.append("s.upstream_payload_hash")
-        if has_local_revision:
-            select_columns.append("s.local_revision")
-        if has_sync_state:
-            select_columns.append("s.sync_state")
-
-        query = f"SELECT {', '.join(select_columns)} FROM skeys s"
-        if has_source_id:
-            query += " LEFT JOIN symbol_sources ss ON ss.id = s.source_id"
-        query += " ORDER BY s.name"
-        cur.execute(query)
-
-        rows = cur.fetchall()
-        skeys = []
-        for row in rows:
-            idx = 0
-            skey_id = row[idx]; idx += 1
-            name = row[idx]; idx += 1
-            skey_group_key = row[idx]; idx += 1
-            skey_subgroup_key = row[idx]; idx += 1
-            skey_description_key = row[idx]; idx += 1
-            spindle_skey = row[idx]; idx += 1
-            orientation = row[idx]; idx += 1
-            flow_arrow = row[idx]; idx += 1
-            dimensioned = row[idx]; idx += 1
-
-            tracing = row[idx] if has_tracing else 0
-            if has_tracing:
-                idx += 1
-            insulation = row[idx] if has_insulation else 0
-            if has_insulation:
-                idx += 1
-
-            pcf_identification = row[idx] if has_pcf else ""
-            if has_pcf:
-                idx += 1
-            idf_record = row[idx] if has_idf else ""
-            if has_idf:
-                idx += 1
-            user_definable = row[idx] if has_user_definable else 1
-            if has_user_definable:
-                idx += 1
-            flow_dependency = row[idx] if has_flow_dependency else 0
-            if has_flow_dependency:
-                idx += 1
-
-            source_id = row[idx] if has_source_id else None
-            source_name = ""
-            source_type = "standard"
-            source_version = ""
-            if has_source_id:
-                idx += 1
-                source_name = row[idx] or ""
-                idx += 1
-                source_type = row[idx] or "standard"
-                idx += 1
-                source_version = row[idx] or ""
-                idx += 1
-
-            isogen_standard = row[idx] if has_isogen_standard else 0
-            if has_isogen_standard:
-                idx += 1
-
-            origin_type = row[idx] if has_origin_type else "user"
-            if has_origin_type:
-                idx += 1
-            is_official = row[idx] if has_is_official else 0
-            if has_is_official:
-                idx += 1
-            is_user_modified = row[idx] if has_is_user_modified else 0
-            if has_is_user_modified:
-                idx += 1
-            upstream_symbol_code = row[idx] if has_upstream_symbol_code else ""
-            if has_upstream_symbol_code:
-                idx += 1
-            upstream_release_version = row[idx] if has_upstream_release_version else ""
-            if has_upstream_release_version:
-                idx += 1
-            upstream_symbol_version = row[idx] if has_upstream_symbol_version else 1
-            if has_upstream_symbol_version:
-                idx += 1
-            last_synced_upstream_version = row[idx] if has_last_synced_upstream_version else 1
-            if has_last_synced_upstream_version:
-                idx += 1
-            upstream_payload_hash = row[idx] if has_upstream_payload_hash else ""
-            if has_upstream_payload_hash:
-                idx += 1
-            local_revision = row[idx] if has_local_revision else 1
-            if has_local_revision:
-                idx += 1
-            sync_state = row[idx] if has_sync_state else "synced"
-
-            geometry = self.get_latest_geometry_for_skey(skey_id)
-            skeys.append(SkeyData(
-                name=name,
-                group_key=skey_group_key,
-                subgroup_key=skey_subgroup_key,
-                description_key=skey_description_key,
-                spindle_skey=spindle_skey or "",  # NULL -> '' for the model
-                orientation=orientation,
-                flow_arrow=flow_arrow,
-                dimensioned=dimensioned,
-                tracing=tracing,
-                insulation=insulation,
-                pcf_identification=pcf_identification or "",
-                idf_record=idf_record or "",
-                user_definable=user_definable,
-                flow_dependency=flow_dependency,
-                source_id=source_id,
-                source_name=source_name,
-                source_type=source_type,
-                source_version=source_version,
-                isogen_standard=isogen_standard,
-                origin_type=origin_type or "user",
-                is_official=is_official or 0,
-                is_user_modified=is_user_modified or 0,
-                upstream_symbol_code=upstream_symbol_code or "",
-                upstream_release_version=upstream_release_version or "",
-                upstream_symbol_version=upstream_symbol_version or 1,
-                last_synced_upstream_version=last_synced_upstream_version or 1,
-                upstream_payload_hash=upstream_payload_hash or "",
-                local_revision=local_revision or 1,
-                sync_state=sync_state or "synced",
-                geometry=geometry
-            ))
-        conn.close()
-        return skeys
-
-    def get_latest_geometry_for_skey(self, skey_id: int) -> List[str]:
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT MAX(transaction_id) FROM geometry WHERE skey_id = ?", (skey_id,))
-        row = cur.fetchone()
-        if not row or row[0] is None:
-            conn.close()
-            return []
-        transaction_id = row[0]
-        cur.execute("SELECT data FROM geometry WHERE skey_id = ? AND transaction_id = ? ORDER BY id ASC", (skey_id, transaction_id))
-        geometry = [r[0] for r in cur.fetchall()]
-        conn.close()
-        return geometry
-
-    def insert_skey(self, skey: SkeyData, user: str = "system", comment: str = "create") -> int:
-        conn = self.connect()
-        cur = conn.cursor()
-        spindle_skey = skey.spindle_skey or None  # '' -> NULL for proper FK behavior
-        source_id = skey.source_id if skey.source_id is not None else self._ensure_symbol_source(
-            skey.source_name, skey.source_type, skey.source_version
-        )
-        cur.execute(
-            """
-            INSERT INTO skeys (
-                name, skey_group_key, skey_subgroup_key, skey_description_key,
-                spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
-                pcf_identification, idf_record, user_definable, flow_dependency,
-                source_id, isogen_standard,
-                origin_type, is_official, is_user_modified,
-                upstream_symbol_code, upstream_release_version,
-                upstream_symbol_version, last_synced_upstream_version,
-                upstream_payload_hash, local_revision, sync_state
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
-                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
-                skey.tracing, skey.insulation,
-                skey.pcf_identification, skey.idf_record, skey.user_definable,
-                skey.flow_dependency, source_id, skey.isogen_standard,
-                skey.origin_type, skey.is_official, skey.is_user_modified,
-                skey.upstream_symbol_code, skey.upstream_release_version,
-                skey.upstream_symbol_version, skey.last_synced_upstream_version,
-                skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
-            ),
-        )
-        skey_id = cur.lastrowid
-        cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "create", comment))
-        transaction_id = cur.lastrowid
-        for geom in skey.geometry:
-            cur.execute("INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)", (skey_id, geom.split(":")[0], geom, transaction_id))
-        conn.commit()
-        conn.close()
-        return skey_id if skey_id is not None else 0
+                cur.execute("INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)", (skey_id, geom.split(":")[0], geom, transaction_id))
+            return skey_id if skey_id is not None else 0
 
     def delete_skey(self, skey_name: str):
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM skeys WHERE name = ?", (skey_name,))
-        row = cur.fetchone()
-        if row:
-            skey_id = row[0]
-            cur.execute("DELETE FROM geometry WHERE skey_id = ?", (skey_id,))
-            cur.execute("DELETE FROM transactions WHERE skey_id = ?", (skey_id,))
-            cur.execute("DELETE FROM skeys WHERE id = ?", (skey_id,))
-            conn.commit()
-        conn.close()
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM skeys WHERE name = ?", (skey_name,))
+            row = cur.fetchone()
+            if row:
+                skey_id = row[0]
+                cur.execute("DELETE FROM geometry WHERE skey_id = ?", (skey_id,))
+                cur.execute("DELETE FROM transactions WHERE skey_id = ?", (skey_id,))
+                cur.execute("DELETE FROM skeys WHERE id = ?", (skey_id,))
 
     def update_skey(self, skey: SkeyData, user: str = "system", comment: str = "edit"):
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM skeys WHERE name = ?", (skey.name,))
-        row = cur.fetchone()
-        if not row:
-            conn.close()
-            return self.insert_skey(skey, user, comment)
-        skey_id = row[0]
         spindle_skey = skey.spindle_skey or None  # '' → NULL
         source_id = skey.source_id if skey.source_id is not None else self._ensure_symbol_source(
             skey.source_name, skey.source_type, skey.source_version
         )
-        cur.execute(
-            """
-            UPDATE skeys SET
-                skey_group_key = ?,
-                skey_subgroup_key = ?,
-                skey_description_key = ?,
-                spindle_skey = ?,
-                orientation = ?,
-                flow_arrow = ?,
-                dimensioned = ?,
-                tracing = ?,
-                insulation = ?,
-                pcf_identification = ?,
-                idf_record = ?,
-                user_definable = ?,
-                flow_dependency = ?,
-                source_id = ?,
-                isogen_standard = ?,
-                origin_type = ?,
-                is_official = ?,
-                is_user_modified = ?,
-                upstream_symbol_code = ?,
-                upstream_release_version = ?,
-                upstream_symbol_version = ?,
-                last_synced_upstream_version = ?,
-                upstream_payload_hash = ?,
-                local_revision = ?,
-                sync_state = ?
-            WHERE id = ?
-            """,
-            (
-                skey.group_key, skey.subgroup_key, skey.description_key,
-                spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
-                skey.tracing, skey.insulation,
-                skey.pcf_identification, skey.idf_record, skey.user_definable,
-                skey.flow_dependency, source_id, skey.isogen_standard,
-                skey.origin_type, skey.is_official, skey.is_user_modified,
-                skey.upstream_symbol_code, skey.upstream_release_version,
-                skey.upstream_symbol_version, skey.last_synced_upstream_version,
-                skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
-                skey_id,
-            ),
-        )
-        cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "edit", comment))
-        transaction_id = cur.lastrowid
-        for geom in skey.geometry:
-            cur.execute("INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)", (skey_id, geom.split(":")[0], geom, transaction_id))
-        conn.commit()
-        conn.close()
-        return skey_id if skey_id is not None else 0
-
-    def get_spindle_geometry(self, spindle_name: str) -> List[str]:
-
-        conn = self.connect()
-        cur = conn.cursor()
-        try:
-            cur.execute("SELECT id FROM spindles WHERE name = ?", (spindle_name,))
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM skeys WHERE name = ?", (skey.name,))
             row = cur.fetchone()
             if not row:
-                return []
-            spindle_id = row[0]
+                return self.insert_skey(skey, user, comment)
+            skey_id = row[0]
+            cur.execute(
+                """
+                UPDATE skeys SET
+                    skey_group_key = ?,
+                    skey_subgroup_key = ?,
+                    skey_description_key = ?,
+                    spindle_skey = ?,
+                    orientation = ?,
+                    flow_arrow = ?,
+                    dimensioned = ?,
+                    tracing = ?,
+                    insulation = ?,
+                    pcf_identification = ?,
+                    idf_record = ?,
+                    user_definable = ?,
+                    flow_dependency = ?,
+                    source_id = ?,
+                    isogen_standard = ?,
+                    origin_type = ?,
+                    is_official = ?,
+                    is_user_modified = ?,
+                    upstream_symbol_code = ?,
+                    upstream_release_version = ?,
+                    upstream_symbol_version = ?,
+                    last_synced_upstream_version = ?,
+                    upstream_payload_hash = ?,
+                    local_revision = ?,
+                    sync_state = ?
+                WHERE id = ?
+                """,
+                (
+                    skey.group_key, skey.subgroup_key, skey.description_key,
+                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    skey.tracing, skey.insulation,
+                    skey.pcf_identification, skey.idf_record, skey.user_definable,
+                    skey.flow_dependency, source_id, skey.isogen_standard,
+                    skey.origin_type, skey.is_official, skey.is_user_modified,
+                    skey.upstream_symbol_code, skey.upstream_release_version,
+                    skey.upstream_symbol_version, skey.last_synced_upstream_version,
+                    skey.upstream_payload_hash, skey.local_revision, skey.sync_state,
+                    skey_id,
+                ),
+            )
+            cur.execute("INSERT INTO transactions (skey_id, user, action, comment) VALUES (?, ?, ?, ?)", (skey_id, user, "edit", comment))
+            transaction_id = cur.lastrowid
+            for geom in skey.geometry:
+                cur.execute("INSERT INTO geometry (skey_id, type, data, transaction_id) VALUES (?, ?, ?, ?)", (skey_id, geom.split(":")[0], geom, transaction_id))
+            return skey_id if skey_id is not None else 0
 
-            cur.execute("SELECT MAX(transaction_id) FROM spindle_geometry WHERE spindle_id = ?", (spindle_id,))
-            trans_row = cur.fetchone()
-            if not trans_row or trans_row[0] is None:
-                return []
-            transaction_id = trans_row[0]
+    def get_spindle_geometry(self, spindle_name: str) -> List[str]:
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            try:
+                cur.execute("SELECT id FROM spindles WHERE name = ?", (spindle_name,))
+                row = cur.fetchone()
+                if not row:
+                    return []
+                spindle_id = row[0]
 
-            cur.execute("SELECT data FROM spindle_geometry WHERE spindle_id = ? AND transaction_id = ? ORDER BY id ASC",
-                       (spindle_id, transaction_id))
-            return [r[0] for r in cur.fetchall()]
-        except sqlite3.OperationalError:
-            return []
-        finally:
-            conn.close()
+                cur.execute("SELECT MAX(transaction_id) FROM spindle_geometry WHERE spindle_id = ?", (spindle_id,))
+                trans_row = cur.fetchone()
+                if not trans_row or trans_row[0] is None:
+                    return []
+                transaction_id = trans_row[0]
+
+                cur.execute("SELECT data FROM spindle_geometry WHERE spindle_id = ? AND transaction_id = ? ORDER BY id ASC",
+                           (spindle_id, transaction_id))
+                return [r[0] for r in cur.fetchall()]
+            except sqlite3.OperationalError:
+                return []
 
     def get_all_spindles(self) -> List[SkeyData]:
         """Returns all spindles as SkeyData objects from the database."""
-        conn = self.connect()
-        cur = conn.cursor()
         spindles = []
-        try:
-            cur.execute("""
-                SELECT id, name, skey_group_key, skey_subgroup_key, skey_description_key,
-                       spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation
-                FROM spindles ORDER BY name
-            """)
-            rows = cur.fetchall()
-            for row in rows:
-                _, name, group_key, subgroup_key, desc_key, s_skey, orient, flow, dim, tracing, insul = row
-                geometry = self.get_spindle_geometry(name)
-                spindles.append(SkeyData(
-                    name=name,
-                    group_key=group_key,
-                    subgroup_key=subgroup_key,
-                    description_key=desc_key,
-                    spindle_skey=s_skey,
-                    orientation=orient,
-                    flow_arrow=flow,
-                    dimensioned=dim,
-                    tracing=tracing,
-                    insulation=insul,
-                    geometry=geometry
-                ))
-        except sqlite3.OperationalError:
-            # Table may be missing or have an outdated structure
-            self._init_spindles_table(conn)
-        finally:
-            conn.close()
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            try:
+                cur.execute("""
+                    SELECT id, name, skey_group_key, skey_subgroup_key, skey_description_key,
+                           spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation
+                    FROM spindles ORDER BY name
+                """)
+                rows = cur.fetchall()
+                for row in rows:
+                    _, name, group_key, subgroup_key, desc_key, s_skey, orient, flow, dim, tracing, insul = row
+                    geometry = self.get_spindle_geometry(name)
+                    spindles.append(SkeyData(
+                        name=name,
+                        group_key=group_key,
+                        subgroup_key=subgroup_key,
+                        description_key=desc_key,
+                        spindle_skey=s_skey,
+                        orientation=orient,
+                        flow_arrow=flow,
+                        dimensioned=dim,
+                        tracing=tracing,
+                        insulation=insul,
+                        geometry=geometry
+                    ))
+            except sqlite3.OperationalError:
+                # Table may be missing or have an outdated structure
+                self._init_spindles_table(conn)
         return spindles
 
     def insert_spindle(self, spindle: SkeyData, user: str = "system", comment: str = "create") -> int:
         """Inserts a new spindle into the database (similar to Skey)."""
-        conn = self.connect()
-        cur = conn.cursor()
         spindle_skey = spindle.spindle_skey or None  # '' → NULL
-        cur.execute("""
-            INSERT INTO spindles (name, skey_group_key, skey_subgroup_key, skey_description_key,
-                                 spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (spindle.name, spindle.group_key, spindle.subgroup_key, spindle.description_key,
-              spindle_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
-              spindle.tracing, spindle.insulation))
-        spindle_id = cur.lastrowid
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO spindles (name, skey_group_key, skey_subgroup_key, skey_description_key,
+                                     spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (spindle.name, spindle.group_key, spindle.subgroup_key, spindle.description_key,
+                  spindle_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
+                  spindle.tracing, spindle.insulation))
+            spindle_id = cur.lastrowid
 
-        cur.execute("INSERT INTO spindle_transactions (spindle_id, user, action, comment) VALUES (?, ?, ?, ?)",
-                   (spindle_id, user, "create", comment))
-        transaction_id = cur.lastrowid
+            cur.execute("INSERT INTO spindle_transactions (spindle_id, user, action, comment) VALUES (?, ?, ?, ?)",
+                       (spindle_id, user, "create", comment))
+            transaction_id = cur.lastrowid
 
-        for geom in spindle.geometry:
-            cur.execute("INSERT INTO spindle_geometry (spindle_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
-                       (spindle_id, geom.split(":")[0], geom, transaction_id))
-        conn.commit()
-        conn.close()
-        return spindle_id if spindle_id is not None else 0
+            for geom in spindle.geometry:
+                cur.execute("INSERT INTO spindle_geometry (spindle_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                           (spindle_id, geom.split(":")[0], geom, transaction_id))
+            return spindle_id if spindle_id is not None else 0
 
     def update_spindle(self, spindle: SkeyData, user: str = "system", comment: str = "edit"):
         """Updates spindle data or creates a new one if it does not exist."""
-        conn = self.connect()
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM spindles WHERE name = ?", (spindle.name,))
-        row = cur.fetchone()
-        if not row:
-            conn.close()
-            return self.insert_spindle(spindle, user, comment)
-
-        spindle_id = row[0]
         sp_skey = spindle.spindle_skey or None  # '' → NULL
-        cur.execute("""
-            UPDATE spindles SET skey_group_key = ?, skey_subgroup_key = ?, skey_description_key = ?,
-                               spindle_skey = ?, orientation = ?, flow_arrow = ?, dimensioned = ?,
-                               tracing = ?, insulation = ?
-            WHERE id = ?
-        """, (spindle.group_key, spindle.subgroup_key, spindle.description_key,
-              sp_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
-              spindle.tracing, spindle.insulation, spindle_id))
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM spindles WHERE name = ?", (spindle.name,))
+            row = cur.fetchone()
+            if not row:
+                return self.insert_spindle(spindle, user, comment)
 
-        cur.execute("INSERT INTO spindle_transactions (spindle_id, user, action, comment) VALUES (?, ?, ?, ?)",
-                   (spindle_id, user, "edit", comment))
-        transaction_id = cur.lastrowid
+            spindle_id = row[0]
+            cur.execute("""
+                UPDATE spindles SET skey_group_key = ?, skey_subgroup_key = ?, skey_description_key = ?,
+                                   spindle_skey = ?, orientation = ?, flow_arrow = ?, dimensioned = ?,
+                                   tracing = ?, insulation = ?
+                WHERE id = ?
+            """, (spindle.group_key, spindle.subgroup_key, spindle.description_key,
+                  sp_skey, spindle.orientation, spindle.flow_arrow, spindle.dimensioned,
+                  spindle.tracing, spindle.insulation, spindle_id))
 
-        for geom in spindle.geometry:
-            cur.execute("INSERT INTO spindle_geometry (spindle_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
-                       (spindle_id, geom.split(":")[0], geom, transaction_id))
-        conn.commit()
-        conn.close()
-        return spindle_id
+            cur.execute("INSERT INTO spindle_transactions (spindle_id, user, action, comment) VALUES (?, ?, ?, ?)",
+                       (spindle_id, user, "edit", comment))
+            transaction_id = cur.lastrowid
+
+            for geom in spindle.geometry:
+                cur.execute("INSERT INTO spindle_geometry (spindle_id, type, data, transaction_id) VALUES (?, ?, ?, ?)",
+                           (spindle_id, geom.split(":")[0], geom, transaction_id))
+            return spindle_id
 
     def _init_spindles_table(self, conn):
         """Creates spindle tables with the new schema (similar to skeys)."""
@@ -1101,53 +934,41 @@ class SkeyDB:
 
     def get_all_groups(self) -> List[str]:
         """Returns all group keys from the database."""
-        conn = self.connect()
-        cur = conn.cursor()
-        try:
-            cur.execute("SELECT skey_group_key FROM skey_groups ORDER BY skey_group_key")
-            return [row[0] for row in cur.fetchall()]
-        except sqlite3.OperationalError:
-            return []
-        finally:
-            conn.close()
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            try:
+                cur.execute("SELECT skey_group_key FROM skey_groups ORDER BY skey_group_key")
+                return [row[0] for row in cur.fetchall()]
+            except sqlite3.OperationalError:
+                return []
 
     def get_subgroups_by_group(self, group_key: str) -> List[str]:
         """Returns all subgroup keys for the specified group."""
-        conn = self.connect()
-        cur = conn.cursor()
-        try:
-            cur.execute("""
-                SELECT s.skey_subgroup_key
-                FROM skey_subgroups s
-                JOIN skey_groups g ON s.group_id = g.id
-                WHERE g.skey_group_key = ?
-                ORDER BY s.skey_subgroup_key
-            """, (group_key,))
-            return [row[0] for row in cur.fetchall()]
-        except sqlite3.OperationalError:
-            return []
-        finally:
-            conn.close()
+        with self._transaction(commit=False) as conn:
+            cur = conn.cursor()
+            try:
+                cur.execute("""
+                    SELECT s.skey_subgroup_key
+                    FROM skey_subgroups s
+                    JOIN skey_groups g ON s.group_id = g.id
+                    WHERE g.skey_group_key = ?
+                    ORDER BY s.skey_subgroup_key
+                """, (group_key,))
+                return [row[0] for row in cur.fetchall()]
+            except sqlite3.OperationalError:
+                return []
 
     def ensure_group_exists(self, group_key: str):
         """Ensures that a group key exists in the skey_groups table."""
-        conn = self.connect()
-        cur = conn.cursor()
-        try:
+        with self._transaction() as conn:
+            cur = conn.cursor()
             cur.execute("INSERT OR IGNORE INTO skey_groups (skey_group_key) VALUES (?)", (group_key,))
-            conn.commit()
-        finally:
-            conn.close()
 
     def ensure_subgroup_exists(self, group_key: str, subgroup_key: str):
         """Ensures that a subgroup key exists in skey_subgroups for the given group."""
         self.ensure_group_exists(group_key)
-        conn = self.connect()
-        cur = conn.cursor()
-        try:
+        with self._transaction() as conn:
+            cur = conn.cursor()
             cur.execute("SELECT id FROM skey_groups WHERE skey_group_key = ?", (group_key,))
             group_id = cur.fetchone()[0]
             cur.execute("INSERT OR IGNORE INTO skey_subgroups (group_id, skey_group_key, skey_subgroup_key) VALUES (?, ?, ?)", (group_id, group_key, subgroup_key))
-            conn.commit()
-        finally:
-            conn.close()

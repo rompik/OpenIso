@@ -5,17 +5,28 @@ import gettext
 import glob
 import json
 import locale
+import logging
 import os
 import subprocess
 from typing import Optional
 
 from openiso.core.constants import AVAILABLE_LANGUAGES, LOCALEDIR
 
-# Global translation state
-_gettext = None
-lang_trans = None
-_current_lang = 'en'
-_json_trans = {}
+
+logger = logging.getLogger(__name__)
+
+
+def _identity(text: str) -> str:
+    return text
+
+
+# Runtime translation state shared across module functions.
+_state = {
+    "gettext": None,
+    "translator": None,
+    "current_lang": "en",
+    "json_trans": {},
+}
 
 def compile_translations():
     """Auto-compile .po to .mo for all available languages."""
@@ -30,8 +41,8 @@ def compile_translations():
                 subprocess.run([
                     'msgfmt', po_path, '-o', mo_path
                 ], check=True)
-            except Exception as e:
-                print(f"[i18n] Failed to compile {po_path} to {mo_path}: {e}")
+            except (subprocess.CalledProcessError, OSError) as err:
+                logger.warning("[i18n] Failed to compile %s to %s: %s", po_path, mo_path, err)
 
 def get_translator(lang_code):
     """Set up and return a translator for the given language code."""
@@ -44,18 +55,16 @@ compile_translations()
 
 def get_current_language():
     """Returns the current language code."""
-    return _current_lang
+    return _state["current_lang"]
 
 def _t(key):
     """Translate using JSON data (supports nested dictionaries) or fallback to gettext."""
-    global _json_trans, _gettext
-
     if not key:
         return key
 
     # Try nested lookup using dot notation (always lowercase for path components)
     parts = key.split('.')
-    curr = _json_trans
+    curr = _state["json_trans"]
     for part in parts:
         # Normalize part to lowercase for key lookup
         p = part.lower()
@@ -63,8 +72,9 @@ def _t(key):
             curr = curr[p]
         else:
             # Fallback to gettext if path not found in JSON
-            if _gettext:
-                return _gettext(key)
+            gettext_fn = _state["gettext"]
+            if gettext_fn:
+                return gettext_fn(key)
             return key
 
     # If we found a result
@@ -78,25 +88,24 @@ def _t(key):
     if parts:
         return parts[-1]
 
-    if _gettext:
-        return _gettext(key)
+    gettext_fn = _state["gettext"]
+    if gettext_fn:
+        return gettext_fn(key)
     return key
 
 def setup_i18n(lang_code=None):
     """Initialize or switch the current translation language."""
-    global _gettext, lang_trans, _current_lang, _json_trans
-
     # If already set and no new code provided, just return current translator
-    if lang_code is None and _gettext is not None:
+    if lang_code is None and _state["gettext"] is not None:
         return _t
 
     if lang_code is None:
         try:
-            language, encoding = locale.getlocale()
+            language, _encoding = locale.getlocale()
             if not language:
                 language = os.environ.get('LANG', 'en').split('.')[0]
             lang_code = language.replace('-', '_') if language else 'en'
-        except Exception:
+        except (locale.Error, ValueError, TypeError):
             lang_code = 'en'
 
     # Normalize lang_code to match AVAILABLE_LANGUAGES (e.g., ru_RU -> ru)
@@ -115,36 +124,37 @@ def setup_i18n(lang_code=None):
             else:
                 lang_code = 'en'
 
-    print(f"[i18n] Setting up language: {lang_code}")
+    logger.info("[i18n] Setting up language: %s", lang_code)
     try:
-        lang_trans = get_translator(lang_code)
-        _gettext = lang_trans.gettext
-    except Exception as e:
-        print(f"[i18n] Failed to get translator for {lang_code}: {e}")
-        _gettext = lambda x: x
+        translator = get_translator(lang_code)
+        _state["translator"] = translator
+        _state["gettext"] = translator.gettext
+    except OSError as err:
+        logger.warning("[i18n] Failed to get translator for %s: %s", lang_code, err)
+        _state["translator"] = None
+        _state["gettext"] = _identity
 
-    _current_lang = lang_code
+    _state["current_lang"] = lang_code
 
     # Load JSON translations
-    _json_trans = {}
+    _state["json_trans"] = {}
     json_path = os.path.join(LOCALEDIR, f"{lang_code}.json")
     if os.path.exists(json_path):
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
-                _json_trans = json.load(f)
-            print(f"[i18n] Loaded JSON translations from {json_path}")
-        except Exception as e:
-            print(f"[i18n] Failed to load JSON translations from {json_path}: {e}")
+                _state["json_trans"] = json.load(f)
+            logger.debug("[i18n] Loaded JSON translations from %s", json_path)
+        except (OSError, json.JSONDecodeError) as err:
+            logger.warning("[i18n] Failed to load JSON translations from %s: %s", json_path, err)
     else:
-        print(f"[i18n] JSON translation file not found: {json_path}")
+        logger.debug("[i18n] JSON translation file not found: %s", json_path)
 
     return _t
 
 def save_json_translation(key: str, text: str, lang_code: Optional[str] = None):
     """Saves a translation to the JSON file for the given language (supports nested structure)."""
-    global _current_lang, _json_trans
     if lang_code is None:
-        lang_code = _current_lang or 'en'
+        lang_code = _state["current_lang"] or 'en'
 
     json_path = os.path.join(LOCALEDIR, f"{lang_code}.json")
     trans_data = {}
@@ -153,13 +163,13 @@ def save_json_translation(key: str, text: str, lang_code: Optional[str] = None):
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
                 trans_data = json.load(f)
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             pass
 
     # Build nested structure
     parts = key.split('.')
     curr = trans_data
-    for i, part in enumerate(parts[:-1]):
+    for part in parts[:-1]:
         if part not in curr or not isinstance(curr[part], dict):
             # If current node is a string and we need to go deeper,
             # preserve the string as _name and convert to dict
@@ -182,11 +192,11 @@ def save_json_translation(key: str, text: str, lang_code: Optional[str] = None):
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump(trans_data, f, ensure_ascii=False, indent=2)
 
-            # Also update the in-memory global _json_trans if same language
-            if lang_code == _current_lang:
-                _json_trans = trans_data
-        except Exception as e:
-            print(f"[i18n] Failed to save JSON translation: {e}")
+            # Keep in-memory translations in sync for the active language.
+            if lang_code == _state["current_lang"]:
+                _state["json_trans"] = trans_data
+        except (OSError, TypeError, ValueError) as err:
+            logger.warning("[i18n] Failed to save JSON translation: %s", err)
 
 # Initial setup with system locale
 setup_i18n()

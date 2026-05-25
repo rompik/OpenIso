@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import os
+import logging
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
@@ -21,6 +22,9 @@ from openiso.core.i18n import _t, get_current_language
 from openiso.view.main_window.window_error_handler import WindowErrorHandler
 
 
+logger = logging.getLogger(__name__)
+
+
 class SkeyOpsMixin:
     """Mixin providing Skey CRUD, import and export operations for SkeyEditor."""
 
@@ -30,9 +34,13 @@ class SkeyOpsMixin:
 
     def _on_create_skey_requested(self):
         """Prepares the editor for creating a new Skey."""
+        self.current_skey_data = None
         self.properties_widget.clear_fields()
         self.scene.clear_symbol_drawlist()
-        self.preview_widget.update_preview([], self.origin_x, self.origin_y)
+        if hasattr(self, "_update_all_previews"):
+            self._update_all_previews()
+        else:
+            self.preview_widget.update_preview([], self.origin_x, self.origin_y)
         self.status_bar_widget.showMessage(_t("Create new Skey"), 3000)
 
     def _on_delete_skey_requested(self, skey_name: str):
@@ -116,7 +124,7 @@ class SkeyOpsMixin:
 
             self.controller.save_skey(**save_payload)
 
-            print(f"Reloading Skey tree after saving '{skey_name}'")
+            logger.debug("Reloading Skey tree after saving '%s'", skey_name)
             self.refresh_skey_tree()
             self._select_skey_in_tree(skey_name)
             self.properties_widget.display_geometry(geometry)
@@ -124,7 +132,7 @@ class SkeyOpsMixin:
             self.status_bar_widget.showMessage(
                 _t("Skey '{0}' saved successfully").format(skey_name), 3000
             )
-            print(f"Skey '{skey_name}' saved successfully")
+            logger.info("Skey '%s' saved successfully", skey_name)
             return True
 
         except (RuntimeError, ValueError, TypeError, OSError) as e:
@@ -151,10 +159,10 @@ class SkeyOpsMixin:
             item = find_item(root.child(i), skey_name)
             if item:
                 self.tree_skeys.setCurrentItem(item)
-                print(f"Selected Skey '{skey_name}' in tree")
+                logger.debug("Selected Skey '%s' in tree", skey_name)
                 return
 
-        print(f"Warning: Could not find Skey '{skey_name}' in tree")
+            logger.warning("Could not find Skey '%s' in tree", skey_name)
 
     # -----------------------------------------------------------------
     # Import / export
@@ -171,7 +179,7 @@ class SkeyOpsMixin:
 
     def import_external_file(self):
         """Placeholder for importing symbol data from a generic external file."""
-        print("Import file clicked")
+        logger.info("Import file clicked")
 
     def export_to_file(self):
         """Exports the current Skey data to an Intergraph ASCII (.asc) file."""
@@ -198,13 +206,13 @@ class SkeyOpsMixin:
             self.status_bar_widget.showMessage(
                 _t("Skey '{0}' exported to {1}").format(skey_name, os.path.basename(file_path)), 3000
             )
-            print(f"Skey '{skey_name}' exported to {file_path}")
+            logger.info("Skey '%s' exported to %s", skey_name, file_path)
         except (RuntimeError, ValueError, TypeError, OSError) as e:
             WindowErrorHandler.handle_export_error(self, e)
 
     def print_symbol(self):
         """Opens the printing dialog to output the current symbol design."""
-        print("Print clicked")
+        logger.info("Print clicked")
 
     def import_from_ascii_format(self):
         """Executes the import process for Skey data from an ASCII-encoded text file."""
@@ -216,7 +224,7 @@ class SkeyOpsMixin:
         if result.success:
             self.refresh_skey_tree()
         else:
-            print(f"Import errors: {result.errors}")
+            logger.warning("Import errors: %s", result.errors)
 
     def import_from_idf_format(self):
         """Executes the import process for Skey data from an Intergraph Data File (IDF)."""

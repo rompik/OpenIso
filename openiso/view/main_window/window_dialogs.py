@@ -29,11 +29,21 @@ class DialogsMixin:
                 self._change_language(lang_code)
 
             iso_view = dialog.get_selected_isometric_view()
-            self.preview_widget.set_isometric_view(iso_view)
+            if hasattr(self, "_set_isometric_view_for_previews"):
+                self._set_isometric_view_for_previews(iso_view)
+            else:
+                self.preview_widget.set_isometric_view(iso_view)
+
+            if hasattr(self, "set_overlay_preview_visible"):
+                self.set_overlay_preview_visible(dialog.get_preview_visibility())
+            if hasattr(self, "set_overlay_preview_opacity"):
+                self.set_overlay_preview_opacity(dialog.get_preview_opacity())
 
             self._apply_color_settings(dialog)
 
-            if hasattr(self, 'current_skey_name') and self.current_skey_name:
+            if hasattr(self, "_update_all_previews"):
+                self._update_all_previews()
+            else:
                 self.preview_widget.update_preview(
                     self.scene.symbol_drawlist, self.origin_x, self.origin_y
                 )

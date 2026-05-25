@@ -60,6 +60,17 @@ def test_geometry_converter_parse_value_and_relative_position():
     assert rel == (0.5, 0.5)
 
 
+def test_geometry_converter_converts_legacy_raw_graphics():
+    raw_geometry = ["1", 0.0, 1000.0, "2", 1000.0, 1000.0, "0", 0.0, 0.0]
+
+    converted = GeometryConverter().convert_graphics("04HT", raw_geometry)
+
+    assert converted == [
+        "ArrivePoint: x0=-25.0 y0=25.0",
+        "Line: x1=-25.0 y1=25.0 x2=25.0 y2=25.0",
+    ]
+
+
 def test_point_geometry_string_roundtrip():
     point = PointGeometry(item_type="ArrivePoint", x=1.2, y=-3.4)
     encoded = point.to_string()

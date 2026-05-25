@@ -3,13 +3,18 @@
 
 import hashlib
 import json
-import os
+import logging
+import sqlite3
 from typing import Optional
 
+from openiso.core.app_context import AppContext
 from openiso.controller.db import SkeyDB
 from openiso.controller.repository import SkeyRepository
 from openiso.model.geometry import GeometryConverter
 from openiso.model.skey import SkeyData, SkeyGroup
+
+
+logger = logging.getLogger(__name__)
 
 
 class GeometryService:
@@ -45,24 +50,32 @@ class SkeyService:
     Main service class that coordinates all Skey business logic.
     This class is completely independent of GUI.
     """
-    def __init__(self, data_path: Optional[str] = None, use_db: bool = True):
-        self._data_path = data_path
+    def __init__(
+        self,
+        use_db: bool = True,
+        context: AppContext | None = None,
+    ):
+        self._context = context
+        if context is not None:
+            self._data_dir = context.data_dir
+        else:
+            self._data_dir = None
         self._repository = SkeyRepository()
         self._geometry_converter = GeometryConverter()
         self._groups = SkeyGroup()
         self._descriptions = {}
         self._use_db = use_db
 
-        # Build database path from data_path
-        if data_path:
-            db_path = os.path.join(data_path, 'database', 'openiso.db')
-            self._db = SkeyDB(db_path)
+        # Build database path from data_dir
+        if self._data_dir is not None:
+            db_path = self._data_dir / 'database' / 'openiso.db'
+            self._db = SkeyDB(str(db_path))
         else:
             self._db = SkeyDB()
 
         if self._use_db:
             self.load_skeys_from_db()
-        elif data_path:
+        elif self._data_dir is not None:
             # Optionally implement loading from JSON if needed
             pass
 
@@ -90,26 +103,24 @@ class SkeyService:
         try:
             self._descriptions = self._repository.load_descriptions()
             return True
-        except Exception as e:
-            print(f"Error loading descriptions: {e}")
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as err:
+            logger.error("Error loading descriptions: %s", err)
             return False
 
     def load_skeys_from_db(self) -> bool:
         """Load skeys from the database and update groups."""
         try:
-            print(f"Loading skeys from database: {self._db.db_path}")
+            logger.debug("Loading skeys from database: %s", self._db.db_path)
             skeys = self._db.get_all_skeys()
-            print(f"Loaded {len(skeys)} skeys from database")
+            logger.debug("Loaded %d skeys from database", len(skeys))
             self._repository.skeys.clear()
             for skey in skeys:
                 self._repository.skeys[skey.name] = skey
             self._groups = self._repository.build_groups() if hasattr(self._repository, 'build_groups') else SkeyGroup()
-            print(f"Built groups with {len(self._groups.get_groups())} top-level groups")
+            logger.debug("Built groups with %d top-level groups", len(self._groups.get_groups()))
             return True
-        except Exception as e:
-            print(f"Error loading skeys from DB: {e}")
-            import traceback
-            traceback.print_exc()
+        except (sqlite3.Error, OSError, ValueError, TypeError) as err:
+            logger.exception("Error loading skeys from DB: %s", err)
             return False
 
     def load_skeys(self) -> bool:
@@ -269,16 +280,16 @@ class SkeyService:
 
     def sync_official_catalog(self, release_version: str) -> dict:
         """Sync bundled official symbols into user DB without overwriting user content."""
-        if not self._data_path:
+        if self._data_dir is None:
             return {"synced": False, "reason": "no_data_path"}
 
-        catalog_path = os.path.join(self._data_path, "settings", "OpenIso.json")
-        manifest_path = os.path.join(self._data_path, "settings", "OpenIso.catalog.manifest.json")
-        if not os.path.exists(catalog_path):
+        catalog_path = self._data_dir / "settings" / "OpenIso.json"
+        manifest_path = self._data_dir / "settings" / "OpenIso.catalog.manifest.json"
+        if not catalog_path.exists():
             return {"synced": False, "reason": "catalog_missing"}
 
         manifest_data = {}
-        if os.path.exists(manifest_path):
+        if manifest_path.exists():
             with open(manifest_path, "r", encoding="utf-8") as manifest_file:
                 manifest_data = json.load(manifest_file)
 
@@ -336,8 +347,8 @@ class SkeyService:
             self._db.delete_skey(skey_name)
             self.reload_groups()
             return True
-        except Exception as e:
-            print(f"Error deleting skey: {e}")
+        except sqlite3.Error as err:
+            logger.error("Error deleting skey '%s': %s", skey_name, err)
             return False
 
     def get_spindle_geometry(self, spindle_name: str) -> list:
@@ -392,7 +403,8 @@ class SkeyService:
 
 
         def clean_key(val):
-            if not val: return "unknown"
+            if not val:
+                return "unknown"
             for prefix in ["group.", "subgroup.", "description."]:
                 if val.startswith(prefix):
                     clean_val = val[len(prefix):]
@@ -495,13 +507,13 @@ class SkeyService:
         # Rebuild groups
         self._groups = self._repository.build_groups()
 
-        print(f"Skey '{name}' updated successfully with hierarchy: {g_id} -> {sg_id}")
+        logger.info("Skey '%s' updated successfully with hierarchy: %s -> %s", name, g_id, sg_id)
         return True
     def save_skeys(self):
         """Save all skeys (called after updates)."""
         # Data is already saved in database by update_skey
         # This method is for compatibility
-        print("Skeys saved to database")
+        logger.debug("Skeys saved to database")
         return True
 
     def import_from_ascii(self, file_path: str):
@@ -564,8 +576,10 @@ class SkeyService:
 
                 if item_type in ("ArrivePoint", "LeavePoint", "TeePoint", "SpindlePoint"):
                     action = "1"
-                    if item_type == "TeePoint": action = "3"
-                    elif item_type == "SpindlePoint": action = "6"
+                    if item_type == "TeePoint":
+                        action = "3"
+                    elif item_type == "SpindlePoint":
+                        action = "6"
                     raw_geom.append((action, round((vals["x0"] + offset_val) * 20.0, 1), round((vals["y0"] + offset_val) * 20.0, 1)))
                 elif item_type == "Line":
                     raw_geom.append(("1", round((vals["x1"] + offset_val) * 20.0, 1), round((vals["y1"] + offset_val) * 20.0, 1)))

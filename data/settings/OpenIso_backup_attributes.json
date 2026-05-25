@@ -18,13 +18,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_01SP_OPE",
-            "idf_record": [
-                260,
-                1820,
-                3380
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "02SP": {
@@ -48,13 +42,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Yoke",
-            "pcf_identification": "SPI_02SP_OPE",
-            "idf_record": [
-                261,
-                1827,
-                3393
-            ]
+            "operator_interface": "Yoke"
         }
     },
     "03SP": {
@@ -76,13 +64,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_03SP_OPE",
-            "idf_record": [
-                262,
-                1834,
-                3406
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "04SP": {
@@ -116,13 +98,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_04SP_OPE",
-            "idf_record": [
-                263,
-                1841,
-                3419
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "05SP": {
@@ -144,13 +120,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_05SP_OPE",
-            "idf_record": [
-                264,
-                1848,
-                3432
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "06SP": {
@@ -173,13 +143,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_06SP_OPE",
-            "idf_record": [
-                265,
-                1855,
-                3445
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "07SP": {
@@ -211,13 +175,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_07SP_OPE",
-            "idf_record": [
-                266,
-                1862,
-                3458
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "08SP": {
@@ -242,13 +200,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_08SP_OPE",
-            "idf_record": [
-                267,
-                1869,
-                3471
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "09SP": {
@@ -275,13 +227,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_09SP_OPE",
-            "idf_record": [
-                268,
-                1876,
-                3484
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "10SP": {
@@ -307,13 +253,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Top_Flange",
-            "pcf_identification": "SPI_10SP_OPE",
-            "idf_record": [
-                260,
-                1820,
-                3380
-            ]
+            "operator_interface": "Top_Flange"
         }
     },
     "11SP": {
@@ -346,13 +286,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Top_Flange",
-            "pcf_identification": "SPI_11SP_OPE",
-            "idf_record": [
-                261,
-                1827,
-                3393
-            ]
+            "operator_interface": "Top_Flange"
         }
     },
     "12SP": {
@@ -381,13 +315,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Top_Flange",
-            "pcf_identification": "SPI_12SP_OPE",
-            "idf_record": [
-                262,
-                1834,
-                3406
-            ]
+            "operator_interface": "Top_Flange"
         }
     },
     "13SP": {
@@ -415,13 +343,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_13SP_OPE",
-            "idf_record": [
-                263,
-                1841,
-                3419
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "14SP": {
@@ -447,13 +369,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_14SP_OPE",
-            "idf_record": [
-                264,
-                1848,
-                3432
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "15SP": {
@@ -479,13 +395,7 @@
             "component_function": "Operator",
             "is_pressure_part": false,
             "requires_spindle": false,
-            "operator_interface": "Stem_Mount",
-            "pcf_identification": "SPI_15SP_OPE",
-            "idf_record": [
-                265,
-                1855,
-                3445
-            ]
+            "operator_interface": "Stem_Mount"
         }
     },
     "FLBL": {
@@ -510,13 +420,7 @@
             "standard": "ASME B16.5",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLBL_JOI",
-            "idf_record": [
-                288,
-                2016,
-                3744
-            ]
+            "requires_spindle": false
         }
     },
     "FLFL": {
@@ -549,13 +453,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLFL_JOI",
-            "idf_record": [
-                292,
-                2044,
-                3796
-            ]
+            "requires_spindle": false
         }
     },
     "FLLB": {
@@ -588,13 +486,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLLB_JOI",
-            "idf_record": [
-                288,
-                2016,
-                3744
-            ]
+            "requires_spindle": false
         }
     },
     "FLRC": {
@@ -619,13 +511,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLRC_JOI",
-            "idf_record": [
-                295,
-                2065,
-                3835
-            ]
+            "requires_spindle": false
         }
     },
     "FLRE": {
@@ -650,13 +536,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLRE_JOI",
-            "idf_record": [
-                297,
-                2079,
-                3861
-            ]
+            "requires_spindle": false
         }
     },
     "FLSC": {
@@ -683,13 +563,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLSC_JOI",
-            "idf_record": [
-                296,
-                2072,
-                3848
-            ]
+            "requires_spindle": false
         }
     },
     "FLSJ": {
@@ -714,13 +588,7 @@
             "standard": "ASME B16.5",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLSJ_JOI",
-            "idf_record": [
-                303,
-                2121,
-                3939
-            ]
+            "requires_spindle": false
         }
     },
     "FOSO": {
@@ -748,13 +616,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FOSO_JOI",
-            "idf_record": [
-                311,
-                2177,
-                4043
-            ]
+            "requires_spindle": false
         }
     },
     "FLSW": {
@@ -781,13 +643,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLSW_JOI",
-            "idf_record": [
-                316,
-                2212,
-                4108
-            ]
+            "requires_spindle": false
         }
     },
     "FLWN": {
@@ -815,13 +671,7 @@
             "standard": "ASME B16.5",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLWN_JOI",
-            "idf_record": [
-                311,
-                2177,
-                4043
-            ]
+            "requires_spindle": false
         }
     },
     "FOWN": {
@@ -852,13 +702,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FOWN_JOI",
-            "idf_record": [
-                314,
-                2198,
-                4082
-            ]
+            "requires_spindle": false
         }
     },
     "FBSE": {
@@ -891,13 +735,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FBSE_JOI",
-            "idf_record": [
-                288,
-                2016,
-                3744
-            ]
+            "requires_spindle": false
         }
     },
     "NRSC": {
@@ -922,13 +760,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_NRSC_JOI",
-            "idf_record": [
-                310,
-                2170,
-                4030
-            ]
+            "requires_spindle": false
         }
     },
     "NBSC": {
@@ -955,13 +787,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_NBSC_JOI",
-            "idf_record": [
-                294,
-                2058,
-                3822
-            ]
+            "requires_spindle": false
         }
     },
     "COCP": {
@@ -988,13 +814,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_COCP_JOI",
-            "idf_record": [
-                293,
-                2051,
-                3809
-            ]
+            "requires_spindle": false
         }
     },
     "COSW": {
@@ -1018,13 +838,7 @@
             "standard": "ASME B16.11",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FIT_COSW_JOI",
-            "idf_record": [
-                316,
-                2212,
-                4108
-            ]
+            "requires_spindle": false
         }
     },
     "CEBW": {
@@ -1049,13 +863,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_CEBW_JOI",
-            "idf_record": [
-                289,
-                2023,
-                3757
-            ]
+            "requires_spindle": false
         }
     },
     "CESC": {
@@ -1080,13 +888,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_CESC_JOI",
-            "idf_record": [
-                286,
-                2002,
-                3718
-            ]
+            "requires_spindle": false
         }
     },
     "CESW": {
@@ -1111,13 +913,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_CESW_JOI",
-            "idf_record": [
-                306,
-                2142,
-                3978
-            ]
+            "requires_spindle": false
         }
     },
     "UNSC": {
@@ -1148,13 +944,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "UNI_UNSC_JOI",
-            "idf_record": [
-                313,
-                2191,
-                4069
-            ]
+            "requires_spindle": false
         }
     },
     "UNSW": {
@@ -1185,13 +975,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "UNI_UNSW_JOI",
-            "idf_record": [
-                333,
-                2331,
-                4329
-            ]
+            "requires_spindle": false
         }
     },
     "EX": {
@@ -1230,13 +1014,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_EX_JOI",
-            "idf_record": [
-                157,
-                1099,
-                2041
-            ]
+            "requires_spindle": false
         }
     },
     "FT": {
@@ -1261,13 +1039,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FT_JOI",
-            "idf_record": [
-                154,
-                1078,
-                2002
-            ]
+            "requires_spindle": false
         }
     },
     "FX": {
@@ -1302,13 +1074,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FX_JOI",
-            "idf_record": [
-                158,
-                1106,
-                2054
-            ]
+            "requires_spindle": false
         }
     },
     "CH": {
@@ -1335,13 +1101,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_CH_JOI",
-            "idf_record": [
-                139,
-                973,
-                1807
-            ]
+            "requires_spindle": false
         }
     },
     "NC": {
@@ -1369,13 +1129,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_NC_JOI",
-            "idf_record": [
-                145,
-                1015,
-                1885
-            ]
+            "requires_spindle": false
         }
     },
     "BO": {
@@ -1400,13 +1154,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_BO_JOI",
-            "idf_record": [
-                145,
-                1015,
-                1885
-            ]
+            "requires_spindle": false
         }
     },
     "PL": {
@@ -1433,13 +1181,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_PL_JOI",
-            "idf_record": [
-                156,
-                1092,
-                2028
-            ]
+            "requires_spindle": false
         }
     },
     "RP": {
@@ -1466,13 +1208,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_RP_JOI",
-            "idf_record": [
-                162,
-                1134,
-                2106
-            ]
+            "requires_spindle": false
         }
     },
     "SG": {
@@ -1505,13 +1241,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SG_JOI",
-            "idf_record": [
-                154,
-                1078,
-                2002
-            ]
+            "requires_spindle": false
         }
     },
     "SP": {
@@ -1553,13 +1283,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SP_JOI",
-            "idf_record": [
-                163,
-                1141,
-                2119
-            ]
+            "requires_spindle": false
         }
     },
     "SR": {
@@ -1596,13 +1320,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SR_JOI",
-            "idf_record": [
-                165,
-                1155,
-                2145
-            ]
+            "requires_spindle": false
         }
     },
     "SB": {
@@ -1657,13 +1375,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SB_JOI",
-            "idf_record": [
-                149,
-                1043,
-                1937
-            ]
+            "requires_spindle": false
         }
     },
     "TU": {
@@ -1686,13 +1398,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_TU_JOI",
-            "idf_record": [
-                169,
-                1183,
-                2197
-            ]
+            "requires_spindle": false
         }
     },
     "FLOW": {
@@ -1731,13 +1437,7 @@
             "is_pressure_part": true,
             "requires_spindle": true,
             "spindle_type": null,
-            "compatible_spindles": [],
-            "pcf_identification": "MIS_FLOW_REG",
-            "idf_record": [
-                312,
-                2184,
-                4056
-            ]
+            "compatible_spindles": []
         }
     },
     "01HG": {
@@ -1760,13 +1460,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_01HG_SUP",
-            "idf_record": [
-                240,
-                1680,
-                3120
-            ]
+            "requires_spindle": false
         }
     },
     "INPP": {
@@ -1836,13 +1530,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_INPP_JOI",
-            "idf_record": [
-                311,
-                2177,
-                4043
-            ]
+            "requires_spindle": false
         }
     },
     "FLOR": {
@@ -1903,13 +1591,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FLOR_JOI",
-            "idf_record": [
-                307,
-                2149,
-                3991
-            ]
+            "requires_spindle": false
         }
     },
     "AR01": {
@@ -1940,13 +1622,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_AR01_JOI",
-            "idf_record": [
-                244,
-                1708,
-                3172
-            ]
+            "requires_spindle": false
         }
     },
     "AR02": {
@@ -1977,13 +1653,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_AR02_JOI",
-            "idf_record": [
-                245,
-                1715,
-                3185
-            ]
+            "requires_spindle": false
         }
     },
     "AR04": {
@@ -2023,13 +1693,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_AR04_JOI",
-            "idf_record": [
-                247,
-                1729,
-                3211
-            ]
+            "requires_spindle": false
         }
     },
     "FI": {
@@ -2062,13 +1726,7 @@
             "is_pressure_part": true,
             "requires_spindle": true,
             "spindle_type": null,
-            "compatible_spindles": [],
-            "pcf_identification": "INS_FI_REG",
-            "idf_record": [
-                143,
-                1001,
-                1859
-            ]
+            "compatible_spindles": []
         }
     },
     "FO": {
@@ -2092,13 +1750,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FO_JOI",
-            "idf_record": [
-                149,
-                1043,
-                1937
-            ]
+            "requires_spindle": false
         }
     },
     "FA": {
@@ -2124,13 +1776,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FA_JOI",
-            "idf_record": [
-                135,
-                945,
-                1755
-            ]
+            "requires_spindle": false
         }
     },
     "PF": {
@@ -2155,13 +1801,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "PIP_PF_JOI",
-            "idf_record": [
-                150,
-                1050,
-                1950
-            ]
+            "requires_spindle": false
         }
     },
     "PV": {
@@ -2186,13 +1826,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "PIP_PV_JOI",
-            "idf_record": [
-                166,
-                1162,
-                2158
-            ]
+            "requires_spindle": false
         }
     },
     "RD": {
@@ -2227,13 +1861,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_RD_JOI",
-            "idf_record": [
-                150,
-                1050,
-                1950
-            ]
+            "requires_spindle": false
         }
     },
     "TO": {
@@ -2257,13 +1885,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TRA_TO_JOI",
-            "idf_record": [
-                163,
-                1141,
-                2119
-            ]
+            "requires_spindle": false
         }
     },
     "TI": {
@@ -2291,13 +1913,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TRA_TI_JOI",
-            "idf_record": [
-                157,
-                1099,
-                2041
-            ]
+            "requires_spindle": false
         }
     },
     "TA": {
@@ -2323,13 +1939,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TRA_TA_JOI",
-            "idf_record": [
-                149,
-                1043,
-                1937
-            ]
+            "requires_spindle": false
         }
     },
     "KABW": {
@@ -2359,13 +1969,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CAP_KABW_JOI",
-            "idf_record": [
-                293,
-                2051,
-                3809
-            ]
+            "requires_spindle": false
         }
     },
     "KACP": {
@@ -2391,13 +1995,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CAP_KACP_JOI",
-            "idf_record": [
-                287,
-                2009,
-                3731
-            ]
+            "requires_spindle": false
         }
     },
     "KASW": {
@@ -2420,13 +2018,7 @@
             "standard": "ASME B16.11",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FIT_KASW_JOI",
-            "idf_record": [
-                310,
-                2170,
-                4030
-            ]
+            "requires_spindle": false
         }
     },
     "FPPL": {
@@ -2451,13 +2043,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FIX_FPPL_JOI",
-            "idf_record": [
-                306,
-                2142,
-                3978
-            ]
+            "requires_spindle": false
         }
     },
     "II": {
@@ -2485,13 +2071,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FIT_II_JOI",
-            "idf_record": [
-                146,
-                1022,
-                1898
-            ]
+            "requires_spindle": false
         }
     },
     "IA": {
@@ -2517,13 +2097,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_IA_JOI",
-            "idf_record": [
-                138,
-                966,
-                1794
-            ]
+            "requires_spindle": false
         }
     },
     "IO": {
@@ -2548,13 +2122,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_IO_JOI",
-            "idf_record": [
-                152,
-                1064,
-                1976
-            ]
+            "requires_spindle": false
         }
     },
     "OP": {
@@ -2583,13 +2151,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "INS_OP_JOI",
-            "idf_record": [
-                159,
-                1113,
-                2067
-            ]
+            "requires_spindle": false
         }
     },
     "PR": {
@@ -2618,13 +2180,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "INS_PR_JOI",
-            "idf_record": [
-                162,
-                1134,
-                2106
-            ]
+            "requires_spindle": false
         }
     },
     "DR": {
@@ -2659,13 +2215,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "INS_DR_JOI",
-            "idf_record": [
-                150,
-                1050,
-                1950
-            ]
+            "requires_spindle": false
         }
     },
     "RA": {
@@ -2694,12 +2244,6 @@
             "spindle_type": "Lever",
             "compatible_spindles": [
                 "02SP"
-            ],
-            "pcf_identification": "MIS_RA_JOI",
-            "idf_record": [
-                147,
-                1029,
-                1911
             ]
         }
     },
@@ -2729,12 +2273,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "09SP"
-            ],
-            "pcf_identification": "MIS_XA_JOI",
-            "idf_record": [
-                153,
-                1071,
-                1989
             ]
         }
     },
@@ -2765,12 +2303,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "04SP"
-            ],
-            "pcf_identification": "INS_CV_JOI",
-            "idf_record": [
-                153,
-                1071,
-                1989
             ]
         }
     },
@@ -2800,12 +2332,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "04SP"
-            ],
-            "pcf_identification": "INS_CA_JOI",
-            "idf_record": [
-                132,
-                924,
-                1716
             ]
         }
     },
@@ -2835,12 +2361,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "04SP"
-            ],
-            "pcf_identification": "INS_C3_JOI",
-            "idf_record": [
-                118,
-                826,
-                1534
             ]
         }
     },
@@ -2870,12 +2390,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "04SP"
-            ],
-            "pcf_identification": "INS_C4_JOI",
-            "idf_record": [
-                119,
-                833,
-                1547
             ]
         }
     },
@@ -2906,12 +2420,6 @@
             "spindle_type": "Gear",
             "compatible_spindles": [
                 "10SP"
-            ],
-            "pcf_identification": "MIS_SV_JOI",
-            "idf_record": [
-                169,
-                1183,
-                2197
             ]
         }
     },
@@ -2941,12 +2449,6 @@
             "spindle_type": "Gear",
             "compatible_spindles": [
                 "10SP"
-            ],
-            "pcf_identification": "MIS_SA_JOI",
-            "idf_record": [
-                148,
-                1036,
-                1924
             ]
         }
     },
@@ -2976,12 +2478,6 @@
             "spindle_type": "Gear",
             "compatible_spindles": [
                 "10SP"
-            ],
-            "pcf_identification": "MIS_S3_JOI",
-            "idf_record": [
-                134,
-                938,
-                1742
             ]
         }
     },
@@ -3011,12 +2507,6 @@
             "spindle_type": "Gear",
             "compatible_spindles": [
                 "10SP"
-            ],
-            "pcf_identification": "MIS_S4_JOI",
-            "idf_record": [
-                135,
-                945,
-                1755
             ]
         }
     },
@@ -3047,12 +2537,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "11SP"
-            ],
-            "pcf_identification": "MIS_MV_JOI",
-            "idf_record": [
-                163,
-                1141,
-                2119
             ]
         }
     },
@@ -3082,12 +2566,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "11SP"
-            ],
-            "pcf_identification": "VAL_MA_ISO",
-            "idf_record": [
-                142,
-                994,
-                1846
             ]
         }
     },
@@ -3117,12 +2595,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "11SP"
-            ],
-            "pcf_identification": "VAL_M3_ISO",
-            "idf_record": [
-                128,
-                896,
-                1664
             ]
         }
     },
@@ -3152,12 +2624,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "11SP"
-            ],
-            "pcf_identification": "VAL_M4_ISO",
-            "idf_record": [
-                129,
-                903,
-                1677
             ]
         }
     },
@@ -3188,12 +2654,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "12SP"
-            ],
-            "pcf_identification": "VAL_HV_ISO",
-            "idf_record": [
-                158,
-                1106,
-                2054
             ]
         }
     },
@@ -3223,12 +2683,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "12SP"
-            ],
-            "pcf_identification": "VAL_HA_ISO",
-            "idf_record": [
-                137,
-                959,
-                1781
             ]
         }
     },
@@ -3258,12 +2712,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "12SP"
-            ],
-            "pcf_identification": "MIS_H3_JOI",
-            "idf_record": [
-                123,
-                861,
-                1599
             ]
         }
     },
@@ -3293,12 +2741,6 @@
             "spindle_type": "Actuator",
             "compatible_spindles": [
                 "12SP"
-            ],
-            "pcf_identification": "MIS_H4_JOI",
-            "idf_record": [
-                124,
-                868,
-                1612
             ]
         }
     },
@@ -3328,12 +2770,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "09SP"
-            ],
-            "pcf_identification": "MIS_XV_JOI",
-            "idf_record": [
-                174,
-                1218,
-                2262
             ]
         }
     },
@@ -3363,12 +2799,6 @@
             "spindle_type": "Lever",
             "compatible_spindles": [
                 "02SP"
-            ],
-            "pcf_identification": "INS_RV_JOI",
-            "idf_record": [
-                168,
-                1176,
-                2184
             ]
         }
     },
@@ -3402,13 +2832,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WW_JOI",
-            "idf_record": [
-                174,
-                1218,
-                2262
-            ]
+            "requires_spindle": false
         }
     },
     "WWD": {
@@ -3435,13 +2859,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WWD_JOI",
-            "idf_record": [
-                242,
-                1694,
-                3146
-            ]
+            "requires_spindle": false
         }
     },
     "WS": {
@@ -3476,13 +2894,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WS_JOI",
-            "idf_record": [
-                170,
-                1190,
-                2210
-            ]
+            "requires_spindle": false
         }
     },
     "WST": {
@@ -3517,13 +2929,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WST_JOI",
-            "idf_record": [
-                254,
-                1778,
-                3302
-            ]
+            "requires_spindle": false
         }
     },
     "WSD": {
@@ -3558,13 +2964,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WSD_JOI",
-            "idf_record": [
-                238,
-                1666,
-                3094
-            ]
+            "requires_spindle": false
         }
     },
     "WF": {
@@ -3599,13 +2999,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WF_JOI",
-            "idf_record": [
-                157,
-                1099,
-                2041
-            ]
+            "requires_spindle": false
         }
     },
     "WFT": {
@@ -3640,13 +3034,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WFT_JOI",
-            "idf_record": [
-                241,
-                1687,
-                3133
-            ]
+            "requires_spindle": false
         }
     },
     "WFD": {
@@ -3681,13 +3069,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WFD_JOI",
-            "idf_record": [
-                225,
-                1575,
-                2925
-            ]
+            "requires_spindle": false
         }
     },
     "WO": {
@@ -3727,13 +3109,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WO_JOI",
-            "idf_record": [
-                166,
-                1162,
-                2158
-            ]
+            "requires_spindle": false
         }
     },
     "WOT": {
@@ -3773,13 +3149,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WOT_JOI",
-            "idf_record": [
-                250,
-                1750,
-                3250
-            ]
+            "requires_spindle": false
         }
     },
     "WOD": {
@@ -3815,13 +3185,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WOD_JOI",
-            "idf_record": [
-                234,
-                1638,
-                3042
-            ]
+            "requires_spindle": false
         }
     },
     "WOF": {
@@ -3861,13 +3225,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WOF_JOI",
-            "idf_record": [
-                236,
-                1652,
-                3068
-            ]
+            "requires_spindle": false
         }
     },
     "WOFT": {
@@ -3907,13 +3265,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WOFT_JOI",
-            "idf_record": [
-                320,
-                2240,
-                4160
-            ]
+            "requires_spindle": false
         }
     },
     "WOFD": {
@@ -3949,13 +3301,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WOFD_JOI",
-            "idf_record": [
-                304,
-                2128,
-                3952
-            ]
+            "requires_spindle": false
         }
     },
     "WSSP": {
@@ -3989,13 +3335,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WSSP_JOI",
-            "idf_record": [
-                333,
-                2331,
-                4329
-            ]
+            "requires_spindle": false
         }
     },
     "WWA": {
@@ -4122,13 +3462,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WWA_JOI",
-            "idf_record": [
-                239,
-                1673,
-                3107
-            ]
+            "requires_spindle": false
         }
     },
     "HC": {
@@ -4153,13 +3487,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_HC_JOI",
-            "idf_record": [
-                139,
-                973,
-                1807
-            ]
+            "requires_spindle": false
         }
     },
     "LA": {
@@ -4184,13 +3512,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_LA_JOI",
-            "idf_record": [
-                141,
-                987,
-                1833
-            ]
+            "requires_spindle": false
         }
     },
     "NI": {
@@ -4215,13 +3537,7 @@
             "standard": "ASME B16.9",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_NI_JOI",
-            "idf_record": [
-                151,
-                1057,
-                1963
-            ]
+            "requires_spindle": false
         }
     },
     "SK": {
@@ -4248,13 +3564,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_SK_JOI",
-            "idf_record": [
-                158,
-                1106,
-                2054
-            ]
+            "requires_spindle": false
         }
     },
     "SW": {
@@ -4281,13 +3591,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_SW_JOI",
-            "idf_record": [
-                170,
-                1190,
-                2210
-            ]
+            "requires_spindle": false
         }
     },
     "TH": {
@@ -4314,13 +3618,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_TH_JOI",
-            "idf_record": [
-                156,
-                1092,
-                2028
-            ]
+            "requires_spindle": false
         }
     },
     "WT": {
@@ -4347,13 +3645,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_WT_JOI",
-            "idf_record": [
-                171,
-                1197,
-                2223
-            ]
+            "requires_spindle": false
         }
     },
     "HCSW": {
@@ -4378,13 +3670,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_HCSW_JOI",
-            "idf_record": [
-                309,
-                2163,
-                4017
-            ]
+            "requires_spindle": false
         }
     },
     "LABW": {
@@ -4409,13 +3695,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_LABW_JOI",
-            "idf_record": [
-                294,
-                2058,
-                3822
-            ]
+            "requires_spindle": false
         }
     },
     "LASC": {
@@ -4440,13 +3720,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_LASC_JOI",
-            "idf_record": [
-                291,
-                2037,
-                3783
-            ]
+            "requires_spindle": false
         }
     },
     "NISC": {
@@ -4471,13 +3745,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_NISC_JOI",
-            "idf_record": [
-                301,
-                2107,
-                3913
-            ]
+            "requires_spindle": false
         }
     },
     "NIPL": {
@@ -4502,13 +3770,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_NIPL_JOI",
-            "idf_record": [
-                307,
-                2149,
-                3991
-            ]
+            "requires_spindle": false
         }
     },
     "SKSW": {
@@ -4535,13 +3797,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_SKSW_JOI",
-            "idf_record": [
-                328,
-                2296,
-                4264
-            ]
+            "requires_spindle": false
         }
     },
     "SWBW": {
@@ -4568,13 +3824,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_SWBW_JOI",
-            "idf_record": [
-                323,
-                2261,
-                4199
-            ]
+            "requires_spindle": false
         }
     },
     "THSC": {
@@ -4601,13 +3851,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_THSC_JOI",
-            "idf_record": [
-                306,
-                2142,
-                3978
-            ]
+            "requires_spindle": false
         }
     },
     "WTBW": {
@@ -4634,13 +3878,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "OLE_WTBW_JOI",
-            "idf_record": [
-                324,
-                2268,
-                4212
-            ]
+            "requires_spindle": false
         }
     },
     "RC": {
@@ -4668,13 +3906,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_RC_JOI",
-            "idf_record": [
-                149,
-                1043,
-                1937
-            ]
+            "requires_spindle": false
         }
     },
     "CPBW": {
@@ -4702,13 +3934,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CPBW_JOI",
-            "idf_record": [
-                300,
-                2100,
-                3900
-            ]
+            "requires_spindle": false
         }
     },
     "CSBW": {
@@ -4736,13 +3962,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CSBW_JOI",
-            "idf_record": [
-                303,
-                2121,
-                3939
-            ]
+            "requires_spindle": false
         }
     },
     "CTBW": {
@@ -4770,13 +3990,7 @@
             "standard": "ASME B16.9",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CTBW_JOI",
-            "idf_record": [
-                304,
-                2128,
-                3952
-            ]
+            "requires_spindle": false
         }
     },
     "CZBW": {
@@ -4804,13 +4018,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CZBW_JOI",
-            "idf_record": [
-                310,
-                2170,
-                4030
-            ]
+            "requires_spindle": false
         }
     },
     "CXBW": {
@@ -4838,13 +4046,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CXBW_JOI",
-            "idf_record": [
-                308,
-                2156,
-                4004
-            ]
+            "requires_spindle": false
         }
     },
     "CPFL": {
@@ -4872,13 +4074,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CPFL_JOI",
-            "idf_record": [
-                293,
-                2051,
-                3809
-            ]
+            "requires_spindle": false
         }
     },
     "CSFL": {
@@ -4906,13 +4102,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CSFL_JOI",
-            "idf_record": [
-                296,
-                2072,
-                3848
-            ]
+            "requires_spindle": false
         }
     },
     "CTFL": {
@@ -4940,13 +4130,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CTFL_JOI",
-            "idf_record": [
-                297,
-                2079,
-                3861
-            ]
+            "requires_spindle": false
         }
     },
     "CZFL": {
@@ -4974,13 +4158,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CZFL_JOI",
-            "idf_record": [
-                303,
-                2121,
-                3939
-            ]
+            "requires_spindle": false
         }
     },
     "CXFL": {
@@ -5008,13 +4186,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CXFL_JOI",
-            "idf_record": [
-                301,
-                2107,
-                3913
-            ]
+            "requires_spindle": false
         }
     },
     "RNSC": {
@@ -5042,13 +4214,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_RNSC_JOI",
-            "idf_record": [
-                310,
-                2170,
-                4030
-            ]
+            "requires_spindle": false
         }
     },
     "CTSC": {
@@ -5076,13 +4242,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CTSC_JOI",
-            "idf_record": [
-                301,
-                2107,
-                3913
-            ]
+            "requires_spindle": false
         }
     },
     "RBSC": {
@@ -5110,13 +4270,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_RBSC_JOI",
-            "idf_record": [
-                298,
-                2086,
-                3874
-            ]
+            "requires_spindle": false
         }
     },
     "CTSW": {
@@ -5144,13 +4298,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_CTSW_JOI",
-            "idf_record": [
-                321,
-                2247,
-                4173
-            ]
+            "requires_spindle": false
         }
     },
     "RBSW": {
@@ -5178,13 +4326,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_RBSW_JOI",
-            "idf_record": [
-                318,
-                2226,
-                4134
-            ]
+            "requires_spindle": false
         }
     },
     "REBW": {
@@ -5211,13 +4353,7 @@
             "standard": "ASME B16.9",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_REBW_JOI",
-            "idf_record": [
-                304,
-                2128,
-                3952
-            ]
+            "requires_spindle": false
         }
     },
     "EPBW": {
@@ -5244,13 +4380,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_EPBW_JOI",
-            "idf_record": [
-                302,
-                2114,
-                3926
-            ]
+            "requires_spindle": false
         }
     },
     "ESBW": {
@@ -5277,13 +4407,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_ESBW_JOI",
-            "idf_record": [
-                305,
-                2135,
-                3965
-            ]
+            "requires_spindle": false
         }
     },
     "OTBW": {
@@ -5310,13 +4434,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_OTBW_JOI",
-            "idf_record": [
-                316,
-                2212,
-                4108
-            ]
+            "requires_spindle": false
         }
     },
     "EZBW": {
@@ -5343,13 +4461,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_EZBW_JOI",
-            "idf_record": [
-                312,
-                2184,
-                4056
-            ]
+            "requires_spindle": false
         }
     },
     "RESC": {
@@ -5376,13 +4488,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_RESC_JOI",
-            "idf_record": [
-                301,
-                2107,
-                3913
-            ]
+            "requires_spindle": false
         }
     },
     "OTSC": {
@@ -5409,13 +4515,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_OTSC_JOI",
-            "idf_record": [
-                313,
-                2191,
-                4069
-            ]
+            "requires_spindle": false
         }
     },
     "REFL": {
@@ -5442,13 +4542,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_REFL_JOI",
-            "idf_record": [
-                297,
-                2079,
-                3861
-            ]
+            "requires_spindle": false
         }
     },
     "EPFL": {
@@ -5475,13 +4569,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_EPFL_JOI",
-            "idf_record": [
-                295,
-                2065,
-                3835
-            ]
+            "requires_spindle": false
         }
     },
     "ESFL": {
@@ -5508,13 +4596,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_ESFL_JOI",
-            "idf_record": [
-                298,
-                2086,
-                3874
-            ]
+            "requires_spindle": false
         }
     },
     "OTFL": {
@@ -5541,13 +4623,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_OTFL_JOI",
-            "idf_record": [
-                309,
-                2163,
-                4017
-            ]
+            "requires_spindle": false
         }
     },
     "EZFL": {
@@ -5574,13 +4650,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_EZFL_JOI",
-            "idf_record": [
-                305,
-                2135,
-                3965
-            ]
+            "requires_spindle": false
         }
     },
     "RFPL": {
@@ -5609,13 +4679,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "RED_RFPL_JOI",
-            "idf_record": [
-                308,
-                2156,
-                4004
-            ]
+            "requires_spindle": false
         }
     },
     "AV": {
@@ -5644,12 +4708,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "VAL_AV_ISO",
-            "idf_record": [
-                151,
-                1057,
-                1963
             ]
         }
     },
@@ -5680,12 +4738,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "VAL_VV_ISO",
-            "idf_record": [
-                172,
-                1204,
-                2236
             ]
         }
     },
@@ -5710,13 +4762,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_VC_JOI",
-            "idf_record": [
-                153,
-                1071,
-                1989
-            ]
+            "requires_spindle": false
         }
     },
     "CK": {
@@ -5746,13 +4792,7 @@
             "is_pressure_part": true,
             "requires_spindle": true,
             "spindle_type": null,
-            "compatible_spindles": [],
-            "pcf_identification": "VAL_CK_ISO",
-            "idf_record": [
-                142,
-                994,
-                1846
-            ]
+            "compatible_spindles": []
         }
     },
     "VB": {
@@ -5798,12 +4838,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "03SP"
-            ],
-            "pcf_identification": "VAL_VB_ISO",
-            "idf_record": [
-                152,
-                1064,
-                1976
             ]
         }
     },
@@ -5859,12 +4893,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "03SP"
-            ],
-            "pcf_identification": "MIS_VY_JOI",
-            "idf_record": [
-                175,
-                1225,
-                2275
             ]
         }
     },
@@ -5911,12 +4939,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "VAL_VD_ISO",
-            "idf_record": [
-                154,
-                1078,
-                2002
             ]
         }
     },
@@ -5973,12 +4995,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "VAL_VG_ISO",
-            "idf_record": [
-                157,
-                1099,
-                2041
             ]
         }
     },
@@ -6009,12 +5025,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "09SP"
-            ],
-            "pcf_identification": "MIS_VX_JOI",
-            "idf_record": [
-                174,
-                1218,
-                2262
             ]
         }
     },
@@ -6044,12 +5054,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "09SP"
-            ],
-            "pcf_identification": "MIS_AX_JOI",
-            "idf_record": [
-                153,
-                1071,
-                1989
             ]
         }
     },
@@ -6079,12 +5083,6 @@
             "spindle_type": "Lever",
             "compatible_spindles": [
                 "02SP"
-            ],
-            "pcf_identification": "MIS_AR_JOI",
-            "idf_record": [
-                147,
-                1029,
-                1911
             ]
         }
     },
@@ -6115,12 +5113,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "03SP"
-            ],
-            "pcf_identification": "VAL_VK_ISO",
-            "idf_record": [
-                161,
-                1127,
-                2093
             ]
         }
     },
@@ -6151,12 +5143,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "05SP"
-            ],
-            "pcf_identification": "VAL_VT_ISO",
-            "idf_record": [
-                170,
-                1190,
-                2210
             ]
         }
     },
@@ -6187,12 +5173,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "06SP"
-            ],
-            "pcf_identification": "VAL_VN_ISO",
-            "idf_record": [
-                164,
-                1148,
-                2132
             ]
         }
     },
@@ -6223,12 +5203,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "07SP"
-            ],
-            "pcf_identification": "VAL_VP_ISO",
-            "idf_record": [
-                166,
-                1162,
-                2158
             ]
         }
     },
@@ -6259,12 +5233,6 @@
             "spindle_type": "Lever",
             "compatible_spindles": [
                 "02SP"
-            ],
-            "pcf_identification": "MIS_VR_JOI",
-            "idf_record": [
-                168,
-                1176,
-                2184
             ]
         }
     },
@@ -6295,12 +5263,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "08SP"
-            ],
-            "pcf_identification": "VAL_VS_ISO",
-            "idf_record": [
-                169,
-                1183,
-                2197
             ]
         }
     },
@@ -6330,12 +5292,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "MIS_V3_JOI",
-            "idf_record": [
-                137,
-                959,
-                1781
             ]
         }
     },
@@ -6365,12 +5321,6 @@
             "spindle_type": "Manual_Handwheel",
             "compatible_spindles": [
                 "01SP"
-            ],
-            "pcf_identification": "MIS_V4_JOI",
-            "idf_record": [
-                138,
-                966,
-                1794
             ]
         }
     },
@@ -6398,13 +5348,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_DUMY_JOI",
-            "idf_record": [
-                319,
-                2233,
-                4147
-            ]
+            "requires_spindle": false
         }
     },
     "KV": {
@@ -6433,12 +5377,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "03SP"
-            ],
-            "pcf_identification": "HYG_KV_JOI",
-            "idf_record": [
-                161,
-                1127,
-                2093
             ]
         }
     },
@@ -6493,12 +5431,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "15SP"
-            ],
-            "pcf_identification": "HYG_ZB_JOI",
-            "idf_record": [
-                156,
-                1092,
-                2028
             ]
         }
     },
@@ -6529,12 +5461,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "15SP"
-            ],
-            "pcf_identification": "HYG_ZG_JOI",
-            "idf_record": [
-                161,
-                1127,
-                2093
             ]
         }
     },
@@ -6565,12 +5491,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "15SP"
-            ],
-            "pcf_identification": "HYG_IG_JOI",
-            "idf_record": [
-                144,
-                1008,
-                1872
             ]
         }
     },
@@ -6602,13 +5522,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_NV_JOI",
-            "idf_record": [
-                164,
-                1148,
-                2132
-            ]
+            "requires_spindle": false
         }
     },
     "K3": {
@@ -6636,12 +5550,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "03SP"
-            ],
-            "pcf_identification": "HYG_K3_JOI",
-            "idf_record": [
-                126,
-                882,
-                1638
             ]
         }
     },
@@ -6670,13 +5578,7 @@
             "is_pressure_part": true,
             "requires_spindle": true,
             "spindle_type": null,
-            "compatible_spindles": [],
-            "pcf_identification": "INS_MP_REG",
-            "idf_record": [
-                157,
-                1099,
-                2041
-            ]
+            "compatible_spindles": []
         }
     },
     "LC": {
@@ -6702,13 +5604,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_LC_JOI",
-            "idf_record": [
-                143,
-                1001,
-                1859
-            ]
+            "requires_spindle": false
         }
     },
     "LN": {
@@ -6734,13 +5630,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_LN_JOI",
-            "idf_record": [
-                154,
-                1078,
-                2002
-            ]
+            "requires_spindle": false
         }
     },
     "LR": {
@@ -6768,13 +5658,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_LR_JOI",
-            "idf_record": [
-                158,
-                1106,
-                2054
-            ]
+            "requires_spindle": false
         }
     },
     "BNUT": {
@@ -6797,13 +5681,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BNUT_JOI",
-            "idf_record": [
-                313,
-                2191,
-                4069
-            ]
+            "requires_spindle": false
         }
     },
     "CLMP": {
@@ -6827,13 +5705,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CLA_CLMP_JOI",
-            "idf_record": [
-                300,
-                2100,
-                3900
-            ]
+            "requires_spindle": false
         }
     },
     "DVP": {
@@ -6862,13 +5734,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_DVP_JOI",
-            "idf_record": [
-                234,
-                1638,
-                3042
-            ]
+            "requires_spindle": false
         }
     },
     "BM": {
@@ -6912,13 +5778,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BM_JOI",
-            "idf_record": [
-                143,
-                1001,
-                1859
-            ]
+            "requires_spindle": false
         }
     },
     "BP": {
@@ -6943,13 +5803,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BP_JOI",
-            "idf_record": [
-                146,
-                1022,
-                1898
-            ]
+            "requires_spindle": false
         }
     },
     "BBC": {
@@ -6977,13 +5831,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BBC_JOI",
-            "idf_record": [
-                199,
-                1393,
-                2587
-            ]
+            "requires_spindle": false
         }
     },
     "BBE": {
@@ -7011,13 +5859,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BBE_JOI",
-            "idf_record": [
-                201,
-                1407,
-                2613
-            ]
+            "requires_spindle": false
         }
     },
     "BTP": {
@@ -7045,13 +5887,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_BTP_JOI",
-            "idf_record": [
-                230,
-                1610,
-                2990
-            ]
+            "requires_spindle": false
         }
     },
     "ADMM": {
@@ -7078,13 +5914,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_ADMM_JOI",
-            "idf_record": [
-                287,
-                2009,
-                3731
-            ]
+            "requires_spindle": false
         }
     },
     "ADMF": {
@@ -7112,13 +5942,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_ADMF_JOI",
-            "idf_record": [
-                280,
-                1960,
-                3640
-            ]
+            "requires_spindle": false
         }
     },
     "2Z": {
@@ -7148,12 +5972,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "14SP"
-            ],
-            "pcf_identification": "HYG_2Z_JOI",
-            "idf_record": [
-                140,
-                980,
-                1820
             ]
         }
     },
@@ -7184,12 +6002,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "14SP"
-            ],
-            "pcf_identification": "HYG_2D_JOI",
-            "idf_record": [
-                118,
-                826,
-                1534
             ]
         }
     },
@@ -7220,12 +6032,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "14SP"
-            ],
-            "pcf_identification": "HYG_3Z_JOI",
-            "idf_record": [
-                141,
-                987,
-                1833
             ]
         }
     },
@@ -7256,12 +6062,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "14SP"
-            ],
-            "pcf_identification": "HYG_3D_JOI",
-            "idf_record": [
-                119,
-                833,
-                1547
             ]
         }
     },
@@ -7292,12 +6092,6 @@
             "spindle_type": null,
             "compatible_spindles": [
                 "14SP"
-            ],
-            "pcf_identification": "HYG_4Z_JOI",
-            "idf_record": [
-                142,
-                994,
-                1846
             ]
         }
     },
@@ -7334,13 +6128,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "HYG_VZ_JOI",
-            "idf_record": [
-                176,
-                1232,
-                2288
-            ]
+            "requires_spindle": false
         }
     },
     "ZV": {
@@ -7378,13 +6166,7 @@
             "is_pressure_part": true,
             "requires_spindle": true,
             "spindle_type": "Automatic",
-            "compatible_spindles": [],
-            "pcf_identification": "VAL_ZV_SAF",
-            "idf_record": [
-                176,
-                1232,
-                2288
-            ]
+            "compatible_spindles": []
         }
     },
     "BA": {
@@ -7410,13 +6192,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_BA_JOI",
-            "idf_record": [
-                131,
-                917,
-                1703
-            ]
+            "requires_spindle": false
         }
     },
     "YLRG": {
@@ -7467,13 +6243,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TEE_YLRG_JOI",
-            "idf_record": [
-                318,
-                2226,
-                4134
-            ]
+            "requires_spindle": false
         }
     },
     "YMED": {
@@ -7518,13 +6288,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TEE_YMED_JOI",
-            "idf_record": [
-                303,
-                2121,
-                3939
-            ]
+            "requires_spindle": false
         }
     },
     "YSML": {
@@ -7563,13 +6327,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "TEE_YSML_JOI",
-            "idf_record": [
-                325,
-                2275,
-                4225
-            ]
+            "requires_spindle": false
         }
     },
     "PLT1": {
@@ -7598,13 +6356,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "PEN_PLT1_JOI",
-            "idf_record": [
-                289,
-                2023,
-                3757
-            ]
+            "requires_spindle": false
         }
     },
     "PLT2": {
@@ -7632,13 +6384,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "PEN_PLT2_JOI",
-            "idf_record": [
-                290,
-                2030,
-                3770
-            ]
+            "requires_spindle": false
         }
     },
     "LPIN": {
@@ -7680,13 +6426,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "PEN_LPIN_JOI",
-            "idf_record": [
-                307,
-                2149,
-                3991
-            ]
+            "requires_spindle": false
         }
     },
     "WALL": {
@@ -7729,13 +6469,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_WALL_JOI",
-            "idf_record": [
-                304,
-                2128,
-                3952
-            ]
+            "requires_spindle": false
         }
     },
     "ANCH": {
@@ -7760,13 +6494,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_ANCH_SUP",
-            "idf_record": [
-                282,
-                1974,
-                3666
-            ]
+            "requires_spindle": false
         }
     },
     "DUCK": {
@@ -7792,13 +6520,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_DUCK_SUP",
-            "idf_record": [
-                295,
-                2065,
-                3835
-            ]
+            "requires_spindle": false
         }
     },
     "GUID": {
@@ -7842,13 +6564,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_GUID_SUP",
-            "idf_record": [
-                297,
-                2079,
-                3861
-            ]
+            "requires_spindle": false
         }
     },
     "HANG": {
@@ -7881,13 +6597,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_HANG_SUP",
-            "idf_record": [
-                286,
-                2002,
-                3718
-            ]
+            "requires_spindle": false
         }
     },
     "SKID": {
@@ -7911,13 +6621,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_SKID_SUP",
-            "idf_record": [
-                299,
-                2093,
-                3887
-            ]
+            "requires_spindle": false
         }
     },
     "SPRG": {
@@ -7945,13 +6649,7 @@
             "standard": "ISO 14617",
             "component_function": "Support",
             "is_pressure_part": false,
-            "requires_spindle": false,
-            "pcf_identification": "SUP_SPRG_SUP",
-            "idf_record": [
-                316,
-                2212,
-                4108
-            ]
+            "requires_spindle": false
         }
     },
     "CPF1": {
@@ -7975,13 +6673,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_CPF1_JOI",
-            "idf_record": [
-                266,
-                1862,
-                3458
-            ]
+            "requires_spindle": false
         }
     },
     "CPF": {
@@ -8015,13 +6707,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_CPF_JOI",
-            "idf_record": [
-                217,
-                1519,
-                2821
-            ]
+            "requires_spindle": false
         }
     },
     "CPM": {
@@ -8046,13 +6732,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_CPM_JOI",
-            "idf_record": [
-                224,
-                1568,
-                2912
-            ]
+            "requires_spindle": false
         }
     },
     "SCF": {
@@ -8101,13 +6781,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SCF_JOI",
-            "idf_record": [
-                220,
-                1540,
-                2860
-            ]
+            "requires_spindle": false
         }
     },
     "SCM": {
@@ -8132,13 +6806,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SCM_JOI",
-            "idf_record": [
-                227,
-                1589,
-                2951
-            ]
+            "requires_spindle": false
         }
     },
     "SWM": {
@@ -8163,13 +6831,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SWM_JOI",
-            "idf_record": [
-                247,
-                1729,
-                3211
-            ]
+            "requires_spindle": false
         }
     },
     "GLM": {
@@ -8194,13 +6856,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_GLM_JOI",
-            "idf_record": [
-                224,
-                1568,
-                2912
-            ]
+            "requires_spindle": false
         }
     },
     "PFF": {
@@ -8252,13 +6908,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_PFF_JOI",
-            "idf_record": [
-                220,
-                1540,
-                2860
-            ]
+            "requires_spindle": false
         }
     },
     "PFF1": {
@@ -8282,13 +6932,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_PFF1_JOI",
-            "idf_record": [
-                269,
-                1883,
-                3497
-            ]
+            "requires_spindle": false
         }
     },
     "PFM": {
@@ -8313,13 +6957,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_PFM_JOI",
-            "idf_record": [
-                227,
-                1589,
-                2951
-            ]
+            "requires_spindle": false
         }
     },
     "VTM": {
@@ -8344,13 +6982,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_VTM_JOI",
-            "idf_record": [
-                247,
-                1729,
-                3211
-            ]
+            "requires_spindle": false
         }
     },
     "PLM": {
@@ -8371,13 +7003,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_PLM_JOI",
-            "idf_record": [
-                233,
-                1631,
-                3029
-            ]
+            "requires_spindle": false
         }
     },
     "NULL": {
@@ -8398,13 +7024,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_NULL_JOI",
-            "idf_record": [
-                315,
-                2205,
-                4095
-            ]
+            "requires_spindle": false
         }
     },
     "FLSB": {
@@ -8445,13 +7065,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FLSB_JOI",
-            "idf_record": [
-                295,
-                2065,
-                3835
-            ]
+            "requires_spindle": false
         }
     },
     "FLBS": {
@@ -8492,13 +7106,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_FLBS_JOI",
-            "idf_record": [
-                295,
-                2065,
-                3835
-            ]
+            "requires_spindle": false
         }
     },
     "FLSM": {
@@ -8546,13 +7154,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLSM_JOI",
-            "idf_record": [
-                306,
-                2142,
-                3978
-            ]
+            "requires_spindle": false
         }
     },
     "FLGM": {
@@ -8581,13 +7183,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLGM_JOI",
-            "idf_record": [
-                294,
-                2058,
-                3822
-            ]
+            "requires_spindle": false
         }
     },
     "FLGF": {
@@ -8615,13 +7211,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "FLA_FLGF_JOI",
-            "idf_record": [
-                287,
-                2009,
-                3731
-            ]
+            "requires_spindle": false
         }
     },
     "CLVT": {
@@ -8648,13 +7238,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CLA_CLVT_JOI",
-            "idf_record": [
-                313,
-                2191,
-                4069
-            ]
+            "requires_spindle": false
         }
     },
     "CLCS": {
@@ -8681,13 +7265,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_CLCS_JOI",
-            "idf_record": [
-                293,
-                2051,
-                3809
-            ]
+            "requires_spindle": false
         }
     },
     "CLGY": {
@@ -8713,13 +7291,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CLA_CLGY_JOI",
-            "idf_record": [
-                303,
-                2121,
-                3939
-            ]
+            "requires_spindle": false
         }
     },
     "CLVR": {
@@ -8745,13 +7317,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "CLA_CLVR_JOI",
-            "idf_record": [
-                311,
-                2177,
-                4043
-            ]
+            "requires_spindle": false
         }
     },
     "GLF": {
@@ -8774,13 +7340,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_GLF_JOI",
-            "idf_record": [
-                217,
-                1519,
-                2821
-            ]
+            "requires_spindle": false
         }
     },
     "CSCP": {
@@ -8807,13 +7367,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_CSCP_JOI",
-            "idf_record": [
-                297,
-                2079,
-                3861
-            ]
+            "requires_spindle": false
         }
     },
     "COVT": {
@@ -8840,13 +7394,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_COVT_JOI",
-            "idf_record": [
-                316,
-                2212,
-                4108
-            ]
+            "requires_spindle": false
         }
     },
     "COGY": {
@@ -8872,13 +7420,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_COGY_JOI",
-            "idf_record": [
-                306,
-                2142,
-                3978
-            ]
+            "requires_spindle": false
         }
     },
     "COVR": {
@@ -8904,13 +7446,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "COU_COVR_JOI",
-            "idf_record": [
-                314,
-                2198,
-                4082
-            ]
+            "requires_spindle": false
         }
     },
     "WSSR": {
@@ -8937,13 +7473,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "WEL_WSSR_JOI",
-            "idf_record": [
-                335,
-                2345,
-                4355
-            ]
+            "requires_spindle": false
         }
     },
     "SWF": {
@@ -8966,13 +7496,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_SWF_JOI",
-            "idf_record": [
-                240,
-                1680,
-                3120
-            ]
+            "requires_spindle": false
         }
     },
     "01HT": {
@@ -9003,13 +7527,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_01HT_JOI",
-            "idf_record": [
-                253,
-                1771,
-                3289
-            ]
+            "requires_spindle": false
         }
     },
     "02HT": {
@@ -9047,13 +7565,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_02HT_JOI",
-            "idf_record": [
-                254,
-                1778,
-                3302
-            ]
+            "requires_spindle": false
         }
     },
     "03HT": {
@@ -9080,13 +7592,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_03HT_JOI",
-            "idf_record": [
-                255,
-                1785,
-                3315
-            ]
+            "requires_spindle": false
         }
     },
     "04HT": {
@@ -9124,13 +7630,7 @@
             "standard": "ISO 14617",
             "component_function": "Joining",
             "is_pressure_part": true,
-            "requires_spindle": false,
-            "pcf_identification": "MIS_04HT_JOI",
-            "idf_record": [
-                256,
-                1792,
-                3328
-            ]
+            "requires_spindle": false
         }
     }
 }

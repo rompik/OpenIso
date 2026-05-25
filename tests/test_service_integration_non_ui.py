@@ -5,6 +5,8 @@ from pathlib import Path
 import pytest
 
 import openiso.core.i18n as i18n
+from openiso import __app_id__, __version__
+from openiso.core.app_context import AppContext
 from openiso.controller.services import SkeyService
 
 
@@ -17,13 +19,17 @@ def _make_data_path(tmp_path: Path) -> Path:
     return data_path
 
 
+def _make_context(data_path: Path) -> AppContext:
+    return AppContext.build(__app_id__, __version__, pkgdatadir=str(data_path))
+
+
 def test_service_update_and_delete_skey_non_ui(tmp_path, monkeypatch):
     data_path = _make_data_path(tmp_path)
 
     # Avoid writing translation files during this non-UI test.
     monkeypatch.setattr(i18n, "save_json_translation", lambda *args, **kwargs: None)
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
 
     ok = service.update_skey(
         name="VALT1",
@@ -63,7 +69,7 @@ def test_service_update_and_delete_skey_non_ui(tmp_path, monkeypatch):
 
 def test_service_get_subgroups_reads_db(tmp_path):
     data_path = _make_data_path(tmp_path)
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
 
     service._db.ensure_subgroup_exists("fittings", "elbows")
     service._db.ensure_subgroup_exists("fittings", "tees")

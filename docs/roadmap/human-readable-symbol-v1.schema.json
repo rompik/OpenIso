@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openiso.dev/schema/human-readable-symbol-v1.json",
+  "title": "OpenIso Human Readable Symbol v1",
+  "type": "object",
+  "required": ["format", "schema_version", "symbol"],
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "OpenIso.Symbol.HR"
+    },
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "symbol": {
+      "type": "object",
+      "required": ["code", "group", "subgroup", "units", "origin", "connectors", "primitives"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subgroup": {
+          "type": "string",
+          "minLength": 1
+        },
+        "units": {
+          "type": "string",
+          "enum": ["mm", "px", "in"]
+        },
+        "origin": {
+          "$ref": "#/$defs/pointObject"
+        },
+        "classification": {
+          "$ref": "#/$defs/classification"
+        },
+        "connectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/connector"
+          }
+        },
+        "primitives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/primitive"
+          }
+        },
+        "style": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/style"
+          }
+        },
+        "meta": {
+          "$ref": "#/$defs/meta"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "finiteNumber": {
+      "type": "number"
+    },
+    "pointArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finiteNumber"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "pointObject": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "$ref": "#/$defs/finiteNumber"
+        },
+        "y": {
+          "$ref": "#/$defs/finiteNumber"
+        }
+      },
+      "additionalProperties": false
+    },
+    "transform": {
+      "type": "object",
+      "properties": {
+        "translate": {
+          "$ref": "#/$defs/pointArray"
+        },
+        "rotate": {
+          "$ref": "#/$defs/finiteNumber"
+        },
+        "scale": {
+          "$ref": "#/$defs/pointArray"
+        }
+      },
+      "additionalProperties": false
+    },
+    "classification": {
+      "type": "object",
+      "properties": {
+        "pcf_identification": {
+          "type": "string"
+        },
+        "idf_record": {
+          "oneOf": [
+            { "type": "integer" },
+            { "type": "string" }
+          ]
+        },
+        "flow_arrow": {
+          "type": "boolean"
+        },
+        "flow_dependency": {
+          "type": "boolean"
+        },
+        "user_definable": {
+          "type": "boolean"
+        },
+        "code_pattern": {
+          "type": "string"
+        },
+        "end_condition_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["BW", "CP", "SW", "FL", "SC", "PL", "LN", "LC", "LR", "MP", "PF", "GL", "CL", "FA", "BS", "SB", "GF"]
+          }
+        },
+        "pattern_params": {
+          "type": "object",
+          "properties": {
+            "segments": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "bend_radius": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "connector": {
+      "type": "object",
+      "required": ["id", "kind", "x", "y"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["arrive", "leave", "tee", "spindle", "aux"]
+        },
+        "x": {
+          "$ref": "#/$defs/finiteNumber"
+        },
+        "y": {
+          "$ref": "#/$defs/finiteNumber"
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["north", "south", "east", "west", "up", "down", "none"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "stroke": {
+          "type": "string"
+        },
+        "stroke_width": {
+          "$ref": "#/$defs/finiteNumber"
+        },
+        "line_cap": {
+          "type": "string",
+          "enum": ["butt", "round", "square"]
+        },
+        "line_join": {
+          "type": "string",
+          "enum": ["miter", "round", "bevel"]
+        },
+        "fill": {
+          "type": "string"
+        },
+        "fill_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "primitiveBase": {
+      "type": "object",
+      "required": ["id", "type", "layer", "data"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": ["line", "arc", "polyline", "polygon", "ellipse"]
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["body", "axis", "annotation", "debug"]
+        },
+        "style_ref": {
+          "type": "string"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        }
+      }
+    },
+    "linePrimitive": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/primitiveBase"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "line"
+            },
+            "data": {
+              "type": "object",
+              "required": ["x1", "y1", "x2", "y2"],
+              "properties": {
+                "x1": { "$ref": "#/$defs/finiteNumber" },
+                "y1": { "$ref": "#/$defs/finiteNumber" },
+                "x2": { "$ref": "#/$defs/finiteNumber" },
+                "y2": { "$ref": "#/$defs/finiteNumber" }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "arcPrimitive": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/primitiveBase"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "arc"
+            },
+            "data": {
+              "type": "object",
+              "required": ["cx", "cy", "r", "start_angle", "end_angle", "clockwise"],
+              "properties": {
+                "cx": { "$ref": "#/$defs/finiteNumber" },
+                "cy": { "$ref": "#/$defs/finiteNumber" },
+                "r": { "$ref": "#/$defs/finiteNumber" },
+                "start_angle": { "$ref": "#/$defs/finiteNumber" },
+                "end_angle": { "$ref": "#/$defs/finiteNumber" },
+                "clockwise": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "polylinePrimitive": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/primitiveBase"
+        },
+        {
+          "properties": {
+            "type": {
+              "enum": ["polyline", "polygon"]
+            },
+            "data": {
+              "type": "object",
+              "required": ["points", "closed"],
+              "properties": {
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/pointArray"
+                  },
+                  "minItems": 2
+                },
+                "closed": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "ellipsePrimitive": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/primitiveBase"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "ellipse"
+            },
+            "data": {
+              "type": "object",
+              "required": ["cx", "cy", "rx", "ry", "rotation"],
+              "properties": {
+                "cx": { "$ref": "#/$defs/finiteNumber" },
+                "cy": { "$ref": "#/$defs/finiteNumber" },
+                "rx": { "$ref": "#/$defs/finiteNumber" },
+                "ry": { "$ref": "#/$defs/finiteNumber" },
+                "rotation": { "$ref": "#/$defs/finiteNumber" }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      ]
+    },
+    "primitive": {
+      "oneOf": [
+        { "$ref": "#/$defs/linePrimitive" },
+        { "$ref": "#/$defs/arcPrimitive" },
+        { "$ref": "#/$defs/polylinePrimitive" },
+        { "$ref": "#/$defs/ellipsePrimitive" }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["manual", "import_ascii", "import_idf", "import_catalog", "generated"]
+        },
+        "legacy": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

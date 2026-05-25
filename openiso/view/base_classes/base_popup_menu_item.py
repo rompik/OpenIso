@@ -14,11 +14,14 @@ _t = setup_i18n()
 class BaseMenuPopupItem(QPushButton):
     item_selected = pyqtSignal(str, str) # Emits (category, item_name)
 
-    def __init__(self, category, name, icon_path, size=48, parent=None):
+    def __init__(self, category, name, icon_path, size=48, item_width=None, parent=None):
         super().__init__(parent)
         self.category = category
         self.item_name = name
-        self.setFixedSize(size + 10, size + 25)
+        self.item_value = name
+        # Keep enough room for translated labels to wrap instead of clipping.
+        width = item_width if item_width is not None else (size + 28)
+        self.setFixedSize(width, size + 52)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setProperty("class", "BaseMenuPopupItem")
 
@@ -42,9 +45,13 @@ class BaseMenuPopupItem(QPushButton):
         self.icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.name_label = QLabel(name)
-        self.name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.name_label.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        self.name_label.setWordWrap(True)
+        self.name_label.setMinimumHeight(36)
+        self.name_label.setMaximumWidth(max(10, width - 8))
+        self.name_label.setToolTip(name)
         self.name_label.setProperty("class", "BasePopupItemName")
 
         layout.addWidget(self.icon_label)
         layout.addWidget(self.name_label)
-        self.clicked.connect(lambda: self.item_selected.emit(self.category, self.item_name))
+        self.clicked.connect(lambda: self.item_selected.emit(self.category, self.item_value))

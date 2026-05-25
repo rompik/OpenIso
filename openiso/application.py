@@ -12,7 +12,6 @@ application lifecycle and resource management.
 
 import os
 import sys
-import sysconfig
 from pathlib import Path
 from typing import Optional
 
@@ -24,10 +23,8 @@ try:
 except ImportError:
     from __init__ import __app_id__, __version__
 
-# Application constants (single source of truth)
-APP_NAME = 'OpenIso'
-ORG_NAME = 'io.github.rompik'
-ORG_DOMAIN = 'github.io'
+from openiso.core.app_context import AppContext, APP_NAME, ORG_NAME, ORG_DOMAIN
+from openiso.core.app_context import resolve_data_dir
 
 
 class Application:
@@ -38,7 +35,13 @@ class Application:
     and settings management.
     """
 
-    def __init__(self, app_id: Optional[str] = None, version: Optional[str] = None, pkgdatadir: Optional[str] = None):
+    def __init__(
+        self,
+        app_id: Optional[str] = None,
+        version: Optional[str] = None,
+        pkgdatadir: Optional[str] = None,
+        context: Optional[AppContext] = None,
+    ):
         """
         Initialize the application.
 
@@ -47,50 +50,27 @@ class Application:
             version: Application version string
             pkgdatadir: Package data directory path
         """
-        self.app_id = app_id or __app_id__
-        self.version = version or __version__
-        self.pkgdatadir = Path(pkgdatadir) if pkgdatadir else Application._find_data_dir()
+        self._context = context or AppContext.build(
+            app_id or __app_id__,
+            version or __version__,
+            pkgdatadir,
+        )
+
+        self.app_id = self._context.app_id
+        self.version = self._context.version
+        self.pkgdatadir = self._context.data_dir
 
         # Pre-compute paths once to avoid repeated operations
-        self.icons_dir: Path = self.pkgdatadir / 'icons'
-        self.settings_dir: Path = self.pkgdatadir / 'settings'
-        self.database_dir: Path = self.pkgdatadir / 'database'
+        self.icons_dir: Path = self._context.paths.icons
+        self.settings_dir: Path = self._context.paths.settings
+        self.database_dir: Path = self._context.paths.database
 
         self._qt_app: Optional[QApplication] = None
         self._settings: Optional[QSettings] = None
 
-    @staticmethod
-    def _find_data_dir() -> Path:
-        """Find the data directory for development or installed mode."""
-        # PyInstaller bundle: data is extracted to _MEIPASS
-        meipass = getattr(sys, '_MEIPASS', None)
-        if meipass is not None:
-            return Path(meipass) / 'data'
-
-        # Running from source: go up two levels from openiso/application.py
-        source_dir = Path(__file__).parent.parent / 'data'
-        if source_dir.exists():
-            return source_dir
-
-        # pip/venv installs with setuptools data-files
-        data_root = sysconfig.get_path('data')
-        if data_root:
-            data_dir = Path(data_root) / 'share' / 'openiso'
-            if data_dir.exists():
-                return data_dir
-
-        prefix_data_dir = Path(sys.prefix) / 'share' / 'openiso'
-        if prefix_data_dir.exists():
-            return prefix_data_dir
-
-        # Standard install locations
-        for prefix in ['/usr/local', '/usr', Path.home() / '.local']:
-            data_dir = Path(prefix) / 'share' / 'openiso'
-            if data_dir.exists():
-                return data_dir
-
-        # Fallback to current directory
-        return Path.cwd() / 'data'
+    @property
+    def context(self) -> AppContext:
+        return self._context
 
     @property
     def settings(self) -> QSettings:
@@ -104,6 +84,11 @@ class Application:
     def get_icon_path(self, icon_name: str) -> str:
         """Get full path to an icon file as string."""
         return str(self.icons_dir / icon_name)
+
+    @staticmethod
+    def _find_data_dir() -> Path:
+        """Backward-compatible data directory resolver for legacy callers/tests."""
+        return resolve_data_dir()
 
     def run(self, argv: Optional[list] = None) -> int:
         """

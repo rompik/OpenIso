@@ -4,8 +4,8 @@
 import os
 
 from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QFrame, QMenu, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QFrame, QPushButton, QVBoxLayout, QWidget
 
 from openiso.core.constants import BUTTON_SIZE, ICONS
 from openiso.core.i18n import setup_i18n
@@ -20,9 +20,9 @@ class DrawToolbarWidget(QWidget):
     def __init__(self, icons_path, parent=None):
         super().__init__(parent)
         self.icons_library_path = icons_path
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(5, 5, 5, 5)
-        self.layout.setSpacing(5)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setContentsMargins(5, 5, 5, 5)
+        self.main_layout.setSpacing(5)
         self.setup_ui()
 
     def _create_tool_button(self, tooltip, icon_path, size=BUTTON_SIZE, has_menu=False):
@@ -46,7 +46,7 @@ class DrawToolbarWidget(QWidget):
         line.setFrameShape(QFrame.Shape.HLine)
         line.setFrameShadow(QFrame.Shadow.Sunken)
         line.setProperty("class", "ToolbarSeparator")
-        self.layout.addWidget(line)
+        self.main_layout.addWidget(line)
 
     def setup_ui(self):
         # 1. Edit / History Group
@@ -70,9 +70,12 @@ class DrawToolbarWidget(QWidget):
         # Define line tools grouped structure
         self.line_groups = {
             _t("Lines"): {
-                _t("Line"): ICONS["line"],
-                _t("Polyline"): ICONS["polyline"],
-                _t("Orthogonal Polyline"): ICONS["polyline_orthogonal"]
+                "Line": {"label": _t("Line"), "icon": ICONS["line"]},
+                "Polyline": {"label": _t("Polyline"), "icon": ICONS["polyline"]},
+                "Orthogonal Polyline": {
+                    "label": _t("Orthogonal Polyline"),
+                    "icon": ICONS["polyline_orthogonal"],
+                },
             }
         }
 
@@ -83,19 +86,19 @@ class DrawToolbarWidget(QWidget):
         # Define shape tools grouped structure
         self.shapes_groups = {
             _t("Basic Shapes"): {
-                _t("Square"): ICONS["square"],
-                _t("Rectangle"): ICONS["rectangle"],
-                _t("Circle"): ICONS["circle"],
-                _t("Triangle"): ICONS["triangle"]
+                "Square": {"label": _t("Square"), "icon": ICONS["square"]},
+                "Rectangle": {"label": _t("Rectangle"), "icon": ICONS["rectangle"]},
+                "Circle": {"label": _t("Circle"), "icon": ICONS["circle"]},
+                "Triangle": {"label": _t("Triangle"), "icon": ICONS["triangle"]},
             },
             _t("Special Shapes"): {
-                _t("Cap"): ICONS["cap"],
-                _t("Diamond"): ICONS["diamond"],
-                _t("Pentagon"): ICONS["pentagon"],
-                _t("Hexagon"): ICONS["hexagon"],
-                _t("Octagon"): ICONS["octagon"],
-                _t("Dodecagon"): ICONS["dodecagon"]
-            }
+                "Cap": {"label": _t("Cap"), "icon": ICONS["cap"]},
+                "Diamond": {"label": _t("Diamond"), "icon": ICONS["diamond"]},
+                "Pentagon": {"label": _t("Pentagon"), "icon": ICONS["pentagon"]},
+                "Hexagon": {"label": _t("Hexagon"), "icon": ICONS["hexagon"]},
+                "Octagon": {"label": _t("Octagon"), "icon": ICONS["octagon"]},
+                "Dodecagon": {"label": _t("Dodecagon"), "icon": ICONS["dodecagon"]},
+            },
         }
 
         self.btn_fill_color = self._create_tool_button("Fill Color", ICONS["fill_colors"])
@@ -106,7 +109,7 @@ class DrawToolbarWidget(QWidget):
         # Add to layout with groups and separators
         conn_group = [self.btn_plot_connections, self.btn_plot_point_spindle]
         for btn in conn_group:
-            self.layout.addWidget(btn)
+            self.main_layout.addWidget(btn)
 
         self._add_separator()
 
@@ -116,13 +119,13 @@ class DrawToolbarWidget(QWidget):
         ]
 
         for btn in shape_group:
-            self.layout.addWidget(btn)
+            self.main_layout.addWidget(btn)
 
         self._add_separator()
-        self.layout.addWidget(self.btn_fill_color)
-        self.layout.addWidget(self.btn_hatch)
-        self.layout.addStretch()
-        self.layout.addWidget(self.btn_clear_sheet)
+        self.main_layout.addWidget(self.btn_fill_color)
+        self.main_layout.addWidget(self.btn_hatch)
+        self.main_layout.addStretch()
+        self.main_layout.addWidget(self.btn_clear_sheet)
 
     def setup_line_menu(self, callback):
         """Setup the line tools menu with grouped popup.

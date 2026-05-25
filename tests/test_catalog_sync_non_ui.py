@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 
 import openiso.core.i18n as i18n
+from openiso import __app_id__, __version__
+from openiso.core.app_context import AppContext
 from openiso.controller.services import SkeyService
 
 
@@ -17,6 +19,10 @@ def _make_data_path(tmp_path: Path) -> Path:
     (data_path / "database").mkdir(parents=True, exist_ok=True)
     (data_path / "settings").mkdir(parents=True, exist_ok=True)
     return data_path
+
+
+def _make_context(data_path: Path) -> AppContext:
+    return AppContext.build(__app_id__, __version__, pkgdatadir=str(data_path))
 
 
 def _write_catalog(data_path: Path, payload: dict) -> None:
@@ -57,7 +63,7 @@ def test_catalog_sync_inserts_official_symbol(tmp_path, monkeypatch):
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     result = service.sync_official_catalog("1.0.0")
     assert result["synced"] is True
     assert result["inserted"] == 1
@@ -91,7 +97,7 @@ def test_catalog_sync_normalizes_legacy_raw_geometry(tmp_path, monkeypatch):
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     result = service.sync_official_catalog("1.0.0")
 
     assert result["inserted"] == 1
@@ -122,7 +128,7 @@ def test_catalog_sync_preserves_user_modified_symbol(tmp_path, monkeypatch):
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     service.sync_official_catalog("1.0.0")
 
     service.update_skey(
@@ -189,7 +195,7 @@ def test_catalog_sync_skips_user_symbol_with_same_name(tmp_path, monkeypatch):
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     service.update_skey(
         name="ABCD",
         group_key="custom",
@@ -249,7 +255,7 @@ def test_resolve_conflict_accept_upstream_replaces_local_fork(tmp_path, monkeypa
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     service.sync_official_catalog("1.0.0")
     service.update_skey(
         name="ABCD",
@@ -315,7 +321,7 @@ def test_get_sync_conflict_details_returns_local_and_upstream_snapshots(tmp_path
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     service.sync_official_catalog("1.0.0")
     service.update_skey(
         name="ABCD",
@@ -382,7 +388,7 @@ def test_resolve_conflict_keep_local_acknowledges_upstream(tmp_path, monkeypatch
         },
     )
 
-    service = SkeyService(data_path=str(data_path), use_db=True)
+    service = SkeyService(use_db=True, context=_make_context(data_path))
     service.sync_official_catalog("1.0.0")
     service.update_skey(
         name="ABCD",

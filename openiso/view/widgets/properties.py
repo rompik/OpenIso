@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2024 OpenIso Roman PARYGIN
 
+import json
 import os
+import logging
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt, QRegularExpression
+from PyQt6.QtGui import QColor, QPixmap, QTextCharFormat, QSyntaxHighlighter
 from PyQt6.QtWidgets import (
     QButtonGroup,
     QCheckBox,
@@ -14,9 +16,10 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QListWidget,
+    QPlainTextEdit,
     QPushButton,
     QRadioButton,
+    QSizePolicy,
     QTextEdit,
     QVBoxLayout,
 )
@@ -24,6 +27,45 @@ from PyQt6.QtWidgets import (
 from openiso.core.i18n import setup_i18n
 
 _t = setup_i18n()
+logger = logging.getLogger(__name__)
+
+
+class JsonSyntaxHighlighter(QSyntaxHighlighter):
+    """Simple JSON syntax highlighter for read-only preview blocks."""
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        key_format = QTextCharFormat()
+        key_format.setForeground(QColor("#005cc5"))
+        key_format.setFontWeight(700)
+
+        string_format = QTextCharFormat()
+        string_format.setForeground(QColor("#22863a"))
+
+        number_format = QTextCharFormat()
+        number_format.setForeground(QColor("#b31d28"))
+
+        literal_format = QTextCharFormat()
+        literal_format.setForeground(QColor("#6f42c1"))
+
+        punct_format = QTextCharFormat()
+        punct_format.setForeground(QColor("#586069"))
+
+        self._rules = [
+            (QRegularExpression(r'"([^"\\]|\\.)*"(?=\s*:)'), key_format),
+            (QRegularExpression(r'"([^"\\]|\\.)*"'), string_format),
+            (QRegularExpression(r'\b-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?\b'), number_format),
+            (QRegularExpression(r'\b(true|false|null)\b'), literal_format),
+            (QRegularExpression(r'[\{\}\[\]:,]'), punct_format),
+        ]
+
+    def highlightBlock(self, text):
+        for pattern, text_format in self._rules:
+            iterator = pattern.globalMatch(text)
+            while iterator.hasNext():
+                match = iterator.next()
+                self.setFormat(match.capturedStart(), match.capturedLength(), text_format)
 
 class PropertiesWidget(QGroupBox):
     """
@@ -33,7 +75,7 @@ class PropertiesWidget(QGroupBox):
     def __init__(self, title, icons_path, parent=None):
         super().__init__(title, parent)
         self.icons_library_path = icons_path
-        self.setFixedWidth(340)
+        self.setMinimumWidth(300)
         self.grid_properties = QGridLayout()
         self.setLayout(self.grid_properties)
 
@@ -139,10 +181,13 @@ class PropertiesWidget(QGroupBox):
 
         self.chk_isogen_standard = QCheckBox(_t("ISOGEN Standard"))
 
-        self.lbl_geometry = QLabel(_t("Geometry"))
-        self.lst_geometry = QListWidget()
-        self.lst_geometry.setMaximumHeight(120)
+        self.lbl_geometry = QLabel(_t("Symbol JSON"))
+        self.lst_geometry = QPlainTextEdit()
+        self.lst_geometry.setReadOnly(True)
+        self.lst_geometry.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
         self.lst_geometry.setMinimumHeight(60)
+        self.lst_geometry.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.geometry_highlighter = JsonSyntaxHighlighter(self.lst_geometry.document())
 
         self.btn_save = QPushButton(_t("Save Changes to Skey File"))
         self.btn_save.setToolTip(_t("Save Changes to Skey File"))
@@ -180,10 +225,34 @@ class PropertiesWidget(QGroupBox):
         self.grid_properties.addWidget(self.chk_user_definable, 16, 0, 1, 2)
         self.grid_properties.addWidget(self.chk_flow_dependency, 17, 0, 1, 2)
         self.grid_properties.addWidget(self.chk_isogen_standard, 18, 0, 1, 2)
-        #self.grid_properties.addWidget(self.lbl_geometry, 10, 0)
-        #self.grid_properties.addWidget(self.lst_geometry, 11, 0, 1, 2)
-        #self.grid_properties.setRowStretch(10, 1)
         self.grid_properties.addWidget(self.btn_save, 19, 0, 1, 2)
+        self.grid_properties.addWidget(self.lbl_geometry, 20, 0)
+        self.grid_properties.addWidget(self.lst_geometry, 21, 0, 1, 2)
+        self.grid_properties.setRowStretch(21, 1)
+
+        self._apply_hidden_properties_for_v090_todo()
+
+    def _apply_hidden_properties_for_v090_todo(self):
+        """Hide deferred fields in Properties panel until v0.9.0 scope is finalized."""
+        # TODO(v0.9.0): Re-enable these fields after UX/data-model finalization.
+        hidden_widgets = [
+            self.lbl_skey_code,
+            self.txt_skey,
+            self.lbl_source_type,
+            self.cb_source_type,
+            self.lbl_source_name,
+            self.txt_source_name,
+            self.lbl_source_version,
+            self.txt_source_version,
+            self.lbl_pcf_identification,
+            self.txt_pcf_identification,
+            self.lbl_idf_record,
+            self.txt_idf_record,
+            self.chk_isogen_standard,
+            self.chk_user_definable,
+        ]
+        for widget in hidden_widgets:
+            widget.setVisible(False)
 
     def clear_fields(self):
         """Clears all input fields in the properties widget."""
@@ -208,35 +277,16 @@ class PropertiesWidget(QGroupBox):
         self.chk_user_definable.setChecked(True)
         self.chk_flow_dependency.setChecked(False)
         self.chk_isogen_standard.setChecked(False)
-        self.lst_geometry.clear()
+        self.lst_geometry.setPlainText("{}")
 
     def update_translations(self, _t):
         """Redraws and re-translates all static UI elements."""
-        self.setTitle(_t("Properties"))
-        self.lbl_skey_code.setText(_t("Code"))
+        self.setTitle("")
         self.lbl_alias_code.setText(_t("Alias Code"))
         self.lbl_skey_group.setText(_t("Group"))
         self.lbl_skey_subgroup.setText(_t("Subgroup"))
         self.lbl_spindle.setText(_t("Spindle"))
-        self.lbl_source_type.setText(_t("Source Type"))
-        self.lbl_source_name.setText(_t("Source Name"))
-        self.lbl_source_version.setText(_t("Source Version"))
-        self.lbl_pcf_identification.setText(_t("PCF Identification"))
-        self.lbl_idf_record.setText(_t("IDF Record"))
-
-        source_options = [
-            (_t("Standard"), "standard"),
-            (_t("Company"), "company"),
-            (_t("Project"), "project"),
-        ]
-        current_source_type = self.cb_source_type.currentData() or "standard"
-        self.cb_source_type.blockSignals(True)
-        self.cb_source_type.clear()
-        for text, value in source_options:
-            self.cb_source_type.addItem(text, value)
-        index = self.cb_source_type.findData(current_source_type)
-        self.cb_source_type.setCurrentIndex(index if index >= 0 else 0)
-        self.cb_source_type.blockSignals(False)
+        # TODO(v0.9.0): Restore translations for deferred fields when re-enabled.
 
         self.group_description.setTitle(_t("Description"))
         self.group_orientation.setTitle(_t("Orientation"))
@@ -244,10 +294,8 @@ class PropertiesWidget(QGroupBox):
         self.chk_dimensioned.setText(_t("Dimensioned"))
         self.chk_tracing.setText(_t("Tracing"))
         self.chk_insulation.setText(_t("Insulation"))
-        self.chk_user_definable.setText(_t("User Definable"))
         self.chk_flow_dependency.setText(_t("Flow Dependency"))
-        self.chk_isogen_standard.setText(_t("ISOGEN Standard"))
-        self.lbl_geometry.setText(_t("Geometry"))
+        self.lbl_geometry.setText(_t("Symbol JSON"))
         self.btn_save.setText(_t("Save Changes to Skey File"))
         self.btn_save.setToolTip(_t("Save Changes to Skey File"))
 
@@ -261,22 +309,108 @@ class PropertiesWidget(QGroupBox):
             radio.setToolTip(text)
             label.setToolTip(text)
 
-    def display_geometry(self, geometry):
-        """Display geometry items in the list widget"""
-        self.lst_geometry.clear()
+    def _parse_geometry_json_items(self, geometry):
+        """Convert geometry string items into a compact JSON structure."""
         if not geometry:
-            return
+            return []
 
+        json_items = []
         for item_str in geometry:
             try:
-                # Format: "Type: param1=value1 param2=value2"
-                parts = item_str.split(':', 1)
+                if not isinstance(item_str, str):
+                    json_items.append(self._json_safe(item_str))
+                    continue
+
+                parts = item_str.split(":", 1)
                 item_type = parts[0].strip()
-                params = parts[1].strip() if len(parts) > 1 else ""
-                self.lst_geometry.addItem(f"{item_type}: {params}")
-            except Exception as e:
-                print(f"Error displaying geometry item: {e}")
-                self.lst_geometry.addItem(str(item_str))
+                params = {}
+                if len(parts) > 1:
+                    for token in parts[1].strip().split():
+                        if "=" in token:
+                            key, value = token.split("=", 1)
+                            params[key.strip()] = self._coerce_number(value.strip())
+
+                # Compact tuples in valid JSON form:
+                # Point: ["ArrivePoint", [x, y], "BW"]
+                # Line:  ["Line", [x1, y1], [x2, y2]]
+                if item_type in ("ArrivePoint", "LeavePoint", "TeePoint", "SpindlePoint"):
+                    x = params.get("x0")
+                    y = params.get("y0")
+                    point_type = params.get("type")
+                    if x is not None and y is not None:
+                        compact_item = [item_type, [x, y]]
+                        if point_type not in (None, ""):
+                            compact_item.append(point_type)
+                        json_items.append(compact_item)
+                        continue
+
+                if item_type == "Line":
+                    x1 = params.get("x1")
+                    y1 = params.get("y1")
+                    x2 = params.get("x2")
+                    y2 = params.get("y2")
+                    if None not in (x1, y1, x2, y2):
+                        json_items.append([item_type, [x1, y1], [x2, y2]])
+                        continue
+
+                # Fallback for other primitives keeps compact pair [type, params].
+                json_items.append([item_type, params])
+            except (ValueError, TypeError, AttributeError, IndexError) as err:
+                logger.warning("Error displaying geometry item: %s", err)
+                json_items.append(str(item_str))
+
+        return json_items
+
+    @staticmethod
+    def _coerce_number(value):
+        """Convert numeric strings to int/float, keep non-numeric values unchanged."""
+        try:
+            if any(ch in value for ch in (".", "e", "E")):
+                return float(value)
+            return int(value)
+        except (TypeError, ValueError):
+            return value
+
+    @staticmethod
+    def _json_safe(value):
+        """Return a JSON-serializable representation for arbitrary values."""
+        try:
+            json.dumps(value)
+            return value
+        except (TypeError, ValueError):
+            return str(value)
+
+    def _build_symbol_json_payload(self, geometry):
+        """Build a full symbol snapshot from current form fields and geometry."""
+        return {
+            "skey_code": self.txt_skey.text().strip(),
+            "alias_code": self.txt_alias_code.text().strip(),
+            "group_key": self.cb_skey_group.currentData() or self.cb_skey_group.currentText(),
+            "subgroup_key": self.cb_skey_subgroup.currentData() or self.cb_skey_subgroup.currentText(),
+            "description": self.txt_skey_desc.toPlainText(),
+            "spindle_skey": self.cb_spindle_skey.currentText(),
+            "orientation": self.orientation_button_group.checkedId(),
+            "flow_arrow": self.chk_flow_arrow.isChecked(),
+            "dimensioned": self.chk_dimensioned.isChecked(),
+            "tracing": self.chk_tracing.isChecked(),
+            "insulation": self.chk_insulation.isChecked(),
+            "user_definable": self.chk_user_definable.isChecked(),
+            "flow_dependency": self.chk_flow_dependency.isChecked(),
+            "isogen_standard": self.chk_isogen_standard.isChecked(),
+            "source": {
+                "type": self.cb_source_type.currentData() or "standard",
+                "name": self.txt_source_name.text().strip(),
+                "version": self.txt_source_version.text().strip(),
+                "pcf_identification": self.txt_pcf_identification.text().strip(),
+                "idf_record": self.txt_idf_record.text().strip(),
+            },
+            "geometry": self._parse_geometry_json_items(geometry),
+        }
+
+    def display_geometry(self, geometry):
+        """Display a full symbol JSON payload (including geometry)."""
+        payload = self._build_symbol_json_payload(geometry)
+        self.lst_geometry.setPlainText(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
 
     def update_spindles(self, spindles):
         """Updates the list of available spindles in the combobox."""
@@ -354,9 +488,6 @@ class PropertiesWidget(QGroupBox):
         self.txt_pcf_identification.setText(getattr(skey_data, "pcf_identification", "") or "")
         self.txt_idf_record.setText(getattr(skey_data, "idf_record", "") or "")
         self.txt_skey_desc.setPlainText(_t(skey_data.description_key) or "")
-
-        # Display geometry in the list
-        self.display_geometry(skey_data.geometry)
 
         if 0 <= skey_data.orientation < len(self.radio_orientations):
             self.radio_orientations[skey_data.orientation].setChecked(True)

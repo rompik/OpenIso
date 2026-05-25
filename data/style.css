@@ -288,6 +288,7 @@ QTextBrowser {
 .BasePopupItemName {
     font-size: 12px;
     background: transparent;
+    line-height: 1.1em;
 }
 
 /* Base Menu Popup Items Styles */
@@ -323,6 +324,7 @@ QTextBrowser {
     color: #555;
     background: transparent;
     padding-left: 5px;
+    padding-right: 5px;
 }
 
 .BasePopupMenuGrid {

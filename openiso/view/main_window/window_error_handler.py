@@ -5,11 +5,14 @@
 
 from __future__ import annotations
 
-import traceback
+import logging
 
 from PyQt6.QtWidgets import QMessageBox
 
 from openiso.core.i18n import _t
+
+
+logger = logging.getLogger(__name__)
 
 
 class WindowErrorHandler:
@@ -17,8 +20,7 @@ class WindowErrorHandler:
 
     @staticmethod
     def handle_save_error(error: Exception) -> None:
-        print(f"Error saving Skey: {error}")
-        traceback.print_exc()
+        logger.exception("Error saving Skey: %s", error)
 
     @staticmethod
     def handle_export_error(parent, error: Exception) -> None:
@@ -27,4 +29,4 @@ class WindowErrorHandler:
             _t("Export Error"),
             _t("Failed to export Skey: {0}").format(str(error)),
         )
-        print(f"Export error: {error}")
+        logger.error("Export error: %s", error)

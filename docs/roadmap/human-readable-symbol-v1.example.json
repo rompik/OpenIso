@@ -1,0 +1,141 @@
+{
+  "format": "OpenIso.Symbol.HR",
+  "schema_version": 1,
+  "symbol": {
+    "code": "VAVW",
+    "name": "Gate Valve",
+    "description": "Gate valve with straight-through bore",
+    "group": "valves",
+    "subgroup": "gate",
+    "units": "mm",
+    "origin": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "classification": {
+      "pcf_identification": "VALVE",
+      "idf_record": 50,
+      "flow_arrow": false,
+      "flow_dependency": true,
+      "user_definable": true,
+      "code_pattern": "VA**",
+      "end_condition_tokens": ["BW", "SW", "FL", "SC"],
+      "pattern_params": {
+        "segments": 1,
+        "bend_radius": 1
+      }
+    },
+    "connectors": [
+      {
+        "id": "c_in",
+        "kind": "arrive",
+        "x": -22.5,
+        "y": 0.0,
+        "direction": "west",
+        "required": true
+      },
+      {
+        "id": "c_out",
+        "kind": "leave",
+        "x": 22.5,
+        "y": 0.0,
+        "direction": "east",
+        "required": true
+      },
+      {
+        "id": "c_sp",
+        "kind": "spindle",
+        "x": 0.0,
+        "y": 12.0,
+        "required": false,
+        "meta": {
+          "legacy_point_type": "6"
+        }
+      }
+    ],
+    "style": {
+      "stroke_main": {
+        "stroke": "#111111",
+        "stroke_width": 2.0,
+        "line_cap": "round",
+        "line_join": "round"
+      },
+      "fill_soft": {
+        "stroke": "#111111",
+        "stroke_width": 1.0,
+        "fill": "#C8C8C8",
+        "fill_opacity": 0.35
+      }
+    },
+    "primitives": [
+      {
+        "id": "p1",
+        "type": "line",
+        "layer": "body",
+        "style_ref": "stroke_main",
+        "data": {
+          "x1": -22.5,
+          "y1": 0.0,
+          "x2": -8.0,
+          "y2": 0.0
+        }
+      },
+      {
+        "id": "p2",
+        "type": "line",
+        "layer": "body",
+        "style_ref": "stroke_main",
+        "data": {
+          "x1": 8.0,
+          "y1": 0.0,
+          "x2": 22.5,
+          "y2": 0.0
+        }
+      },
+      {
+        "id": "p3",
+        "type": "polygon",
+        "layer": "body",
+        "style_ref": "fill_soft",
+        "data": {
+          "points": [[-8.0, -6.0], [8.0, -6.0], [8.0, 6.0], [-8.0, 6.0]],
+          "closed": true
+        }
+      },
+      {
+        "id": "p4",
+        "type": "line",
+        "layer": "body",
+        "style_ref": "stroke_main",
+        "data": {
+          "x1": -8.0,
+          "y1": -6.0,
+          "x2": 8.0,
+          "y2": 6.0
+        }
+      },
+      {
+        "id": "p5",
+        "type": "line",
+        "layer": "body",
+        "style_ref": "stroke_main",
+        "data": {
+          "x1": -8.0,
+          "y1": 6.0,
+          "x2": 8.0,
+          "y2": -6.0
+        }
+      }
+    ],
+    "meta": {
+      "author": "openiso-team",
+      "created_at": "2026-05-16T10:00:00Z",
+      "updated_at": "2026-05-16T12:30:00Z",
+      "source": "import_idf",
+      "legacy": {
+        "record_502_count": 11
+      },
+      "tags": ["valve", "gate", "idf-migrated"]
+    }
+  }
+}
