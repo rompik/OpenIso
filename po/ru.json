@@ -168,7 +168,12 @@
     }
   },
   "unknown": {
-    "_name": "Неизвестно"
+    "_name": "unknown",
+    "unknown": {
+      "_name": "unknown",
+      "ii": "II",
+      "03ht": "03HT"
+    }
   },
   "couplings": {
     "_name": "couplings",
@@ -518,11 +523,12 @@
   "instruments": {
     "_name": "instruments",
     "3_way_control_valve": {
-      "_name": "3_way_control_valve",
+      "_name": "3-way_control_valve",
       "c3": {
         "_name": "C3",
         "description": ""
-      }
+      },
+      "ii": "II"
     },
     "4_way_control_valve": {
       "_name": "4-Way Control Valve",
@@ -1241,7 +1247,7 @@
     }
   },
   "clamped_joints": {
-    "_name": "Clamped Joints",
+    "_name": "clamped_joints",
     "grayloc_type_coupling": {
       "_name": "Grayloc-type coupling",
       "clgy": {
@@ -1250,11 +1256,12 @@
       }
     },
     "flared_clamp": {
-      "_name": "Flared Clamp",
+      "_name": "flared_clamp",
       "clmp": {
         "_name": "CLMP",
         "description": ""
-      }
+      },
+      "02ht": "02HT"
     },
     "victaulic_welded__forded_ring_type": {
       "_name": "Victaulic (Welded /Forded ring type)",
