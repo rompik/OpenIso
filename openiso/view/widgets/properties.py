@@ -473,7 +473,7 @@ class PropertiesWidget(QGroupBox):
         return f"{group_key}-{subgroup_key}-{name}"
 
     def load_skey_data(self, skey_data):
-        self.txt_skey.setText(self._generate_skey_code(skey_data))
+        self.txt_skey.setText(skey_data.name or self._generate_skey_code(skey_data))
         self.txt_alias_code.setText(skey_data.name)
         self.cb_skey_group.setCurrentText(_t(skey_data.group_key))
         # Use full path for subgroup translation

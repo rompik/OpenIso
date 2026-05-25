@@ -86,6 +86,16 @@
   </content_rating>
 
   <releases>
+    <release version="0.8.5" date="2026-05-26">
+      <description>
+        <p>Major update focused on editor workflow, catalog synchronization, and packaging reliability:</p>
+        <p>• Added resizable properties panel, live Skey property synchronization, and compact JSON symbol view</p>
+        <p>• Expanded symbol source metadata and release catalog synchronization workflow</p>
+        <p>• Improved database schema and migration scripts for symbol source/version tracking</p>
+        <p>• Improved help/documentation path handling and updated localization catalogs</p>
+        <p>• Refined CI/publish workflow and runtime version/data-path resolution for packaged builds</p>
+      </description>
+    </release>
     <release version="0.5.0" date="2026-02-08">
       <description>
         <p>Stable release with export capabilities and core fixes:</p>

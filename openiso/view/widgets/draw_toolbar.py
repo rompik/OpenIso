@@ -21,9 +21,13 @@ class DrawToolbarWidget(QWidget):
         super().__init__(parent)
         self.icons_library_path = icons_path
         self.main_layout = QVBoxLayout(self)
-        self.main_layout.setContentsMargins(5, 5, 5, 5)
-        self.main_layout.setSpacing(5)
+        self.main_layout.setContentsMargins(2, 2, 2, 2)
+        self.main_layout.setSpacing(3)
         self.setup_ui()
+        # Keep toolbar compact: width follows button size plus layout margins.
+        margins = self.main_layout.contentsMargins()
+        toolbar_width = BUTTON_SIZE + margins.left() + margins.right()
+        self.setFixedWidth(toolbar_width)
 
     def _create_tool_button(self, tooltip, icon_path, size=BUTTON_SIZE, has_menu=False):
         btn = QPushButton()
