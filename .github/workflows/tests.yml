@@ -29,7 +29,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .[dev]
+    - name: Install Qt system dependencies
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -y --no-install-recommends \
+          libegl1 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-randr0 \
+          libxcb-render-util0 \
+          libxcb-xinerama0 \
+          libxkbcommon-x11-0
     - name: Schema validation
       run: python -m pytest -q tests/test_canonical_schema_non_ui.py
     - name: Run tests
       run: python -m pytest -q tests
+      env:
+        QT_QPA_PLATFORM: offscreen
+        PYTEST_QT_API: pyqt6
