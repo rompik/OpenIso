@@ -13,9 +13,9 @@ from openiso.model.skey import SkeyData
 class WindowController:
     """Thin orchestration layer between SkeyEditor UI and SkeyService."""
 
-    def __init__(self, context: AppContext, use_db: bool = True):
+    def __init__(self, context: AppContext, use_db: bool = True, db_path: str | None = None):
         self._context = context
-        self.skey_service = SkeyService(use_db=use_db, context=context)
+        self.skey_service = SkeyService(use_db=use_db, context=context, db_path=db_path)
         self._last_sync_result: dict | None = None
 
     def load_initial_data(self, release_version: str | None = None) -> bool:
@@ -85,3 +85,15 @@ class WindowController:
             geometry=geometry,
         )
         return self.skey_service.export_skey_to_ascii(skey)
+
+    def export_all_skeys_to_ascii(self) -> str:
+        return self.skey_service.export_all_skeys_to_ascii()
+
+    def export_all_skeys_to_ois_payload(self) -> dict:
+        return self.skey_service.export_all_skeys_to_ois_payload()
+
+    def get_database_path(self) -> str:
+        return self.skey_service.get_database_path()
+
+    def switch_database(self, db_path: str) -> bool:
+        return self.skey_service.switch_database(db_path)

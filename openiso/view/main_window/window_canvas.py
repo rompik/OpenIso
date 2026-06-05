@@ -127,7 +127,7 @@ class CanvasMixin:
             self.scene.current_action = ""
             return
 
-        QMainWindow.keyPressEvent(self, event)  # type: ignore[arg-type]
+        QMainWindow.keyPressEvent(self, event)
 
     def _on_focus_item_changed(self, newItem, _oldItem, reason):
         """Slot to handle focus changes between items (currently a placeholder)."""
@@ -140,11 +140,7 @@ class CanvasMixin:
 
     def clear_canvas(self):
         """Removes all user-drawn graphical elements from the current editing session."""
-        for item in self.scene.symbol_drawlist:
-            self.scene.removeItem(item)
-        self.scene.symbol_drawlist.clear()
-        if hasattr(self, 'preview_widget'):
-            self.preview_widget.update_preview([], self.origin_x, self.origin_y)
+        self.scene.clear_symbol_drawlist()
 
     def select_all_items(self):
         """Select all items on the canvas."""

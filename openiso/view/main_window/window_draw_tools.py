@@ -23,6 +23,14 @@ logger = logging.getLogger(__name__)
 class DrawToolsMixin:
     """Mixin providing draw tool actions for SkeyEditor."""
 
+    def _set_active_edit_tool(self, tool_name: str | None = None):
+        toolbar = getattr(self, "draw_toolbar_widget", None)
+        if toolbar is None:
+            return
+
+        toolbar.btn_plot_select_element.setChecked(tool_name == "select")
+        toolbar.btn_move.setChecked(tool_name == "move")
+
     # -----------------------------------------------------------------
     # Shape shortcut handlers
     # -----------------------------------------------------------------
@@ -217,10 +225,13 @@ class DrawToolsMixin:
         QApplication.restoreOverrideCursor()
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.CrossCursor))
         self.scene.current_action = action
+        self._set_active_edit_tool(None)
+        self.scene.show_move_handles = False
         for item in self.scene.symbol_drawlist:
             if not isinstance(item, PointItem):
                 item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, False)
                 item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+        self.scene.update_selection_handles()
 
     # -----------------------------------------------------------------
     # Selection / move / rotate / scale
@@ -231,6 +242,8 @@ class DrawToolsMixin:
         QApplication.restoreOverrideCursor()
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.ArrowCursor))
         self.scene.current_action = "select_element"
+        self._set_active_edit_tool("select")
+        self.scene.show_move_handles = False
         self.scene.clearSelection()
         if hasattr(self.scene, 'selected_for_highlight'):
             for item in self.scene.selected_for_highlight:
@@ -245,16 +258,21 @@ class DrawToolsMixin:
             self.scene.selected_for_highlight.clear()
         for item in self.scene.symbol_drawlist:
             if not isinstance(item, PointItem):
-                item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, False)
+                item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
+                item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+        self.scene.update_selection_handles()
 
     def _on_move_tool_clicked(self):
         """Activates the move tool to relocate elements on the canvas."""
         QApplication.restoreOverrideCursor()
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.SizeAllCursor))
         self.scene.current_action = "move_element"
+        self._set_active_edit_tool("move")
+        self.scene.show_move_handles = True
         for item in self.scene.symbol_drawlist:
             item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
             item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+        self.scene.update_selection_handles()
 
     def _on_rotate_tool_clicked(self):
         """Rotates selected elements on the canvas by 90 degrees."""

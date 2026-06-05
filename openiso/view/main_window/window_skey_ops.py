@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import logging
 
@@ -14,7 +15,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
 from openiso.controller.skey_request_mapper import (
-    build_export_payload,
     build_save_payload,
     resolve_skey_name,
 )
@@ -34,9 +34,12 @@ class SkeyOpsMixin:
 
     def _on_create_skey_requested(self):
         """Prepares the editor for creating a new Skey."""
+        self._is_creating_new_skey = True
         self.current_skey_data = None
         self.properties_widget.clear_fields()
         self.scene.clear_symbol_drawlist()
+        if hasattr(self, "_set_save_button_dirty"):
+            self._set_save_button_dirty(True)
         if hasattr(self, "_update_all_previews"):
             self._update_all_previews()
         else:
@@ -132,6 +135,9 @@ class SkeyOpsMixin:
             self.status_bar_widget.showMessage(
                 _t("Skey '{0}' saved successfully").format(skey_name), 3000
             )
+            self._is_creating_new_skey = False
+            if hasattr(self, "_set_save_button_dirty"):
+                self._set_save_button_dirty(False)
             logger.info("Skey '%s' saved successfully", skey_name)
             return True
 
@@ -182,31 +188,56 @@ class SkeyOpsMixin:
         logger.info("Import file clicked")
 
     def export_to_file(self):
-        """Exports the current Skey data to an Intergraph ASCII (.asc) file."""
+        """Export either current Skey as ASCII (.asc) or full DB snapshot as OIS (.ois)."""
         form_data = self.form_adapter.collect_export_form_data()
-        skey_name = form_data["skey_name"]
-        if not skey_name:
-            QMessageBox.warning(self, _t("Export Error"), _t("No Skey selected or name is empty"))
-            return
-        geometry = self._collect_geometry_from_scene()
-        skey_payload, geometry_payload = build_export_payload(form_data, geometry)
-
-        file_path, _ = QFileDialog.getSaveFileName(
-            self, _t("Export Skey as ASCII"),
+        skey_name = form_data.get("skey_name") or "openiso_skeys"
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self, _t("Export File"),
             os.path.join(os.path.expanduser("~"), f"{skey_name}.asc"),
-            _t("ASCII Symbolic File") + " (*.asc);;" + _t("All Files") + " (*)",
+            _t("ASCII Symbolic File") + " (*.asc);;"
+            + _t("OpenIso Skey File") + " (*.ois);;"
+            + _t("All Files") + " (*)",
         )
         if not file_path:
             return
 
         try:
-            ascii_content = self.controller.export_skey_to_ascii(skey_payload, geometry_payload)
-            with open(file_path, 'w', encoding='utf-8') as f:
+            export_path = file_path
+            ext = os.path.splitext(file_path)[1].lower()
+
+            export_kind = None
+            if ext == ".ois":
+                export_kind = "ois"
+            elif ext == ".asc":
+                export_kind = "asc"
+            elif ext == "":
+                if "*.ois" in selected_filter:
+                    export_kind = "ois"
+                    export_path = file_path + ".ois"
+                else:
+                    export_kind = "asc"
+                    export_path = file_path + ".asc"
+            else:
+                QMessageBox.warning(self, _t("Export Error"), _t("Unsupported export format"))
+                return
+
+            if export_kind == "ois":
+                payload = self.controller.export_all_skeys_to_ois_payload()
+                with open(export_path, 'w', encoding='utf-8') as f:
+                    json.dump(payload, f, ensure_ascii=False, indent=2)
+                self.status_bar_widget.showMessage(
+                    _t("Skeys exported to {0}").format(os.path.basename(export_path)), 3000
+                )
+                logger.info("All skeys exported to OIS: %s", export_path)
+                return
+
+            ascii_content = self.controller.export_all_skeys_to_ascii()
+            with open(export_path, 'w', encoding='utf-8') as f:
                 f.write(ascii_content)
             self.status_bar_widget.showMessage(
-                _t("Skey '{0}' exported to {1}").format(skey_name, os.path.basename(file_path)), 3000
+                _t("Skeys exported to {0}").format(os.path.basename(export_path)), 3000
             )
-            logger.info("Skey '%s' exported to %s", skey_name, file_path)
+            logger.info("All skeys exported to ASCII: %s", export_path)
         except (RuntimeError, ValueError, TypeError, OSError) as e:
             WindowErrorHandler.handle_export_error(self, e)
 

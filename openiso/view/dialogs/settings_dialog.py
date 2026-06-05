@@ -9,10 +9,12 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
+    QFileDialog,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QPushButton,
     QScrollArea,
     QSlider,
@@ -128,6 +130,30 @@ class SettingsDialog(QDialog):
         i18n_layout.addLayout(lang_layout)
 
         content_layout.addWidget(self.groupI18n)
+
+        # Database Settings Group
+        self.groupDatabase = QGroupBox(self._t("Database"))
+        db_layout = QVBoxLayout(self.groupDatabase)
+
+        db_row = QHBoxLayout()
+        self.lblDatabasePath = QLabel(self._t("Symbol Database:"))
+        self.txtDatabasePath = QLineEdit()
+        self.btnBrowseDatabase = QPushButton(self._t("Browse..."))
+        self.btnBrowseDatabase.clicked.connect(self._choose_database_path)
+
+        current_db_path = ""
+        if self._main_window is not None and hasattr(self._main_window, "controller"):
+            current_db_path = self._main_window.controller.get_database_path()
+
+        self.txtDatabasePath.setText(current_db_path)
+        self.txtDatabasePath.setPlaceholderText(self._t("Path to SQLite symbol database"))
+
+        db_row.addWidget(self.lblDatabasePath)
+        db_row.addWidget(self.txtDatabasePath, stretch=1)
+        db_row.addWidget(self.btnBrowseDatabase)
+        db_layout.addLayout(db_row)
+
+        content_layout.addWidget(self.groupDatabase)
 
         # Isometric View Settings Group
         self.groupIsoView = QGroupBox(self._t("Isometric View"))
@@ -306,6 +332,24 @@ class SettingsDialog(QDialog):
     def get_selected_language(self):
         """Returns the selected language code."""
         return self.cbLanguage.currentData()
+
+    def _choose_database_path(self):
+        """Open file dialog to pick a custom symbol database location."""
+        current_path = self.txtDatabasePath.text().strip()
+        start_dir = current_path if current_path else ""
+
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            self._t("Select Symbol Database"),
+            start_dir,
+            self._t("SQLite Database") + " (*.db *.sqlite *.sqlite3);;" + self._t("All Files") + " (*)",
+        )
+        if file_path:
+            self.txtDatabasePath.setText(file_path)
+
+    def get_database_path(self) -> str:
+        """Returns selected symbol database path."""
+        return self.txtDatabasePath.text().strip()
 
     def get_selected_isometric_view(self):
         """Returns the selected isometric view."""

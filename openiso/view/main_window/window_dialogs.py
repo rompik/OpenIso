@@ -7,8 +7,12 @@
 
 from __future__ import annotations
 
+from PyQt6.QtWidgets import QMessageBox
+
 from openiso import __version__
 from openiso.core.i18n import _t, get_current_language
+from openiso.core.user_settings import UserSettings
+from openiso.core.workspace import ensure_workspace
 from openiso.view.dialogs.about_dialog import AboutDialog
 from openiso.view.dialogs.help_window import HelpWindow
 from openiso.view.dialogs.keyboard_shortcuts_dialog import KeyboardShortcutsDialog
@@ -20,26 +24,54 @@ from openiso.view.ui_constants import update_point_colors, update_scene_colors
 class DialogsMixin:
     """Mixin providing settings, help, about and keyboard-shortcuts dialogs for SkeyEditor."""
 
+    def _get_user_settings(self) -> UserSettings:
+        if hasattr(self, "_application") and self._application is not None:
+            return self._application.settings
+
+        workspace = ensure_workspace()
+        return UserSettings(json_path=workspace.settings_file)
+
     def _on_settings_clicked(self):
         """Opens the settings dialog and handles configuration changes."""
         dialog = SettingsDialog(self)
         if dialog.exec():
+            settings = self._get_user_settings()
+
             lang_code = dialog.get_selected_language()
             if lang_code != get_current_language():
                 self._change_language(lang_code)
+            settings.set("language/code", lang_code)
 
             iso_view = dialog.get_selected_isometric_view()
             if hasattr(self, "_set_isometric_view_for_previews"):
                 self._set_isometric_view_for_previews(iso_view)
             else:
                 self.preview_widget.set_isometric_view(iso_view)
+            settings.set("preview/isometric_view", int(iso_view))
 
             if hasattr(self, "set_overlay_preview_visible"):
                 self.set_overlay_preview_visible(dialog.get_preview_visibility())
+                settings.set("preview/visible", dialog.get_preview_visibility())
             if hasattr(self, "set_overlay_preview_opacity"):
                 self.set_overlay_preview_opacity(dialog.get_preview_opacity())
+                settings.set("preview/opacity", dialog.get_preview_opacity())
+
+            selected_db_path = dialog.get_database_path()
+            if selected_db_path:
+                current_db_path = self.controller.get_database_path()
+                if selected_db_path != current_db_path:
+                    if self.controller.switch_database(selected_db_path):
+                        settings.set("database/path", selected_db_path)
+                        self.refresh_skey_tree()
+                    else:
+                        QMessageBox.warning(
+                            self,
+                            _t("Error"),
+                            _t("Failed to switch symbol database"),
+                        )
 
             self._apply_color_settings(dialog)
+            settings.sync()
 
             if hasattr(self, "_update_all_previews"):
                 self._update_all_previews()
@@ -66,6 +98,11 @@ class DialogsMixin:
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
+
+    def _on_whats_new_clicked(self):
+        """Displays What's New information inside About dialog."""
+        dialog = AboutDialog(self.icons_library_path, self, initial_page="whats_new")
+        dialog.exec()
 
     def _on_keyboard_shortcuts_clicked(self):
         """Displays the keyboard shortcuts dialog."""

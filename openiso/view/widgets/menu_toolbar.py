@@ -5,7 +5,7 @@ import os
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QWidget
+from PyQt6.QtWidgets import QHBoxLayout, QPushButton, QSizePolicy, QWidget
 
 from openiso.core.constants import BUTTON_SIZE, ICONS
 from openiso.core.i18n import setup_i18n
@@ -19,11 +19,13 @@ class MenuToolbarWidget(QWidget):
     def __init__(self, icons_path, parent=None):
         super().__init__(parent)
         self.setObjectName("MenuToolbar")
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         self.icons_library_path = icons_path
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(5, 5, 5, 5)
         self.layout.setSpacing(5)
         self.setup_ui()
+        self.setFixedHeight(self.sizeHint().height())
 
     def _create_tool_button(self, tooltip, icon_path=None, size=BUTTON_SIZE, text=None, icon_size=None):
         btn = QPushButton()
@@ -83,3 +85,14 @@ class MenuToolbarWidget(QWidget):
         self.btn_keyboard_shortcuts.setToolTip(_t("Keyboard Shortcuts"))
         self.btn_help.setToolTip(_t("Help"))
         self.btn_about.setToolTip(_t("About"))
+
+    def set_save_dirty_state(self, dirty: bool):
+        """Switch save button icon between saved and unsaved states."""
+        icon_key = "unsaved" if dirty else "save"
+        icon_rel_path = ICONS.get(icon_key)
+        if not icon_rel_path:
+            return
+
+        icon_full_path = os.path.join(self.icons_library_path, icon_rel_path)
+        if os.path.exists(icon_full_path):
+            self.btn_save.setIcon(QIcon(icon_full_path))

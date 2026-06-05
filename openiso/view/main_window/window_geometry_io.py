@@ -35,8 +35,7 @@ if TYPE_CHECKING:
 
 
 class GeometryIOMixin:
-    """Mixin providing geometry loading, serialisation
-    and coordinate helpers for SkeyEditor."""
+    """Mixin providing geometry loading, serialisation and coordinate helpers for SkeyEditor."""
 
     # Populated by the concrete main-window class that composes this mixin.
     scene: Any
@@ -83,10 +82,7 @@ class GeometryIOMixin:
             return
 
         self._load_spindle_geometry_to_scene(geometry_list, pos.x(), pos.y())
-        if hasattr(self, "_update_all_previews"):
-            self._update_all_previews()
-        else:
-            self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
+        self._update_all_previews()
 
     def _load_spindle_geometry_to_scene(self, geometry, base_x, base_y):
         """Loads and positions spindle geometry onto the scene based on a reference point."""
@@ -271,10 +267,7 @@ class GeometryIOMixin:
                 logger.warning("Error loading geometry item '%s': %s", item_str, err)
                 continue
 
-        if hasattr(self, "_update_all_previews"):
-            self._update_all_previews()
-        else:
-            self.preview_widget.update_preview(self.scene.symbol_drawlist, self.origin_x, self.origin_y)
+        self._update_all_previews()
 
     # -----------------------------------------------------------------
     # Geometry serialisation

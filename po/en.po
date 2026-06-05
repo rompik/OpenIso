@@ -32,6 +32,15 @@ msgstr "Website"
 msgid "What's New"
 msgstr "What's New"
 
+#: openiso/view/dialogs/whats_new_dialog.py:56
+msgid "Release notes are not available for this language yet."
+msgstr "Release notes are not available for this language yet."
+
+#: openiso/view/dialogs/whats_new_dialog.py:89
+#, python-brace-format
+msgid "Could not load release notes: {0}"
+msgstr "Could not load release notes: {0}"
+
 #: openiso/view/dialogs/about_dialog.py:177
 msgid "Support Questions"
 msgstr "Support Questions"
@@ -895,13 +904,6 @@ msgstr "Flow Dependency"
 #: openiso/view/widgets/properties.py:142
 msgid "ISOGEN Standard"
 msgstr "ISOGEN Standard"
-
-#: openiso/view/widgets/properties.py:149
-#: openiso/view/widgets/properties.py:150
-#: openiso/view/widgets/properties.py:256
-#: openiso/view/widgets/properties.py:257
-msgid "Save Changes to Skey File"
-msgstr "Save Changes to Skey File"
 
 #: openiso/view/widgets/properties.py:242
 msgid "Alias Code"

@@ -17,7 +17,6 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPlainTextEdit,
-    QPushButton,
     QRadioButton,
     QSizePolicy,
     QTextEdit,
@@ -124,13 +123,13 @@ class PropertiesWidget(QGroupBox):
         self.lyt_description.addWidget(self.txt_skey_desc)
 
         # Orientation Group
-        self.group_orientation = QGroupBox(_t("Orientation"))
-        self.lyt_orientation = QHBoxLayout()
-        self.group_orientation.setLayout(self.lyt_orientation)
-        self.orientation_button_group = QButtonGroup(self)
+        self.group_mirror = QGroupBox(_t("Mirror"))
+        self.lyt_mirror = QHBoxLayout()
+        self.group_mirror.setLayout(self.lyt_mirror)
+        self.mirror_button_group = QButtonGroup(self)
 
-        self.radio_orientations = []
-        self.orientation_labels = []
+        self.radio_mirrors = []
+        self.mirror_labels = []
         orientations = [
             ("simmetrical", _t("Use on symmetrical component")),
             ("non_simmetrical", _t("Use on non-symmetrical component")),
@@ -159,12 +158,29 @@ class PropertiesWidget(QGroupBox):
             container.addWidget(icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
             container.addWidget(radio, alignment=Qt.AlignmentFlag.AlignCenter)
 
-            self.lyt_orientation.addLayout(container)
-            self.orientation_button_group.addButton(radio, i)
-            self.radio_orientations.append(radio)
-            self.orientation_labels.append(icon_label)
+            self.lyt_mirror.addLayout(container)
+            self.mirror_button_group.addButton(radio, i)
+            self.radio_mirrors.append(radio)
+            self.mirror_labels.append(icon_label)
 
-        self.radio_orientations[0].setChecked(True)
+        self.radio_mirrors[0].setChecked(True)
+
+        # Draw Orientation Group
+        self.group_draw_orientation = QGroupBox(_t("Orientation"))
+        self.group_draw_orientation.setToolTip(_t("Controls the direction in which the symbol is drawn.\nApplies only to certain components, such as supports."))
+        self.lyt_draw_orientation = QVBoxLayout()
+        self.group_draw_orientation.setLayout(self.lyt_draw_orientation)
+        self.cb_orientation = QComboBox()
+        _draw_orientation_items = [
+            (0, _t("None"), _t("Symbol is drawn along the pipe.")),
+            (1, _t("Always Vertical"), _t("Symbol is always drawn vertical.")),
+            (2, _t("All Primary"), _t("Symbol copied and drawn in each primary direction (U/D, N/S, E/W).")),
+            (3, _t("User Defined"), _t("Direction is controlled by an attribute of the component.")),
+        ]
+        for _val, _label, _tip in _draw_orientation_items:
+            self.cb_orientation.addItem(_label, _val)
+            self.cb_orientation.setItemData(self.cb_orientation.count() - 1, _tip, Qt.ItemDataRole.ToolTipRole)
+        self.lyt_draw_orientation.addWidget(self.cb_orientation)
 
         self.chk_flow_arrow = QCheckBox(_t("Flow Arrow"))
 
@@ -188,9 +204,6 @@ class PropertiesWidget(QGroupBox):
         self.lst_geometry.setMinimumHeight(60)
         self.lst_geometry.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.geometry_highlighter = JsonSyntaxHighlighter(self.lst_geometry.document())
-
-        self.btn_save = QPushButton(_t("Save Changes to Skey File"))
-        self.btn_save.setToolTip(_t("Save Changes to Skey File"))
 
         # Add to grid
         self.grid_properties.addWidget(self.lbl_skey_code, 0, 0)
@@ -216,16 +229,16 @@ class PropertiesWidget(QGroupBox):
         self.grid_properties.addWidget(self.txt_idf_record, 9, 1)
 
         self.grid_properties.addWidget(self.group_description, 10, 0, 1, 2)
-        self.grid_properties.addWidget(self.group_orientation, 11, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_mirror, 11, 0, 1, 2)
 
-        self.grid_properties.addWidget(self.chk_flow_arrow, 12, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_dimensioned, 13, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_tracing, 14, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_insulation, 15, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_user_definable, 16, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_flow_dependency, 17, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_isogen_standard, 18, 0, 1, 2)
-        self.grid_properties.addWidget(self.btn_save, 19, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_draw_orientation, 12, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_arrow, 13, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_dimensioned, 14, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_tracing, 15, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_insulation, 16, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_user_definable, 17, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_dependency, 18, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_isogen_standard, 19, 0, 1, 2)
         self.grid_properties.addWidget(self.lbl_geometry, 20, 0)
         self.grid_properties.addWidget(self.lst_geometry, 21, 0, 1, 2)
         self.grid_properties.setRowStretch(21, 1)
@@ -269,7 +282,8 @@ class PropertiesWidget(QGroupBox):
         self.txt_pcf_identification.clear()
         self.txt_idf_record.clear()
         self.txt_skey_desc.setPlainText("")
-        self.radio_orientations[0].setChecked(True)
+        self.radio_mirrors[0].setChecked(True)
+        self.cb_orientation.setCurrentIndex(0)
         self.chk_flow_arrow.setChecked(False)
         self.chk_dimensioned.setChecked(False)
         self.chk_tracing.setChecked(False)
@@ -289,15 +303,24 @@ class PropertiesWidget(QGroupBox):
         # TODO(v0.9.0): Restore translations for deferred fields when re-enabled.
 
         self.group_description.setTitle(_t("Description"))
-        self.group_orientation.setTitle(_t("Orientation"))
+        self.group_mirror.setTitle(_t("Orientation"))
+        self.group_draw_orientation.setTitle(_t("Orientation"))
+        self.group_draw_orientation.setToolTip(_t("Controls the direction in which the symbol is drawn.\nApplies only to certain components, such as supports."))
+        _draw_orientation_items = [
+            (0, _t("None"), _t("Symbol is drawn along the pipe.")),
+            (1, _t("Always Vertical"), _t("Symbol is always drawn vertical.")),
+            (2, _t("All Primary"), _t("Symbol copied and drawn in each primary direction (U/D, N/S, E/W).")),
+            (3, _t("User Defined"), _t("Direction is controlled by an attribute of the component.")),
+        ]
+        for _i, (_val, _label, _tip) in enumerate(_draw_orientation_items):
+            self.cb_orientation.setItemText(_i, _label)
+            self.cb_orientation.setItemData(_i, _tip, Qt.ItemDataRole.ToolTipRole)
         self.chk_flow_arrow.setText(_t("Flow Arrow"))
         self.chk_dimensioned.setText(_t("Dimensioned"))
         self.chk_tracing.setText(_t("Tracing"))
         self.chk_insulation.setText(_t("Insulation"))
         self.chk_flow_dependency.setText(_t("Flow Dependency"))
         self.lbl_geometry.setText(_t("Symbol JSON"))
-        self.btn_save.setText(_t("Save Changes to Skey File"))
-        self.btn_save.setToolTip(_t("Save Changes to Skey File"))
 
         orient_texts = [
             _t("Use on symmetrical component"),
@@ -305,7 +328,7 @@ class PropertiesWidget(QGroupBox):
             _t("Use on reducers"),
             _t("Use on flanges")
         ]
-        for radio, label, text in zip(self.radio_orientations, self.orientation_labels, orient_texts):
+        for radio, label, text in zip(self.radio_mirrors, self.mirror_labels, orient_texts):
             radio.setToolTip(text)
             label.setToolTip(text)
 
@@ -389,7 +412,8 @@ class PropertiesWidget(QGroupBox):
             "subgroup_key": self.cb_skey_subgroup.currentData() or self.cb_skey_subgroup.currentText(),
             "description": self.txt_skey_desc.toPlainText(),
             "spindle_skey": self.cb_spindle_skey.currentText(),
-            "orientation": self.orientation_button_group.checkedId(),
+            "orientation": self.mirror_button_group.checkedId(),
+            "draw_orientation": self.cb_orientation.currentData(),
             "flow_arrow": self.chk_flow_arrow.isChecked(),
             "dimensioned": self.chk_dimensioned.isChecked(),
             "tracing": self.chk_tracing.isChecked(),
@@ -410,7 +434,32 @@ class PropertiesWidget(QGroupBox):
     def display_geometry(self, geometry):
         """Display a full symbol JSON payload (including geometry)."""
         payload = self._build_symbol_json_payload(geometry)
-        self.lst_geometry.setPlainText(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
+        self.lst_geometry.setPlainText(self._format_symbol_json_payload(payload))
+
+    def _format_symbol_json_payload(self, payload):
+        """Format payload with one geometry entry per line for readability."""
+        lines = ["{"]
+        keys = list(payload.keys())
+        for index, key in enumerate(keys):
+            value = payload[key]
+            is_last = index == len(keys) - 1
+            suffix = "," if not is_last else ""
+
+            if key == "geometry":
+                lines.append('  "geometry": [')
+                for geom_index, item in enumerate(value):
+                    geom_suffix = "," if geom_index < len(value) - 1 else ""
+                    lines.append(f"    {json.dumps(item, ensure_ascii=False, default=str)}{geom_suffix}")
+                lines.append(f"  ]{suffix}")
+                continue
+
+            lines.append(
+                f'  {json.dumps(key, ensure_ascii=False)}: '
+                f'{json.dumps(value, ensure_ascii=False, default=str)}{suffix}'
+            )
+
+        lines.append("}")
+        return "\n".join(lines)
 
     def update_spindles(self, spindles):
         """Updates the list of available spindles in the combobox."""
@@ -473,13 +522,28 @@ class PropertiesWidget(QGroupBox):
         return f"{group_key}-{subgroup_key}-{name}"
 
     def load_skey_data(self, skey_data):
+        # Capture spindle_skey BEFORE triggering group/subgroup signals that may overwrite skey_data
+        spindle_name = skey_data.spindle_skey or ""
+
         self.txt_skey.setText(skey_data.name or self._generate_skey_code(skey_data))
         self.txt_alias_code.setText(skey_data.name)
         self.cb_skey_group.setCurrentText(_t(skey_data.group_key))
-        # Use full path for subgroup translation
-        subgroup_path = f"{skey_data.group_key}.{skey_data.subgroup_key}"
-        self.cb_skey_subgroup.setCurrentText(_t(subgroup_path))
-        self.cb_spindle_skey.setCurrentText(skey_data.spindle_skey or "")
+        subgroup_index = self.cb_skey_subgroup.findData(skey_data.subgroup_key)
+        if subgroup_index >= 0:
+            self.cb_skey_subgroup.setCurrentIndex(subgroup_index)
+        else:
+            self.cb_skey_subgroup.setCurrentText(skey_data.subgroup_key or "")
+        # Set spindle_skey using pre-captured value (skey_data may have been overwritten by signals above)
+        if spindle_name:
+            spindle_index = self.cb_spindle_skey.findData(spindle_name)
+            if spindle_index >= 0:
+                self.cb_spindle_skey.setCurrentIndex(spindle_index)
+            else:
+                spindle_index = self.cb_spindle_skey.findText(spindle_name)
+                if spindle_index >= 0:
+                    self.cb_spindle_skey.setCurrentIndex(spindle_index)
+        else:
+            self.cb_spindle_skey.setCurrentIndex(0)
         source_type = getattr(skey_data, "source_type", "standard") or "standard"
         source_index = self.cb_source_type.findData(source_type)
         self.cb_source_type.setCurrentIndex(source_index if source_index >= 0 else 0)
@@ -489,8 +553,12 @@ class PropertiesWidget(QGroupBox):
         self.txt_idf_record.setText(getattr(skey_data, "idf_record", "") or "")
         self.txt_skey_desc.setPlainText(_t(skey_data.description_key) or "")
 
-        if 0 <= skey_data.orientation < len(self.radio_orientations):
-            self.radio_orientations[skey_data.orientation].setChecked(True)
+        if 0 <= skey_data.orientation < len(self.radio_mirrors):
+            self.radio_mirrors[skey_data.orientation].setChecked(True)
+
+        draw_orientation = getattr(skey_data, "draw_orientation", 0)
+        draw_orientation_index = self.cb_orientation.findData(draw_orientation)
+        self.cb_orientation.setCurrentIndex(draw_orientation_index if draw_orientation_index >= 0 else 0)
 
         # FlowArrow: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
         self.chk_flow_arrow.setChecked(skey_data.flow_arrow == 2)

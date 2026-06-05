@@ -113,3 +113,27 @@ def test_update_skey_creates_new_geometry_transaction(tmp_path):
 
     assert loaded.name == "TEE01"
     assert loaded.geometry == ["Line: x1=2 y1=2 x2=3 y2=3"]
+
+
+def test_spindle_symbols_have_arrivepoint_not_spindlepoint(tmp_path):
+    """Test that spindle anchor points are migrated from SpindlePoint to ArrivePoint."""
+    db = _new_db(tmp_path)
+    db.ensure_subgroup_exists("Spindles", "Standard Handwheel")
+
+    spindle_symbol = SkeyData(
+        name="01SP",
+        group_key="Spindles",
+        subgroup_key="Standard Handwheel",
+        description_key="",
+        geometry=[
+            "SpindlePoint: x0=0.0 y0=0.0",
+            "Line: x1=0.0 y1=0.0 x2=0.0 y2=1.0",
+        ],
+    )
+    db.insert_skey(spindle_symbol, user="test", comment="create spindle")
+
+    loaded = db.get_all_skeys()[0]
+
+    assert loaded.name == "01SP"
+    assert loaded.geometry[0].startswith("ArrivePoint:")
+    assert all(not g.startswith("SpindlePoint:") for g in loaded.geometry)

@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from PyQt6.QtCore import QSettings, Qt
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
 try:
@@ -25,6 +25,8 @@ except ImportError:
 
 from openiso.core.app_context import AppContext, APP_NAME, ORG_NAME, ORG_DOMAIN
 from openiso.core.app_context import resolve_data_dir
+from openiso.core.user_settings import UserSettings
+from openiso.core.workspace import ensure_workspace
 
 
 class Application:
@@ -55,6 +57,7 @@ class Application:
             version or __version__,
             pkgdatadir,
         )
+        self.workspace = ensure_workspace()
 
         self.app_id = self._context.app_id
         self.version = self._context.version
@@ -66,19 +69,22 @@ class Application:
         self.database_dir: Path = self._context.paths.database
 
         self._qt_app: Optional[QApplication] = None
-        self._settings: Optional[QSettings] = None
+        self._settings: Optional[UserSettings] = None
 
     @property
     def context(self) -> AppContext:
         return self._context
 
     @property
-    def settings(self) -> QSettings:
-        """Get application settings. Requires QApplication to exist."""
+    def settings(self) -> UserSettings:
+        """Get application settings persisted as JSON."""
+        from PyQt6.QtWidgets import QApplication
+        if QApplication.instance() is None:
+            raise RuntimeError(
+                "QApplication must be running before accessing application settings."
+            )
         if self._settings is None:
-            if QApplication.instance() is None:
-                raise RuntimeError("QApplication must be created before accessing settings")
-            self._settings = QSettings(ORG_NAME, APP_NAME)
+            self._settings = UserSettings(json_path=self.workspace.settings_file)
         return self._settings
 
     def get_icon_path(self, icon_name: str) -> str:

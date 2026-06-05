@@ -62,6 +62,12 @@ class DrawToolbarWidget(QWidget):
         self.btn_undo = self._create_tool_button("Undo", ICONS["undo"])
         self.btn_redo = self._create_tool_button("Redo", ICONS["redo"])
 
+        # Keep select/move mutually exclusive to indicate active interaction mode.
+        self.btn_plot_select_element.setCheckable(True)
+        self.btn_move.setCheckable(True)
+        self.btn_plot_select_element.setAutoExclusive(True)
+        self.btn_move.setAutoExclusive(True)
+
         # 2. Connection Points Group
         self.btn_plot_connections = self._create_tool_button("Draw Connection Point", ICONS["point_arrive"])
         self.btn_plot_point_spindle = self._create_tool_button("Draw Spindle Connection Point", ICONS["point_spindle"])
@@ -111,6 +117,20 @@ class DrawToolbarWidget(QWidget):
 
 
         # Add to layout with groups and separators
+        edit_group = [
+            self.btn_plot_select_element,
+            self.btn_select_all,
+            self.btn_move,
+            self.btn_rotate,
+            self.btn_scale,
+            self.btn_undo,
+            self.btn_redo,
+        ]
+        for btn in edit_group:
+            self.main_layout.addWidget(btn)
+
+        self._add_separator()
+
         conn_group = [self.btn_plot_connections, self.btn_plot_point_spindle]
         for btn in conn_group:
             self.main_layout.addWidget(btn)

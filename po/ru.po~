@@ -247,12 +247,6 @@ msgstr ""
 msgid "Geometry"
 msgstr ""
 
-#: src/view/properties.py:110 src/view/properties.py:111
-#: src/view/properties.py:164 src/view/properties.py:165
-#: src/view/properties.py:187 src/view/properties.py:188
-msgid "Save Changes to Skey File"
-msgstr "Сохранить изменения в файле Skey"
-
 #: src/view/menu_toolbar.py:72
 msgid "Import File"
 msgstr "Импортировать файл"

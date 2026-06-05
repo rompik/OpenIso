@@ -1234,13 +1234,14 @@
     }
   },
   "clamped_joints": {
-    "_name": "Clamped Joints",
+    "_name": "clamped_joints",
     "flared_clamp": {
-      "_name": "Flared Clamp",
+      "_name": "flared_clamp",
       "clmp": {
         "_name": "CLMP",
         "description": ""
-      }
+      },
+      "clvt": "CLVT"
     },
     "victaulic_grooved_pipe_end_type": {
       "_name": "Victaulic (Grooved pipe end type)",

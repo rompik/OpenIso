@@ -7,7 +7,7 @@ SkeyData and SkeyGroup models for Skey Library
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-from .enums import Dimensioned, FlowArrow, Insulation, Orientation, Tracing
+from .enums import Dimensioned, DrawOrientation, FlowArrow, Insulation, Orientation, Tracing
 
 
 @dataclass
@@ -18,6 +18,7 @@ class SkeyData:
     description_key: str = ""
     spindle_skey: str = ""
     orientation: int = Orientation.SYMMETRICAL
+    draw_orientation: int = DrawOrientation.NONE
     flow_arrow: int = FlowArrow.DEFAULT
     dimensioned: int = Dimensioned.DEFAULT
     tracing: int = Tracing.DEFAULT
@@ -50,6 +51,7 @@ class SkeyData:
             "description_key": self.description_key,
             "spindle_skey": self.spindle_skey,
             "orientation": self.orientation,
+            "draw_orientation": self.draw_orientation,
             "flow_arrow": self.flow_arrow,
             "dimensioned": self.dimensioned,
             "tracing": self.tracing,
@@ -85,6 +87,7 @@ class SkeyData:
                 description_key=data.get("description_key", data.get("description", "")),
                 spindle_skey=data.get("spindle_skey", ""),
                 orientation=data.get("orientation", 0),
+                draw_orientation=data.get("draw_orientation", 0),
                 flow_arrow=data.get("flow_arrow", 0),
                 dimensioned=data.get("dimensioned", 0),
                 tracing=data.get("tracing", 0),

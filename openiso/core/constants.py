@@ -128,6 +128,7 @@ ICONS = {
     "redo": "common/128x128_redo.png",
     "rotate": "common/100x100_reload.svg",
     "save": "common/save.svg",
+    "unsaved": "common/unsaved.svg",
     "scale": "common/scale.svg",
     "select_all": "common/select_by_rectangular.svg",
     "select_element": "common/select_element.svg",

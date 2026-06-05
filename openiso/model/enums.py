@@ -44,3 +44,10 @@ class IsometricView(IntEnum):
     NW = 1  # North-West: X left-up, Y right-up
     SE = 2  # South-East: X right-down, Y left-down
     SW = 3  # South-West: X left-down, Y right-down
+
+class DrawOrientation(IntEnum):
+    """Draw orientation options — controls the direction in which a symbol is drawn"""
+    NONE = 0           # Symbol is drawn along the pipe
+    ALWAYS_VERTICAL = 1  # Symbol is always drawn vertical
+    ALL_PRIMARY = 2    # Symbol copied and drawn in each primary direction (U/D, N/S, E/W)
+    USER_DEFINED = 3   # Direction is controlled by an attribute of the component

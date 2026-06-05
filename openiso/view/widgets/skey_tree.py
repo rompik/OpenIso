@@ -47,6 +47,17 @@ class SkeyTree(QTreeWidget):
             expanded (bool): Whether to initiallly expand group and subgroup items.
         """
         _t = setup_i18n()
+
+        def _normalize_part(value):
+            return str(value or "").strip().lower().replace(" ", "_").replace("-", "_")
+
+        def _display_label(raw_label, *path_parts):
+            lookup_key = ".".join(_normalize_part(part) for part in path_parts if part)
+            translated = _t(lookup_key)
+            if translated == lookup_key or translated == lookup_key.split(".")[-1]:
+                return raw_label
+            return translated
+
         self.clear()
         self.tree_root = QTreeWidgetItem(self)
         self.tree_root.setText(0, _t("Components"))
@@ -55,21 +66,19 @@ class SkeyTree(QTreeWidget):
         for skey_group in groups.get_groups():
             group_level = QTreeWidgetItem(self.tree_root)
             group_level.setExpanded(expanded)
-            group_level.setText(0, _t(skey_group))
+            group_level.setText(0, _display_label(skey_group, skey_group))
             group_level.setData(0, Qt.ItemDataRole.UserRole, skey_group)
             group_level.setIcon(0, QIcon())
 
             for skey_subgroup in groups.get_subgroups(skey_group):
                 subgroup_level = QTreeWidgetItem(group_level)
                 subgroup_level.setExpanded(expanded)
-                subgroup_level.setText(0, _t(f"{skey_group}.{skey_subgroup}"))
+                subgroup_level.setText(0, _display_label(skey_subgroup, skey_group, skey_subgroup))
                 subgroup_level.setData(0, Qt.ItemDataRole.UserRole, skey_subgroup)
 
                 for skey in groups.get_skeys(skey_group, skey_subgroup):
                     skey_level = QTreeWidgetItem(subgroup_level)
-                    # Use lowercase for the i18n key path to match JSON structure
-                    skey_i18n_path = f"{skey_group}.{skey_subgroup}.{skey.lower()}"
-                    skey_level.setText(0, _t(skey_i18n_path))
+                    skey_level.setText(0, _display_label(skey, skey_group, skey_subgroup, skey))
                     skey_level.setData(0, Qt.ItemDataRole.UserRole, skey)
                 subgroup_level.sortChildren(0, Qt.SortOrder.AscendingOrder)
             group_level.sortChildren(0, Qt.SortOrder.AscendingOrder)
@@ -138,10 +147,31 @@ class SkeyTree(QTreeWidget):
         if not self.tree_root or not group_name:
             return
 
+        def _normalize(value):
+            return str(value or "").strip().lower().replace(" ", "_").replace("-", "_")
+
+        def _matches(item, target):
+            if not item or target is None:
+                return False
+
+            item_text = str(item.text(0) or "")
+            item_data = str(item.data(0, Qt.ItemDataRole.UserRole) or "")
+            target_text = str(target or "")
+            target_leaf = target_text.split(".")[-1]
+
+            return (
+                item_text == target_text
+                or item_data == target_text
+                or _normalize(item_text) == _normalize(target_text)
+                or _normalize(item_data) == _normalize(target_text)
+                or _normalize(item_text) == _normalize(target_leaf)
+                or _normalize(item_data) == _normalize(target_leaf)
+            )
+
         # 1. Find group
         for i in range(self.tree_root.childCount()):
             group_item = self.tree_root.child(i)
-            if group_item and group_item.text(0) == group_name:
+            if _matches(group_item, group_name):
                 if not subgroup_name:
                     self.setCurrentItem(group_item)
                     return group_item
@@ -149,7 +179,7 @@ class SkeyTree(QTreeWidget):
                 # 2. Find subgroup
                 for j in range(group_item.childCount()):
                     subgroup_item = group_item.child(j)
-                    if subgroup_item and subgroup_item.text(0) == subgroup_name:
+                    if _matches(subgroup_item, subgroup_name):
                         if not skey_name:
                             self.setCurrentItem(subgroup_item)
                             return subgroup_item
@@ -157,7 +187,7 @@ class SkeyTree(QTreeWidget):
                         # 3. Find skey
                         for k in range(subgroup_item.childCount()):
                             skey_item = subgroup_item.child(k)
-                            if skey_item and skey_item.text(0) == skey_name:
+                            if _matches(skey_item, skey_name):
                                 self.setCurrentItem(skey_item)
                                 return skey_item
 

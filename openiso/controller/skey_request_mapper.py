@@ -23,6 +23,7 @@ def build_save_payload(form_data: dict, skey_name: str, geometry: list, lang_cod
         "description_key": form_data["description_text"],
         "spindle_skey": form_data["spindle_skey"],
         "orientation": form_data["orientation"],
+        "draw_orientation": form_data["draw_orientation"],
         "flow_arrow": form_data["flow_arrow"],
         "dimensioned": form_data["dimensioned"],
         "tracing": form_data["tracing"],

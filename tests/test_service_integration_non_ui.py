@@ -57,8 +57,8 @@ def test_service_update_and_delete_skey_non_ui(tmp_path, monkeypatch):
     assert ok is True
     saved = service.get_skey("VALT1")
     assert saved is not None
-    assert saved.group_key == "valves"
-    assert saved.subgroup_key == "gate"
+    assert saved.group_key == "Valves"
+    assert saved.subgroup_key == "Gate"
     assert saved.pcf_identification == "VALVE"
     assert saved.source_name == "Test Company"
 

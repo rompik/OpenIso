@@ -428,11 +428,6 @@ msgstr "Insulation"
 msgid "Geometry"
 msgstr "Geometry"
 
-#: openiso/view/properties.py:110 openiso/view/properties.py:111
-#: openiso/view/properties.py:169 openiso/view/properties.py:170
-msgid "Save Changes to Skey File"
-msgstr "Save Changes to Skey File"
-
 #: openiso/view/properties.py:158
 msgid "Alias Code"
 msgstr "Alias Code"

@@ -32,6 +32,15 @@ msgstr "网站"
 msgid "What's New"
 msgstr "更新内容"
 
+#: openiso/view/dialogs/whats_new_dialog.py:56
+msgid "Release notes are not available for this language yet."
+msgstr "该语言的发行说明暂不可用。"
+
+#: openiso/view/dialogs/whats_new_dialog.py:89
+#, python-brace-format
+msgid "Could not load release notes: {0}"
+msgstr "无法加载发行说明: {0}"
+
 #: openiso/view/dialogs/about_dialog.py:177
 msgid "Support Questions"
 msgstr "支持问题"
@@ -895,13 +904,6 @@ msgstr "流向依赖"
 #: openiso/view/widgets/properties.py:142
 msgid "ISOGEN Standard"
 msgstr "ISOGEN 标准"
-
-#: openiso/view/widgets/properties.py:149
-#: openiso/view/widgets/properties.py:150
-#: openiso/view/widgets/properties.py:256
-#: openiso/view/widgets/properties.py:257
-msgid "Save Changes to Skey File"
-msgstr "Save Changes to Skey File"
 
 #: openiso/view/widgets/properties.py:242
 msgid "Alias Code"

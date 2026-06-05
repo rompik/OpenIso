@@ -66,7 +66,7 @@
     }
   },
   "flanges": {
-    "_name": "flanges",
+    "_name": "Flanges",
     "blind_or_blanking_flange": {
       "_name": "blind_or_blanking_flange",
       "flbl": {
@@ -165,6 +165,15 @@
         "_name": "FOWN",
         "description": ""
       }
+    },
+    "blind_flange": {
+      "_name": "Blind flange",
+      "flbl": "FLBL",
+      "flgm": "FLGM"
+    },
+    "cast/lined_flange_with_female_gland_type": {
+      "_name": "Cast/lined flange with female gland type",
+      "flgf": "FLGF"
     }
   },
   "unknown": {
@@ -184,31 +193,32 @@
         "description": ""
       },
       "couplings-butt_weld_elbolet-cebw": "couplings-butt_weld_elbolet-CEBW",
-      "couplings-butt_weld_elbolet-couplings-butt_weld_elbolet-cebw": "couplings-butt_weld_elbolet-couplings-butt_weld_elbolet-CEBW"
+      "couplings-butt_weld_elbolet-couplings-butt_weld_elbolet-cebw": "couplings-butt_weld_elbolet-couplings-butt_weld_elbolet-CEBW",
+      "cocp": "COCP"
     },
     "screwed_fitting_elbolet": {
-      "_name": "Screwed Fitting Elbolet",
+      "_name": "Screwed fitting elbolet",
       "cesc": {
         "_name": "CESC",
         "description": ""
       }
     },
     "socket_weld_elbolet": {
-      "_name": "Socket Weld Elbolet",
+      "_name": "Socket weld elbolet",
       "cesw": {
         "_name": "CESW",
         "description": ""
       }
     },
     "compression_fitting_coupling": {
-      "_name": "Compression Fitting Coupling",
+      "_name": "Compression fitting coupling",
       "cocp": {
         "_name": "COCP",
         "description": ""
       }
     },
     "coupling_with_grayloc_connections": {
-      "_name": "Coupling with Grayloc connections",
+      "_name": "Coupling with grayloc connections",
       "cogy": {
         "_name": "COGY",
         "description": ""
@@ -229,38 +239,46 @@
       }
     },
     "coupling_with_compression_sleeve_connections": {
-      "_name": "Coupling with compression sleeve connections",
+      "_name": "coupling_with_compression_sleeve_connections",
       "cscp": {
         "_name": "CSCP",
         "description": ""
       }
     },
     "screwed_nipple": {
-      "_name": "Screwed Nipple",
+      "_name": "Screwed nipple",
       "nbsc": {
         "_name": "NBSC",
         "description": ""
       }
     },
     "screwed_fitting_nipple": {
-      "_name": "Screwed Fitting Nipple",
+      "_name": "Screwed fitting nipple",
       "nrsc": {
         "_name": "NRSC",
         "description": ""
       }
+    },
+    "coupling_with_victaulic_connections_(grooved_pipe)": {
+      "_name": "Coupling with victaulic connections (grooved pipe)",
+      "covt": "COVT"
+    },
+    "coupling_with_victaulic_connections_(welded_connections)": {
+      "_name": "Coupling with victaulic connections (welded connections)",
+      "covr": "COVR"
     }
   },
   "unions": {
     "_name": "Unions",
     "screwed_fitting_union": {
-      "_name": "Screwed Fitting Union",
+      "_name": "Screwed fitting union",
       "unsc": {
         "_name": "UNSC",
         "description": ""
       }
     },
     "butt_or_socket_weld_union": {
-      "_name": "Butt or Socket Weld Union",
+      "_name": "Butt or socket weld union",
       "unsw": {
         "_name": "UNSW",
         "description": ""
@@ -268,7 +286,7 @@
     }
   },
   "miscellaneous_pipe_components": {
-    "_name": "Miscellaneous Pipe Components",
+    "_name": "Miscellaneous pipe components",
     "block_offset": {
       "_name": "Block offset",
       "bo": {
@@ -284,7 +302,7 @@
       }
     },
     "expansion_bellows": {
-      "_name": "Expansion Bellows",
+      "_name": "Expansion bellows",
       "ex": {
         "_name": "EX",
         "description": ""
@@ -411,6 +429,15 @@
         "_name": "WALL",
         "description": ""
       }
+    },
+    "arrow_head_(dimension_line)": {
+      "_name": "Arrow head (dimension line)",
+      "ar01": "AR01",
+      "flor": "FLOR"
+    },
+    "arrow_head_(message_line)": {
+      "_name": "Arrow head (message line)",
+      "ar02": "AR02"
     }
   },
   "supports": {
@@ -478,21 +505,21 @@
   "traps": {
     "_name": "Traps",
     "angled_trap": {
-      "_name": "Angled Trap",
+      "_name": "Angled trap",
       "ta": {
         "_name": "TA",
         "description": ""
       }
     },
     "in_line_trap": {
-      "_name": "In-line Trap",
+      "_name": "In-line trap",
       "ti": {
         "_name": "TI",
         "description": ""
       }
     },
     "offset_trap": {
-      "_name": "Offset Trap",
+      "_name": "Offset trap",
       "to": {
         "_name": "TO",
         "description": ""
@@ -692,7 +719,8 @@
       "wwa": {
         "_name": "WWA",
         "description": ""
-      }
+      },
+      "wfd": "WFD"
     },
     "dotted_workshop_weld": {
       "_name": "Dotted Workshop Weld",
@@ -1026,7 +1054,7 @@
       }
     },
     "angled_valve": {
-      "_name": "Angled Valve",
+      "_name": "Angled valve",
       "av": {
         "_name": "AV",
         "description": ""
@@ -1073,6 +1101,11 @@
         "_name": "VV",
         "description": ""
       }
+    },
+    "3_way_valve": {
+      "_name": "3-way valve",
+      "m4": "M4",
+      "m3": "M3"
     }
   },
   "hygienic_fittings": {
@@ -1159,7 +1192,8 @@
       "bnut": {
         "_name": "BNUT",
         "description": ""
-      }
+      },
+      "ln": "LN"
     },
     "blank_plain": {
       "_name": "Blank plain",
@@ -1261,7 +1295,8 @@
         "_name": "CLMP",
         "description": ""
       },
-      "02ht": "02HT"
+      "02ht": "02HT",
+      "clvt": "CLVT"
     },
     "victaulic_welded__forded_ring_type": {
       "_name": "Victaulic (Welded /Forded ring type)",
@@ -1276,16 +1311,25 @@
         "_name": "CLVT",
         "description": ""
       }
+    },
+    "victaulic_(grooved_pipe_end_type)": {
+      "_name": "Victaulic (grooved pipe end type)",
+      "clvt": "CLVT"
+    },
+    "victaulic_(welded_/forded_ring_type)": {
+      "_name": "Victaulic (welded /forded ring type)",
+      "clvr": "CLVR"
     }
   },
   "tees": {
     "_name": "Tees",
     "y_type_tee_large": {
-      "_name": "Y-type tee (Large)",
+      "_name": "Y type tee large",
       "ylrg": {
         "_name": "YLRG",
         "description": ""
-      }
+      },
+      "ymed": "YMED"
     },
     "y_type_tee_medium": {
       "_name": "Y-type tee (Medium)",
@@ -1300,6 +1344,10 @@
         "_name": "YSML",
         "description": ""
       }
+    },
+    "y_type_tee_(medium)": {
+      "_name": "Y-type tee (medium)",
+      "ymed": "YMED"
     }
   },
   "penetration_plate_items": {
@@ -1329,11 +1377,36 @@
   "fixed_length_pipes": {
     "_name": "Fixed Length Pipes",
     "fixed_length_pipe_with_plain_ends": {
-      "_name": "Fixed Length Pipe with Plain Ends",
+      "_name": "Fixed Length Pipe With Plain Ends",
       "fppl": {
         "_name": "FPPL",
         "description": ""
       }
+    }
+  },
+  "miscellaneous": {
+    "_name": "Miscellaneous",
+    "generic_fitting": {
+      "_name": "Generic Fitting",
+      "03ht": "03HT",
+      "01ht": "01HT",
+      "02ht": "02HT",
+      "ar": "AR",
+      "ax": "AX",
+      "clcs": "CLCS",
+      "04ht": "04HT"
+    }
+  },
+  "instrumentation": {
+    "_name": "Instrumentation",
+    "flow_indicator": {
+      "_name": "Flow indicator",
+      "fi": "FI",
+      "mp": "MP"
+    },
+    "magnetic_flowmeter": {
+      "_name": "Magnetic flowmeter",
+      "mp": "MP"
     }
   }
 }

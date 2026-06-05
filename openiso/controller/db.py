@@ -131,6 +131,7 @@ class SkeyDB:
                 dimensioned INTEGER NOT NULL DEFAULT 0,
                 tracing INTEGER NOT NULL DEFAULT 0,
                 insulation INTEGER NOT NULL DEFAULT 0,
+                draw_orientation INTEGER NOT NULL DEFAULT 0,
                 pcf_identification TEXT,
                 idf_record TEXT,
                 user_definable INTEGER NOT NULL DEFAULT 1,
@@ -152,6 +153,7 @@ class SkeyDB:
                 CHECK (dimensioned IN (0, 1, 2)),
                 CHECK (tracing IN (0, 1, 2)),
                 CHECK (insulation IN (0, 1, 2)),
+                CHECK (draw_orientation IN (0, 1, 2, 3)),
                 FOREIGN KEY (skey_group_key) REFERENCES skey_groups(skey_group_key) ON DELETE RESTRICT ON UPDATE CASCADE,
                 FOREIGN KEY (skey_group_key, skey_subgroup_key) REFERENCES skey_subgroups(skey_group_key, skey_subgroup_key) ON DELETE RESTRICT ON UPDATE CASCADE,
                 FOREIGN KEY (spindle_skey) REFERENCES spindles(name) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -284,6 +286,7 @@ class SkeyDB:
                 ("upstream_payload_hash", "TEXT"),
                 ("local_revision", "INTEGER NOT NULL DEFAULT 1"),
                 ("sync_state", "TEXT NOT NULL DEFAULT 'synced'"),
+                ("draw_orientation", "INTEGER NOT NULL DEFAULT 0"),
             ]
             for column_name, column_type in new_skey_columns:
                 if not self._column_exists(cur, "skeys", column_name):
@@ -479,18 +482,18 @@ class SkeyDB:
                     """
                     INSERT INTO skeys (
                         name, skey_group_key, skey_subgroup_key, skey_description_key,
-                        spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
+                        spindle_skey, orientation, draw_orientation, flow_arrow, dimensioned, tracing, insulation,
                         pcf_identification, idf_record, user_definable, flow_dependency,
                         source_id, isogen_standard,
                         origin_type, is_official, is_user_modified,
                         upstream_symbol_code, upstream_release_version,
                         upstream_symbol_version, last_synced_upstream_version,
                         upstream_payload_hash, local_revision, sync_state
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
-                        spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                        spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                         skey.tracing, skey.insulation, skey.pcf_identification, skey.idf_record,
                         skey.user_definable, skey.flow_dependency, source_id, skey.isogen_standard,
                         "official", 1, 0,
@@ -554,6 +557,7 @@ class SkeyDB:
                     skey_description_key = ?,
                     spindle_skey = ?,
                     orientation = ?,
+                    draw_orientation = ?,
                     flow_arrow = ?,
                     dimensioned = ?,
                     tracing = ?,
@@ -577,7 +581,7 @@ class SkeyDB:
                 """,
                 (
                     skey.group_key, skey.subgroup_key, skey.description_key,
-                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,
                     skey.flow_dependency, source_id, skey.isogen_standard,
@@ -598,7 +602,39 @@ class SkeyDB:
                 )
             return "updated"
 
+    def _migrate_spindle_anchor_points(self):
+        """One-time migration: replace SpindlePoint with ArrivePoint for spindle symbols."""
+        with self._transaction() as conn:
+            cur = conn.cursor()
+            # Check if migration has already been done
+            cur.execute("SELECT value FROM app_metadata WHERE key = 'spindle_anchor_migration_done'")
+            row = cur.fetchone()
+            if row:
+                return  # Migration already executed
+
+            # Execute migration
+            cur.execute(
+                """
+                UPDATE geometry SET data = REPLACE(data, 'SpindlePoint:', 'ArrivePoint:')
+                WHERE skey_id IN (
+                    SELECT s.id FROM skeys s
+                    WHERE s.name IN (SELECT name FROM spindles)
+                       OR UPPER(s.name) LIKE '%SP'
+                )
+                AND data LIKE 'SpindlePoint:%'
+                """
+            )
+
+            # Mark migration as done
+            cur.execute(
+                "INSERT OR REPLACE INTO app_metadata (key, value) VALUES (?, ?)",
+                ("spindle_anchor_migration_done", "true"),
+            )
+
     def get_all_skeys(self) -> List[SkeyData]:
+        # Execute spindle anchor migration if needed
+        self._migrate_spindle_anchor_points()
+
         # All columns are guaranteed by _ensure_columns_exist() called at __init__.
         # sqlite3.Row allows named column access, eliminating index tracking.
         with self._transaction(commit=False) as conn:
@@ -608,7 +644,7 @@ class SkeyDB:
                 """
                 SELECT
                     s.id, s.name, s.skey_group_key, s.skey_subgroup_key, s.skey_description_key,
-                    s.spindle_skey, s.orientation, s.flow_arrow, s.dimensioned, s.tracing, s.insulation,
+                    s.spindle_skey, s.orientation, s.draw_orientation, s.flow_arrow, s.dimensioned, s.tracing, s.insulation,
                     s.pcf_identification, s.idf_record, s.user_definable, s.flow_dependency,
                     s.source_id, s.isogen_standard, s.origin_type, s.is_official, s.is_user_modified,
                     s.upstream_symbol_code, s.upstream_release_version, s.upstream_symbol_version,
@@ -630,6 +666,7 @@ class SkeyDB:
                     description_key=row["skey_description_key"],
                     spindle_skey=row["spindle_skey"] or "",
                     orientation=row["orientation"],
+                    draw_orientation=row["draw_orientation"],
                     flow_arrow=row["flow_arrow"],
                     dimensioned=row["dimensioned"],
                     tracing=row["tracing"],
@@ -680,18 +717,18 @@ class SkeyDB:
                 """
                 INSERT INTO skeys (
                     name, skey_group_key, skey_subgroup_key, skey_description_key,
-                    spindle_skey, orientation, flow_arrow, dimensioned, tracing, insulation,
+                    spindle_skey, orientation, draw_orientation, flow_arrow, dimensioned, tracing, insulation,
                     pcf_identification, idf_record, user_definable, flow_dependency,
                     source_id, isogen_standard,
                     origin_type, is_official, is_user_modified,
                     upstream_symbol_code, upstream_release_version,
                     upstream_symbol_version, last_synced_upstream_version,
                     upstream_payload_hash, local_revision, sync_state
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
-                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,
                     skey.flow_dependency, source_id, skey.isogen_standard,
@@ -739,6 +776,7 @@ class SkeyDB:
                     skey_description_key = ?,
                     spindle_skey = ?,
                     orientation = ?,
+                    draw_orientation = ?,
                     flow_arrow = ?,
                     dimensioned = ?,
                     tracing = ?,
@@ -763,7 +801,7 @@ class SkeyDB:
                 """,
                 (
                     skey.group_key, skey.subgroup_key, skey.description_key,
-                    spindle_skey, skey.orientation, skey.flow_arrow, skey.dimensioned,
+                    spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,
                     skey.flow_dependency, source_id, skey.isogen_standard,

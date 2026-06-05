@@ -5,11 +5,13 @@ import hashlib
 import json
 import logging
 import sqlite3
+import shutil
 from typing import Optional
 
 from openiso.core.app_context import AppContext
 from openiso.controller.db import SkeyDB
 from openiso.controller.repository import SkeyRepository
+from openiso.core.workspace import ensure_workspace
 from openiso.model.geometry import GeometryConverter
 from openiso.model.skey import SkeyData, SkeyGroup
 
@@ -54,6 +56,7 @@ class SkeyService:
         self,
         use_db: bool = True,
         context: AppContext | None = None,
+        db_path: str | None = None,
     ):
         self._context = context
         if context is not None:
@@ -66,12 +69,19 @@ class SkeyService:
         self._descriptions = {}
         self._use_db = use_db
 
-        # Build database path from data_dir
+        workspace = ensure_workspace()
+        default_db_path = workspace.database_file
+
         if self._data_dir is not None:
-            db_path = self._data_dir / 'database' / 'openiso.db'
-            self._db = SkeyDB(str(db_path))
-        else:
-            self._db = SkeyDB()
+            seed_db_path = self._data_dir / "database" / "openiso.db"
+            if seed_db_path.exists() and not default_db_path.exists():
+                try:
+                    shutil.copy2(seed_db_path, default_db_path)
+                except OSError:
+                    logger.debug("Unable to seed workspace database from %s", seed_db_path)
+
+        effective_db_path = db_path.strip() if isinstance(db_path, str) else ""
+        self._db = SkeyDB(effective_db_path or str(default_db_path))
 
         if self._use_db:
             self.load_skeys_from_db()
@@ -82,16 +92,6 @@ class SkeyService:
     def reload_groups(self):
         """Reload skeys from DB and rebuild SkeyGroup from current repository data."""
         self.load_skeys_from_db()
-        # Populate the group structure from groups and subgroups tables
-        db_groups = self._db.get_all_groups()
-        for g_key in db_groups:
-            if g_key not in self._groups.get_groups():
-                self._groups.groups[g_key] = {}
-
-            db_subgroups = self._db.get_subgroups_by_group(g_key)
-            for sg_key in db_subgroups:
-                if sg_key not in self._groups.groups[g_key]:
-                    self._groups.groups[g_key][sg_key] = []
 
     @property
     def groups(self):
@@ -129,6 +129,22 @@ class SkeyService:
 
     def get_sync_conflicts(self) -> list[dict]:
         return self._db.get_sync_conflicts()
+
+    def get_database_path(self) -> str:
+        return self._db.db_path
+
+    def switch_database(self, db_path: str) -> bool:
+        """Switch active database and reload current in-memory data."""
+        if not isinstance(db_path, str) or not db_path.strip():
+            return False
+
+        try:
+            self._db = SkeyDB(db_path.strip())
+            self.load_skeys_from_db()
+            return True
+        except (sqlite3.Error, OSError, ValueError, TypeError):
+            logger.exception("Failed to switch database to %s", db_path)
+            return False
 
     def _normalize_catalog_geometry(self, symbol_code: str, payload: dict) -> list[str]:
         raw_geometry = payload.get("geometry", [])
@@ -214,11 +230,12 @@ class SkeyService:
     ) -> SkeyData:
         return SkeyData(
             name=symbol_code,
-            group_key=(payload.get("skey_group") or "unknown").lower().replace(" ", "_"),
-            subgroup_key=(payload.get("subgroup") or "unknown").lower().replace(" ", "_"),
+            group_key=payload.get("skey_group") or "unknown",
+            subgroup_key=payload.get("subgroup") or "unknown",
             description_key=payload.get("description") or "",
             spindle_skey=payload.get("spindle_skey") or "",
             orientation=int(payload.get("orientation", 0)),
+            draw_orientation=int(payload.get("draw_orientation", 0)),
             flow_arrow=int(payload.get("flow_arrow", 0)),
             dimensioned=int(payload.get("dimensioned", 0)),
             tracing=int(payload.get("tracing", 0)),
@@ -389,6 +406,7 @@ class SkeyService:
         insulation: int,
         geometry: list,
         lang_code: Optional[str] = None,
+        draw_orientation: int = 0,
         pcf_identification: str = "",
         idf_record: str = "",
         user_definable: int = 1,
@@ -413,9 +431,11 @@ class SkeyService:
                     return clean_val
             return val
 
-        # Normalize group/subgroup identifiers
-        g_id = clean_key(group_key).lower().replace(' ', '_').replace('-', '_')
-        sg_id = clean_key(subgroup_key).lower().replace(' ', '_').replace('-', '_')
+        # Preserve display spelling in storage, but keep normalized ids for translation keys.
+        group_value = clean_key(group_key)
+        subgroup_value = clean_key(subgroup_key)
+        g_id = group_value.lower().replace(' ', '_').replace('-', '_')
+        sg_id = subgroup_value.lower().replace(' ', '_').replace('-', '_')
 
         # If we received a display name (not a key), store its translation
         if "." not in group_key:
@@ -465,11 +485,12 @@ class SkeyService:
 
         skey = SkeyData(
             name=name,
-            group_key=g_id,
-            subgroup_key=sg_id,
+            group_key=group_value,
+            subgroup_key=subgroup_value,
             description_key=desc_i18n_key,
             spindle_skey=spindle_skey,
             orientation=orientation,
+            draw_orientation=draw_orientation,
             flow_arrow=flow_arrow,
             dimensioned=dimensioned,
             tracing=tracing,
@@ -496,7 +517,7 @@ class SkeyService:
         )
 
         # Ensure group and subgroup exist in the database
-        self._db.ensure_subgroup_exists(g_id, sg_id)
+        self._db.ensure_subgroup_exists(group_value, subgroup_value)
 
         # Update in database
         self._db.update_skey(skey)
@@ -507,7 +528,7 @@ class SkeyService:
         # Rebuild groups
         self._groups = self._repository.build_groups()
 
-        logger.info("Skey '%s' updated successfully with hierarchy: %s -> %s", name, g_id, sg_id)
+        logger.info("Skey '%s' updated successfully with hierarchy: %s -> %s", name, group_value, subgroup_value)
         return True
     def save_skeys(self):
         """Save all skeys (called after updates)."""
@@ -541,25 +562,70 @@ class SkeyService:
         """
         Convert a SkeyData object to Intergraph ASCII format (lines of 501 and 502 records).
         """
-        # 1. Header 501
-        # Format: 501 SKEY BASE SPINDLE ... ORI FLOW DIM
-        skey_name = (skey.name[:5]).ljust(5)
-        base_name = (skey.name[:4]).ljust(4) # Often base is same as first 4 chars
-        spindle_name = (skey.spindle_skey or "")[:4].ljust(4)
+        # 1. Header 501 in IsoAlgo-like fixed-width layout.
+        # Keep offsets compatible with importer slices:
+        # new(5:10), base(11:15), spindle(16:20), orientation(30:37),
+        # flow(38:45), dimensioned(46:53).
+        # IsoAlgo-style legacy profile stores symbol code in base field,
+        # while keeping new/spindle fields empty.
+        skey_name = "".ljust(5)
+        base_name = (skey.name[:4]).ljust(4)
+        spindle_name = "".ljust(4)
 
-        orientation = str(skey.orientation).rjust(7)
-        flow_arrow = str(skey.flow_arrow).rjust(7)
-        dimensioned = str(skey.dimensioned).rjust(7)
+        row_501 = list(" " + "501" + (" " * 97))
+        row_501[5:10] = list(skey_name)
+        row_501[11:15] = list(base_name)
+        row_501[16:20] = list(spindle_name)
 
-        # 501 header with precise spacing for columns
-        header = f"501  {skey_name} {base_name} {spindle_name}"
-        header = header.ljust(30) + f"{orientation} {flow_arrow} {dimensioned}"
-        lines = [header]
+        # Legacy base scale field (matches IsoAlgo style).
+        row_501[20:30] = list(f"{100:>9} ")
+
+        numeric_values = [
+            int(skey.orientation),
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            int(skey.local_revision),
+        ]
+        starts = [30, 38, 46, 54, 62, 70, 78, 86, 94]
+        for start, value in zip(starts, numeric_values):
+            row_501[start:start + 7] = list(f"{value:>7}")
+
+        lines = ["".join(row_501)]
+
+        def _to_int_coord(value: float) -> int:
+            return int(round(value))
+
+        def _build_502_record(chunk: list[tuple[str, int, int]]) -> str:
+            # Keep strict fixed-width layout expected by legacy 502 parser.
+            # Slices align with importer positions:
+            # (5:14 action, 15:22 x, 23:30 y), ... up to y(95:103).
+            row = list("502  " + (" " * 98))
+            positions = [
+                (5, 14, 15, 22, 23, 30),
+                (31, 38, 39, 46, 47, 54),
+                (55, 63, 64, 70, 71, 78),
+                (79, 86, 87, 94, 95, 103),
+            ]
+
+            for (start_action, end_action, start_x, end_x, start_y, end_y), (act, rx, ry) in zip(positions, chunk):
+                act_str = str(act).rjust(end_action - start_action)
+                x_str = str(rx).rjust(end_x - start_x)
+                y_str = str(ry).rjust(end_y - start_y)
+                row[start_action:end_action] = list(act_str)
+                row[start_x:end_x] = list(x_str)
+                row[start_y:end_y] = list(y_str)
+
+            return "".join(row)
 
         # 2. Geometry 502
         # Convert standardized geometry strings to raw (Action, X, Y)
         # Using scale 20.0 (inverse of 0.05) and an offset of 50.0 to keep coords positive
-        raw_geom = []
+        raw_geom: list[tuple[str, int, int]] = []
         offset_val = 50.0
 
         for item in skey.geometry:
@@ -580,16 +646,32 @@ class SkeyService:
                         action = "3"
                     elif item_type == "SpindlePoint":
                         action = "6"
-                    raw_geom.append((action, round((vals["x0"] + offset_val) * 20.0, 1), round((vals["y0"] + offset_val) * 20.0, 1)))
+                    raw_geom.append((
+                        action,
+                        _to_int_coord((vals["x0"] + offset_val) * 20.0),
+                        _to_int_coord((vals["y0"] + offset_val) * 20.0),
+                    ))
                 elif item_type == "Line":
-                    raw_geom.append(("1", round((vals["x1"] + offset_val) * 20.0, 1), round((vals["y1"] + offset_val) * 20.0, 1)))
-                    raw_geom.append(("2", round((vals["x2"] + offset_val) * 20.0, 1), round((vals["y2"] + offset_val) * 20.0, 1)))
+                    raw_geom.append((
+                        "1",
+                        _to_int_coord((vals["x1"] + offset_val) * 20.0),
+                        _to_int_coord((vals["y1"] + offset_val) * 20.0),
+                    ))
+                    raw_geom.append((
+                        "2",
+                        _to_int_coord((vals["x2"] + offset_val) * 20.0),
+                        _to_int_coord((vals["y2"] + offset_val) * 20.0),
+                    ))
                 elif item_type == "Rectangle":
                     x, y, w, h = vals["x0"], vals["y0"], vals["width"], vals["height"]
                     rect_pts = [(x - w/2, y - h/2), (x + w/2, y - h/2), (x + w/2, y + h/2), (x - w/2, y + h/2), (x - w/2, y - h/2)]
                     for i, (px, py) in enumerate(rect_pts):
                         act = "1" if i == 0 else "2"
-                        raw_geom.append((act, round((px + offset_val) * 20.0, 1), round((py + offset_val) * 20.0, 1)))
+                        raw_geom.append((
+                            act,
+                            _to_int_coord((px + offset_val) * 20.0),
+                            _to_int_coord((py + offset_val) * 20.0),
+                        ))
             except (ValueError, IndexError, KeyError):
                 continue
 
@@ -597,16 +679,44 @@ class SkeyService:
             return "\n".join(lines)
 
         # 800 terminator
-        raw_geom.append(("0", 0.0, 0.0))
+        raw_geom.append(("0", 0, 0))
 
-        # Chunk into 502 records (up to 4 points per line)
+        # Chunk into fixed-width 502 records (always 4 points per line).
+        # If the last chunk is shorter, fill with zero triplets to match legacy formatting.
         for i in range(0, len(raw_geom), 4):
             chunk = raw_geom[i:i+4]
-            record = "502  "
-            for act, rx, ry in chunk:
-                # Format: Action(9) + Space(1) + X(7) + Space(1) + Y(7) + Space(1) = 26 chars
-                # This matches the importer's positions 5, 31, 55, 79...
-                record += f"{act.rjust(9)} {str(rx).rjust(7)} {str(ry).rjust(7)} "
-            lines.append(record.rstrip())
+            if len(chunk) < 4:
+                chunk.extend([("0", 0, 0)] * (4 - len(chunk)))
+            lines.append(_build_502_record(chunk))
 
         return "\n".join(lines)
+
+    def export_all_skeys_to_ois_payload(self) -> dict:
+        """Build OpenIso OIS JSON payload with all Skey parameters from the database."""
+        if self._use_db:
+            self.load_skeys_from_db()
+
+        skeys_payload: dict[str, dict] = {}
+        for skey_name in sorted(self._repository.skeys.keys()):
+            skey = self._repository.skeys[skey_name]
+            skey_dict = skey.to_dict()
+            skey_dict["name"] = skey.name
+            skeys_payload[skey_name] = skey_dict
+
+        return {
+            "format": "openiso-ois",
+            "version": 1,
+            "skeys": skeys_payload,
+        }
+
+    def export_all_skeys_to_ascii(self) -> str:
+        """Export all skeys as a single ASCII text document."""
+        if self._use_db:
+            self.load_skeys_from_db()
+
+        chunks: list[str] = []
+        for skey_name in sorted(self._repository.skeys.keys()):
+            skey = self._repository.skeys[skey_name]
+            chunks.append(self.export_skey_to_ascii(skey))
+
+        return "\n\n".join(chunks)

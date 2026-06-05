@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QScrollArea,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
@@ -18,13 +19,15 @@ from PyQt6.QtWidgets import (
 
 from openiso import __version__
 from openiso.core.constants import (
+    DATA_ROOT,
     ISSUES_URL,
     MIT_LICENSE_URL,
     NEW_ISSUE_URL,
+    PROJECT_ROOT,
     README_URL,
     REPO_URL,
 )
-from openiso.core.i18n import setup_i18n
+from openiso.core.i18n import get_current_language, setup_i18n
 
 
 class AboutDialog(QDialog):
@@ -32,7 +35,7 @@ class AboutDialog(QDialog):
     Custom About dialog for the application.
     Redesigned to follow modern GNOME (Adwaita) About window style.
     """
-    def __init__(self, icons_path, parent=None):
+    def __init__(self, icons_path, parent=None, initial_page: str | None = None):
         super().__init__(parent)
         self.setObjectName("AboutDialog")
         self._t = setup_i18n()
@@ -48,6 +51,9 @@ class AboutDialog(QDialog):
         self.main_layout.addWidget(self.stack)
 
         self.setupUi()
+
+        if initial_page == "whats_new" and hasattr(self, "whats_new_page"):
+            self.stack.setCurrentWidget(self.whats_new_page)
 
     def _create_row(self, text, url=None, target_page=None):
         btn = QPushButton()
@@ -102,9 +108,15 @@ class AboutDialog(QDialog):
 
         layout.addWidget(header)
 
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+
         content_widget = QWidget()
         content_widget.setProperty("class", "SubPageContent")
-        layout.addWidget(content_widget, 1)
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area, 1)
 
         return page, content_widget
 
@@ -149,6 +161,17 @@ class AboutDialog(QDialog):
 
         content_layout.addSpacing(10)
 
+        # 2. Sub-pages Setup
+        self.credits_page, self.credits_content = self._create_subpage(self._t("Credits"))
+        self.legal_page, self.legal_content = self._create_subpage(self._t("Legal"))
+        self.acks_page, self.acks_content = self._create_subpage(self._t("Acknowledgments"))
+        self.whats_new_page, self.whats_new_content = self._create_subpage(self._t("What's New"))
+
+        self.stack.addWidget(self.credits_page)
+        self.stack.addWidget(self.legal_page)
+        self.stack.addWidget(self.acks_page)
+        self.stack.addWidget(self.whats_new_page)
+
         # Sections
         website_group = QFrame()
         website_group.setProperty("class", "ListGroup")
@@ -165,7 +188,7 @@ class AboutDialog(QDialog):
         releases_layout = QVBoxLayout(releases_group)
         releases_layout.setContentsMargins(0, 0, 0, 0)
         releases_layout.setSpacing(0)
-        releases_layout.addWidget(self._create_row(self._t("What's New"), url=f"{REPO_URL}/releases"))
+        releases_layout.addWidget(self._create_row(self._t("What's New"), target_page=self.whats_new_page))
         content_layout.addWidget(releases_group)
         content_layout.addSpacing(10)
 
@@ -185,15 +208,6 @@ class AboutDialog(QDialog):
         support_layout.addWidget(self._create_row(self._t("Troubleshooting"), url=README_URL))
         content_layout.addWidget(support_group)
         content_layout.addSpacing(10)
-
-        # 2. Sub-pages Setup
-        self.credits_page, self.credits_content = self._create_subpage(self._t("Credits"))
-        self.legal_page, self.legal_content = self._create_subpage(self._t("Legal"))
-        self.acks_page, self.acks_content = self._create_subpage(self._t("Acknowledgments"))
-
-        self.stack.addWidget(self.credits_page)
-        self.stack.addWidget(self.legal_page)
-        self.stack.addWidget(self.acks_page)
 
         legal_group = QFrame()
         legal_group.setProperty("class", "ListGroup")
@@ -249,3 +263,98 @@ class AboutDialog(QDialog):
         ack.setProperty("class", "AboutAcknowledgment")
         a_layout.addWidget(ack)
         a_layout.addStretch()
+
+        # What's New
+        wn_layout = QVBoxLayout(self.whats_new_content)
+        wn_layout.setContentsMargins(15, 15, 15, 15)
+        wn_layout.setSpacing(10)
+
+        self.whats_new_title = QLabel(self._t("What's New"))
+        self.whats_new_title.setProperty("class", "AboutCopyrightBold")
+        wn_layout.addWidget(self.whats_new_title)
+
+        self.whats_new_text = QLabel()
+        self.whats_new_text.setWordWrap(True)
+        self.whats_new_text.setOpenExternalLinks(True)
+        self.whats_new_text.setProperty("class", "AboutLegalText")
+        wn_layout.addWidget(self.whats_new_text)
+        wn_layout.addStretch()
+
+        self._load_whats_new_content()
+
+    def _docs_path(self) -> str:
+        source_docs_path = os.path.join(PROJECT_ROOT, "docs")
+        installed_docs_path = os.path.join(DATA_ROOT, "docs")
+        return source_docs_path if os.path.exists(source_docs_path) else installed_docs_path
+
+    def _pick_whats_new_file(self, docs_path: str) -> str | None:
+        lang_code = get_current_language() or "en"
+        candidates = []
+
+        for code in (lang_code, "en"):
+            lang_dir = os.path.join(docs_path, code)
+            candidates.append(os.path.join(lang_dir, "WHATS_NEW.MD"))
+            candidates.append(os.path.join(lang_dir, f"WHATS_NEW_{__version__}.MD"))
+
+        for candidate in candidates:
+            if os.path.exists(candidate):
+                return candidate
+
+        return None
+
+    def _load_whats_new_content(self) -> None:
+        docs_path = self._docs_path()
+        release_file = self._pick_whats_new_file(docs_path)
+        if not release_file:
+            self.whats_new_title.setText(self._t("What's New"))
+            self.whats_new_text.setText(
+                self._t("Release notes are not available for this language yet.")
+            )
+            return
+
+        try:
+            with open(release_file, "r", encoding="utf-8") as handle:
+                content = handle.read()
+            rendered_title = self._t("What's New")
+            for raw_line in content.splitlines():
+                stripped = raw_line.strip()
+                if stripped.startswith("# "):
+                    rendered_title = stripped[2:].strip()
+                    break
+
+            self.whats_new_title.setText(rendered_title)
+            self.whats_new_text.setText(self._format_whats_new_for_legal_style(content))
+        except (OSError, UnicodeError, ValueError) as err:
+            self.whats_new_title.setText(self._t("Error"))
+            self.whats_new_text.setText(
+                self._t("Could not load release notes: {0}").format(str(err))
+            )
+
+    def _format_whats_new_for_legal_style(self, content: str) -> str:
+        """Convert markdown release notes to simple legal-style rich text."""
+        lines = content.splitlines()
+        html_parts: list[str] = []
+
+        for raw_line in lines:
+            line = raw_line.strip()
+            if not line:
+                html_parts.append("<br/>")
+                continue
+
+            if line.startswith("# "):
+                # Main title is shown in self.whats_new_title.
+                continue
+
+            if line.startswith("## "):
+                section = line[3:].strip()
+                html_parts.append(f"<b>{section}</b><br/>")
+                continue
+
+            if line.startswith("- "):
+                bullet = line[2:].strip()
+                html_parts.append(f"&bull; {bullet}<br/>")
+                continue
+
+            html_parts.append(f"{line}<br/>")
+
+        return "".join(html_parts).strip()

@@ -87,6 +87,7 @@ class SheetLayout(QGraphicsScene):
         self.undo_stack = []
         self.redo_stack = []
         self._move_before_states = None
+        self.show_move_handles = False
 
         # Pre-create reusable graphics items
         self.arrive_point = ArrivePoint()
@@ -269,7 +270,8 @@ class SheetLayout(QGraphicsScene):
                     item.setPen(green_pen)
 
                 self.selected_for_highlight.add(item)
-                self.create_handles_for_item(item)
+                if self.show_move_handles:
+                    self.create_handles_for_item(item)
 
 
     def create_handles_for_item(self, item):
@@ -462,17 +464,12 @@ class SheetLayout(QGraphicsScene):
         if btn == Qt.MouseButton.LeftButton:
 
             # Move mode
-            if action == "move_element":
+            if action in ("move_element", "select_element"):
                 self._move_before_states = [
                     (item, self._capture_item_state(item))
                     for item in self.selectedItems()
                     if item in self.symbol_drawlist
                 ]
-                super().mousePressEvent(mouse_event)
-                return
-
-            # Selection mode
-            if action == "select_element":
                 super().mousePressEvent(mouse_event)
                 return
 
@@ -520,7 +517,7 @@ class SheetLayout(QGraphicsScene):
 
     def mouseReleaseEvent(self, mouse_event):
         super().mouseReleaseEvent(mouse_event)
-        if self.current_action == "move_element" and self._move_before_states:
+        if self.current_action in ("move_element", "select_element") and self._move_before_states:
             items = [item for item, _ in self._move_before_states]
             before = [state for _, state in self._move_before_states]
             after = [self._capture_item_state(item) for item in items]

@@ -162,6 +162,12 @@ QTextBrowser {
     padding: 0px;
 }
 
+.ToolButton:checked {
+    background-color: #d8e8ff;
+    border: 1px solid #78a6e8;
+    border-radius: 4px;
+}
+
 .ToolButton::menu-indicator {
     image: none;
     width: 0px;
