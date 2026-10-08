@@ -108,11 +108,10 @@ class GeometryConverter:
         new_geometry = []
         # Use a fixed scale of 0.05 (1/20) for 100px units
         scale = 0.05
-        max_size = 1.0
-        max_width = 1.0
-        max_height = 1.0
-        min_width = 10000.0
-        min_height = 10000.0
+        max_width = float("-inf")
+        max_height = float("-inf")
+        min_width = float("inf")
+        min_height = float("inf")
 
         # First pass: find bounds
         for x in range(0, len(geometry), 3):
@@ -124,8 +123,11 @@ class GeometryConverter:
                 max_width = max(point_x, max_width)
                 max_height = max(point_y, max_height)
 
-        symbol_width = max_width * scale
-        symbol_height = max_height * scale
+        if min_width == float("inf"):
+            return []
+
+        center_x = (min_width + max_width) * scale / 2
+        center_y = (min_height + max_height) * scale / 2
 
         # Find end of geometry
         index_of_end_geometry = 0
@@ -139,8 +141,8 @@ class GeometryConverter:
             pen_action = geometry[x]
 
             if pen_action == "1":
-                start_point_x = round(float(geometry[x + 1]) * scale - symbol_width / 2, 3)
-                start_point_y = round(float(geometry[x + 2]) * scale - symbol_height / 2, 3)
+                start_point_x = round(float(geometry[x + 1]) * scale - center_x, 3)
+                start_point_y = round(float(geometry[x + 2]) * scale - center_y, 3)
 
                 if x == 0:
                     point_type = "SpindlePoint" if "SP" in skey else "ArrivePoint"
@@ -150,8 +152,8 @@ class GeometryConverter:
                         new_geometry.append(f"LeavePoint: x0={start_point_x} y0={start_point_y}")
 
             elif pen_action == "2":
-                end_point_x = round(float(geometry[x + 1]) * scale - symbol_width / 2, 3)
-                end_point_y = round(float(geometry[x + 2]) * scale - symbol_height / 2, 3)
+                end_point_x = round(float(geometry[x + 1]) * scale - center_x, 3)
+                end_point_y = round(float(geometry[x + 2]) * scale - center_y, 3)
                 new_geometry.append(
                     f"Line: x1={start_point_x} y1={start_point_y} x2={end_point_x} y2={end_point_y}"
                 )
@@ -159,15 +161,15 @@ class GeometryConverter:
                 start_point_y = end_point_y
 
             elif pen_action == "3":
-                end_point_x = round(float(geometry[x + 1]) * scale - symbol_width / 2, 3)
-                end_point_y = round(float(geometry[x + 2]) * scale - symbol_height / 2, 3)
+                end_point_x = round(float(geometry[x + 1]) * scale - center_x, 3)
+                end_point_y = round(float(geometry[x + 2]) * scale - center_y, 3)
                 new_geometry.append(f"TeePoint: x0={end_point_x} y0={end_point_y}")
                 start_point_x = end_point_x
                 start_point_y = end_point_y
 
             elif pen_action == "6":
-                end_point_x = round(float(geometry[x + 1]) * scale - symbol_width / 2, 3)
-                end_point_y = round(float(geometry[x + 2]) * scale - symbol_height / 2, 3)
+                end_point_x = round(float(geometry[x + 1]) * scale - center_x, 3)
+                end_point_y = round(float(geometry[x + 2]) * scale - center_y, 3)
                 new_geometry.append(f"SpindlePoint: x0={end_point_x} y0={end_point_y}")
                 start_point_x = end_point_x
                 start_point_y = end_point_y

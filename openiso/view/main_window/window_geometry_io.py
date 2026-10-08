@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
     QGraphicsEllipseItem,
     QGraphicsItem,
     QGraphicsLineItem,
+    QGraphicsPathItem,
     QGraphicsPolygonItem,
     QGraphicsRectItem,
 )
@@ -306,24 +307,43 @@ class GeometryIOMixin:
                     break
             else:
                 if isinstance(item, QGraphicsLineItem):
-                    x1, y1 = self._to_relative_coordinates(item.line().p1().x(), item.line().p1().y())
-                    x2, y2 = self._to_relative_coordinates(item.line().p2().x(), item.line().p2().y())
+                    p1 = item.mapToScene(item.line().p1())
+                    p2 = item.mapToScene(item.line().p2())
+                    x1, y1 = self._to_relative_coordinates(p1.x(), p1.y())
+                    x2, y2 = self._to_relative_coordinates(p2.x(), p2.y())
                     geometry.append(f"Line: x1={x1} y1={y1} x2={x2} y2={y2}")
 
                 elif isinstance(item, QGraphicsRectItem):
-                    pos = self.scene.convert_to_relative_position(QPointF(item.rect().x(), item.rect().y()))
+                    center = item.mapToScene(item.rect().center())
+                    pos = self.scene.convert_to_relative_position(center)
                     width = round(item.rect().width() / self.scene.step_x / 20, 2)
-                    height = round(item.rect().height() / self.scene.step_x / 20, 2)
+                    height = round(item.rect().height() / self.scene.step_y / 20, 2)
                     geometry.append(f"Rectangle: x0={pos.x()} y0={pos.y()} width={width} height={height}")
+
+                elif isinstance(item, QGraphicsEllipseItem):
+                    center = item.mapToScene(item.rect().center())
+                    pos = self.scene.convert_to_relative_position(center)
+                    radius = round(item.rect().width() / 2 / self.scene.step_x / 20, 3)
+                    geometry.append(f"Circle: x0={pos.x()} y0={pos.y()} r={radius}")
 
                 elif isinstance(item, QGraphicsPolygonItem):
                     parts = []
                     polygon = item.polygon()
                     for index in range(polygon.count()):
-                        point = polygon.at(index)
+                        point = item.mapToScene(polygon.at(index))
                         pos = self.scene.convert_to_relative_position(point)
                         parts.append(f"p{index + 1}x={pos.x()} p{index + 1}y={pos.y()}")
                     geometry.append(f"Polygon: {' '.join(parts)}")
+
+                elif isinstance(item, QGraphicsPathItem):
+                    path = item.mapToScene(item.path())
+                    for polygon in path.toSubpathPolygons():
+                        for index in range(1, polygon.count()):
+                            p1 = polygon.at(index - 1)
+                            p2 = polygon.at(index)
+                            x1, y1 = self._to_relative_coordinates(p1.x(), p1.y())
+                            x2, y2 = self._to_relative_coordinates(p2.x(), p2.y())
+                            geometry.append(f"Line: x1={x1} y1={y1} x2={x2} y2={y2}")
 
         return geometry
 

@@ -574,7 +574,8 @@
       "ww": {
         "_name": "WW",
         "description": ""
-      }
+      },
+      "soch": "SOCH"
     },
     "dotted_workshop_weld": {
       "_name": "Dotted Workshop Weld",

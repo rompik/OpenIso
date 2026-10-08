@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.8.10 (2026-10-08)
+
+### Improvements
+
+- Fixed ASCII import so trailing blank lines do not discard the final symbol geometry.
+- Corrected geometry centering and canvas serialization for rectangles, circles, and paths.
+- Connected Undo and Redo controls to the scene history.
+- Preserved Default, Off, and On values when editing symbol flags.
+- Added regression tests for import, geometry, export, and editing behavior.
+
 ## 0.8.9 (2026-06-04)
 
 Compared to the 0.8.8 baseline.

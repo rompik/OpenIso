@@ -66,8 +66,19 @@ def test_geometry_converter_converts_legacy_raw_graphics():
     converted = GeometryConverter().convert_graphics("04HT", raw_geometry)
 
     assert converted == [
-        "ArrivePoint: x0=-25.0 y0=25.0",
-        "Line: x1=-25.0 y1=25.0 x2=25.0 y2=25.0",
+        "ArrivePoint: x0=-25.0 y0=0.0",
+        "Line: x1=-25.0 y1=0.0 x2=25.0 y2=0.0",
+    ]
+
+
+def test_geometry_converter_centers_geometry_with_nonzero_minimums():
+    raw_geometry = ["1", 100.0, 200.0, "2", 300.0, 400.0, "0", 0.0, 0.0]
+
+    converted = GeometryConverter().convert_graphics("TEST", raw_geometry)
+
+    assert converted == [
+        "ArrivePoint: x0=-5.0 y0=-5.0",
+        "Line: x1=-5.0 y1=-5.0 x2=5.0 y2=5.0",
     ]
 
 

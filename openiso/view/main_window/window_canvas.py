@@ -168,11 +168,11 @@ class CanvasMixin:
 
     def undo_last_action(self):
         """Reverts the last drawing or editing operation performed."""
-        logger.info("Undo clicked")
+        self.scene.undo()
 
     def redo_next_action(self):
         """Re-applies the operation that was previously undone."""
-        logger.info("Redo clicked")
+        self.scene.redo()
 
     # -----------------------------------------------------------------
     # Transform operations

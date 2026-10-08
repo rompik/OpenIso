@@ -4,6 +4,7 @@
 import hashlib
 import json
 import logging
+import math
 import sqlite3
 import shutil
 from typing import Optional
@@ -543,12 +544,16 @@ class SkeyService:
         importer = SkeyImporterFactory.create_importer(file_path, self._descriptions, self._geometry_converter)
         result = importer.import_from_file(file_path)
         if result.success:
+            available_spindles = {spindle.name for spindle in self._db.get_all_spindles()}
             for name, skey in result.skeys.items():
                 skey.origin_type = "imported"
                 skey.is_official = 0
                 skey.is_user_modified = 0
                 skey.local_revision = 1
                 skey.sync_state = "synced"
+                if skey.spindle_skey not in available_spindles:
+                    skey.spindle_skey = ""
+                self._db.ensure_subgroup_exists(skey.group_key, skey.subgroup_key)
                 self._db.update_skey(skey)
                 self._repository.skeys[name] = skey
             self._groups = self._repository.build_groups()
@@ -671,6 +676,19 @@ class SkeyService:
                             act,
                             _to_int_coord((px + offset_val) * 20.0),
                             _to_int_coord((py + offset_val) * 20.0),
+                        ))
+                elif item_type == "Circle":
+                    center_x, center_y = vals["x0"], vals["y0"]
+                    radius = abs(vals["r"])
+                    segment_count = 32
+                    for point_index in range(segment_count + 1):
+                        angle = 2 * math.pi * point_index / segment_count
+                        point_x = center_x + radius * math.cos(angle)
+                        point_y = center_y + radius * math.sin(angle)
+                        raw_geom.append((
+                            "1" if point_index == 0 else "2",
+                            _to_int_coord((point_x + offset_val) * 20.0),
+                            _to_int_coord((point_y + offset_val) * 20.0),
                         ))
             except (ValueError, IndexError, KeyError):
                 continue

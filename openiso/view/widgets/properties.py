@@ -29,6 +29,14 @@ _t = setup_i18n()
 logger = logging.getLogger(__name__)
 
 
+def _flag_to_check_state(value):
+    return {
+        0: Qt.CheckState.PartiallyChecked,
+        1: Qt.CheckState.Unchecked,
+        2: Qt.CheckState.Checked,
+    }.get(value, Qt.CheckState.PartiallyChecked)
+
+
 class JsonSyntaxHighlighter(QSyntaxHighlighter):
     """Simple JSON syntax highlighter for read-only preview blocks."""
 
@@ -183,12 +191,16 @@ class PropertiesWidget(QGroupBox):
         self.lyt_draw_orientation.addWidget(self.cb_orientation)
 
         self.chk_flow_arrow = QCheckBox(_t("Flow Arrow"))
+        self.chk_flow_arrow.setTristate(True)
 
         self.chk_dimensioned = QCheckBox(_t("Dimensioned"))
+        self.chk_dimensioned.setTristate(True)
 
         self.chk_tracing = QCheckBox(_t("Tracing"))
+        self.chk_tracing.setTristate(True)
 
         self.chk_insulation = QCheckBox(_t("Insulation"))
+        self.chk_insulation.setTristate(True)
 
         self.chk_user_definable = QCheckBox(_t("User Definable"))
         self.chk_user_definable.setChecked(True)
@@ -284,10 +296,10 @@ class PropertiesWidget(QGroupBox):
         self.txt_skey_desc.setPlainText("")
         self.radio_mirrors[0].setChecked(True)
         self.cb_orientation.setCurrentIndex(0)
-        self.chk_flow_arrow.setChecked(False)
-        self.chk_dimensioned.setChecked(False)
-        self.chk_tracing.setChecked(False)
-        self.chk_insulation.setChecked(False)
+        self.chk_flow_arrow.setCheckState(_flag_to_check_state(0))
+        self.chk_dimensioned.setCheckState(_flag_to_check_state(0))
+        self.chk_tracing.setCheckState(_flag_to_check_state(0))
+        self.chk_insulation.setCheckState(_flag_to_check_state(0))
         self.chk_user_definable.setChecked(True)
         self.chk_flow_dependency.setChecked(False)
         self.chk_isogen_standard.setChecked(False)
@@ -561,13 +573,10 @@ class PropertiesWidget(QGroupBox):
         self.cb_orientation.setCurrentIndex(draw_orientation_index if draw_orientation_index >= 0 else 0)
 
         # FlowArrow: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
-        self.chk_flow_arrow.setChecked(skey_data.flow_arrow == 2)
-        # Dimensioned: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
-        self.chk_dimensioned.setChecked(skey_data.dimensioned == 2)
-        # Tracing: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
-        self.chk_tracing.setChecked(hasattr(skey_data, 'tracing') and skey_data.tracing == 2)
-        # Insulation: 0=Default, 1=Off, 2=On -> Checkbox: Checked if On
-        self.chk_insulation.setChecked(hasattr(skey_data, 'insulation') and skey_data.insulation == 2)
+        self.chk_flow_arrow.setCheckState(_flag_to_check_state(skey_data.flow_arrow))
+        self.chk_dimensioned.setCheckState(_flag_to_check_state(skey_data.dimensioned))
+        self.chk_tracing.setCheckState(_flag_to_check_state(getattr(skey_data, "tracing", 0)))
+        self.chk_insulation.setCheckState(_flag_to_check_state(getattr(skey_data, "insulation", 0)))
         self.chk_user_definable.setChecked(getattr(skey_data, "user_definable", 1) == 1)
         self.chk_flow_dependency.setChecked(getattr(skey_data, "flow_dependency", 0) == 1)
         self.chk_isogen_standard.setChecked(getattr(skey_data, "isogen_standard", 0) == 1)

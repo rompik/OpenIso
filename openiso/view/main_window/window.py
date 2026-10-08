@@ -44,7 +44,7 @@ from openiso.view.graphics.scene import SheetLayout
 from openiso.view.main_window.window_canvas import CanvasMixin
 from openiso.view.main_window.window_controller import WindowController
 from openiso.view.main_window.window_dialogs import DialogsMixin
-from openiso.view.main_window.window_form_adapter import WindowFormAdapter
+from openiso.view.main_window.window_form_adapter import WindowFormAdapter, _checkbox_flag_value
 
 # --- Mixin imports ---
 from openiso.view.main_window.window_draw_tools import DrawToolsMixin
@@ -85,10 +85,6 @@ class SkeyEditor(
     """SkeyEditor main window."""
 
     _CHECKBOX_FLAG_MAP = {
-        "flow_arrow": (2, 1),
-        "dimensioned": (2, 1),
-        "tracing": (2, 1),
-        "insulation": (2, 1),
         "user_definable": (1, 0),
         "flow_dependency": (1, 0),
         "isogen_standard": (1, 0),
@@ -217,10 +213,16 @@ class SkeyEditor(
         """Sync orientation changes to current SkeyData."""
         self._sync_current_skey_form_fields()
 
-    def _on_property_checkbox_toggled(self, field_name: str, checked: bool):
+    def _on_property_checkbox_toggled(self, field_name: str, state):
         """Keep current SkeyData flags synchronized with checkbox state."""
         skey_data = getattr(self, "current_skey_data", None)
         if skey_data is None:
+            return
+
+        if field_name in ("flow_arrow", "dimensioned", "tracing", "insulation"):
+            setattr(skey_data, field_name, _checkbox_flag_value(state))
+            self._refresh_current_skey_json_preview()
+            self._mark_unsaved_changes()
             return
 
         mapping = self._CHECKBOX_FLAG_MAP.get(field_name)
@@ -228,7 +230,7 @@ class SkeyEditor(
             return
 
         on_value, off_value = mapping
-        setattr(skey_data, field_name, on_value if checked else off_value)
+        setattr(skey_data, field_name, on_value if state else off_value)
         self._refresh_current_skey_json_preview()
         self._mark_unsaved_changes()
 
@@ -486,17 +488,17 @@ class SkeyEditor(
         )
         self.properties_widget.txt_idf_record.textChanged.connect(lambda _text: self._mark_unsaved_changes())
         self.properties_widget.mirror_button_group.idClicked.connect(self._on_orientation_changed)
-        self.properties_widget.chk_flow_arrow.toggled.connect(
-            lambda checked: self._on_property_checkbox_toggled("flow_arrow", checked)
+        self.properties_widget.chk_flow_arrow.stateChanged.connect(
+            lambda state: self._on_property_checkbox_toggled("flow_arrow", state)
         )
-        self.properties_widget.chk_dimensioned.toggled.connect(
-            lambda checked: self._on_property_checkbox_toggled("dimensioned", checked)
+        self.properties_widget.chk_dimensioned.stateChanged.connect(
+            lambda state: self._on_property_checkbox_toggled("dimensioned", state)
         )
-        self.properties_widget.chk_tracing.toggled.connect(
-            lambda checked: self._on_property_checkbox_toggled("tracing", checked)
+        self.properties_widget.chk_tracing.stateChanged.connect(
+            lambda state: self._on_property_checkbox_toggled("tracing", state)
         )
-        self.properties_widget.chk_insulation.toggled.connect(
-            lambda checked: self._on_property_checkbox_toggled("insulation", checked)
+        self.properties_widget.chk_insulation.stateChanged.connect(
+            lambda state: self._on_property_checkbox_toggled("insulation", state)
         )
         self.properties_widget.chk_user_definable.toggled.connect(
             lambda checked: self._on_property_checkbox_toggled("user_definable", checked)

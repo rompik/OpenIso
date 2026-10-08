@@ -4,6 +4,7 @@ import re
 
 import pytest
 
+from openiso.controller.importers import ASCIISkeyImporter
 from openiso.controller.services import GeometryService, SkeyService
 from openiso.model.skey import SkeyData
 
@@ -130,6 +131,21 @@ def test_skey_service_export_to_ascii_matches_isoalgo_style_501():
     geometry_lines = [line for line in lines[1:] if line.startswith("502")]
     assert geometry_lines
     assert all(len(line) == 103 for line in geometry_lines)
+
+
+def test_skey_service_exports_circle_geometry_to_ascii(tmp_path):
+    service = SkeyService(use_db=False)
+    skey = SkeyData(
+        name="CIRC",
+        geometry=["Circle: x0=0 y0=0 r=1"],
+    )
+    export_path = tmp_path / "circle.asc"
+    export_path.write_text(service.export_skey_to_ascii(skey), encoding="utf-8")
+
+    result = ASCIISkeyImporter().import_from_file(str(export_path))
+
+    assert result.success is True
+    assert len([item for item in result.skeys["CIRC"].geometry if item.startswith("Line:")]) == 32
 
 
 def test_skey_service_export_all_skeys_to_ois_payload_contains_all_fields():

@@ -86,6 +86,11 @@
   </content_rating>
 
   <releases>
+    <release version="0.8.10" date="2026-10-08">
+      <description>
+        <p>Bug fixes and improvements to symbol import, geometry editing, undo/redo, and property preservation.</p>
+      </description>
+    </release>
     <release version="0.8.5" date="2026-05-26">
       <description>
         <p>Major update focused on editor workflow, catalog synchronization, and packaging reliability:</p>

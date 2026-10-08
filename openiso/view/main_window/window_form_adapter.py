@@ -5,6 +5,17 @@
 
 from __future__ import annotations
 
+from PyQt6.QtCore import Qt
+
+
+def _checkbox_flag_value(check_state: Qt.CheckState) -> int:
+    """Map a tri-state checkbox to the SKEY Default/Off/On values."""
+    return {
+        Qt.CheckState.Unchecked: 1,
+        Qt.CheckState.PartiallyChecked: 0,
+        Qt.CheckState.Checked: 2,
+    }[Qt.CheckState(check_state)]
+
 
 class WindowFormAdapter:
     """Extract normalized primitive values from UI widgets."""
@@ -22,10 +33,10 @@ class WindowFormAdapter:
             "spindle_skey": self._props.cb_spindle_skey.currentText(),
             "orientation": self._props.mirror_button_group.checkedId(),
             "draw_orientation": self._props.cb_orientation.currentData(),
-            "flow_arrow": 2 if self._props.chk_flow_arrow.isChecked() else 1,
-            "dimensioned": 2 if self._props.chk_dimensioned.isChecked() else 1,
-            "tracing": 2 if self._props.chk_tracing.isChecked() else 1,
-            "insulation": 2 if self._props.chk_insulation.isChecked() else 1,
+            "flow_arrow": _checkbox_flag_value(self._props.chk_flow_arrow.checkState()),
+            "dimensioned": _checkbox_flag_value(self._props.chk_dimensioned.checkState()),
+            "tracing": _checkbox_flag_value(self._props.chk_tracing.checkState()),
+            "insulation": _checkbox_flag_value(self._props.chk_insulation.checkState()),
             "user_definable": 1 if self._props.chk_user_definable.isChecked() else 0,
             "flow_dependency": 1 if self._props.chk_flow_dependency.isChecked() else 0,
             "isogen_standard": 1 if self._props.chk_isogen_standard.isChecked() else 0,
@@ -45,8 +56,8 @@ class WindowFormAdapter:
             "spindle_skey": self._props.cb_spindle_skey.currentText(),
             "orientation": self._props.mirror_button_group.checkedId(),
             "draw_orientation": self._props.cb_orientation.currentData(),
-            "flow_arrow": 2 if self._props.chk_flow_arrow.isChecked() else 1,
-            "dimensioned": 2 if self._props.chk_dimensioned.isChecked() else 1,
-            "tracing": 2 if self._props.chk_tracing.isChecked() else 1,
-            "insulation": 2 if self._props.chk_insulation.isChecked() else 1,
+            "flow_arrow": _checkbox_flag_value(self._props.chk_flow_arrow.checkState()),
+            "dimensioned": _checkbox_flag_value(self._props.chk_dimensioned.checkState()),
+            "tracing": _checkbox_flag_value(self._props.chk_tracing.checkState()),
+            "insulation": _checkbox_flag_value(self._props.chk_insulation.checkState()),
         }

@@ -153,14 +153,12 @@ class ASCIISkeyImporter(BaseSkeyImporter):
                     self._errors.append(f"Line {line_index + 1}: Failed to parse 502 record: {e}")
                     continue
 
-                # Check if last line
-                if line_index == len(contents) - 1:
-                    target_skey = new_skey if new_skey else base_skey
-                    if target_skey and target_skey in skeys:
-                        skeys[target_skey].geometry = self.geometry_converter.convert_graphics(
-                            target_skey, geometry
-                        )
-                    geometry = []
+
+        target_skey = new_skey if new_skey else base_skey
+        if target_skey and target_skey in skeys:
+            skeys[target_skey].geometry = self.geometry_converter.convert_graphics(
+                target_skey, geometry
+            )
 
         return ImportResult(
             success=len(self._errors) == 0,
@@ -237,7 +235,9 @@ class IDFSkeyImporter(BaseSkeyImporter):
                     skey_parts = row[5:21].strip().split(",")
                     new_skey = skey_parts[0] if len(skey_parts) > 0 else ""
                     base_skey = skey_parts[1] if len(skey_parts) > 1 else ""
-                    spindle_skey = skey_parts[2] if len(skey_parts) > 2 else ""
+                    spindle_skey = skey_parts[2].strip() if len(skey_parts) > 2 else ""
+                    if spindle_skey.upper() == "NONE":
+                        spindle_skey = ""
 
                     orientation = int(row[30:37].strip())
                     flow_arrow = int(row[38:45].strip())
@@ -330,7 +330,7 @@ class SkeyImporterFactory:
                         descriptions: Optional[Dict[str, list]] = None,
                         geometry_converter: Optional[GeometryConverter] = None) -> BaseSkeyImporter:
         """Create appropriate importer based on file extension"""
-        if file_path.lower().endswith('.skey'):
+        if file_path.lower().endswith(('.skey', '.asc')):
             return ASCIISkeyImporter(descriptions, geometry_converter)
         elif file_path.lower().endswith('.idf'):
             return IDFSkeyImporter(descriptions, geometry_converter)

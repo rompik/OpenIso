@@ -184,8 +184,48 @@ class SkeyOpsMixin:
         return file_path if file_path else None
 
     def import_external_file(self):
-        """Placeholder for importing symbol data from a generic external file."""
-        logger.info("Import file clicked")
+        """Import an ASCII or IDF symbol file selected by the user."""
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            _t("Import File"),
+            os.path.expanduser("~"),
+            _t("Symbol files") + " (*.skey *.asc *.idf);;" + _t("All Files") + " (*)",
+        )
+        if not file_path:
+            return
+
+        extension = os.path.splitext(file_path)[1].lower()
+        try:
+            if extension in (".skey", ".asc"):
+                result = self.controller.import_from_ascii(file_path)
+            elif extension == ".idf":
+                result = self.controller.import_from_idf(file_path)
+            else:
+                QMessageBox.warning(
+                    self,
+                    _t("Import Error"),
+                    _t("Unsupported import format"),
+                )
+                return
+
+            if result.success:
+                self.refresh_skey_tree()
+                self.status_bar_widget.showMessage(
+                    _t("Skeys imported from {0}").format(os.path.basename(file_path)),
+                    3000,
+                )
+                logger.info("Skeys imported from %s", file_path)
+            else:
+                error_text = "; ".join(result.errors) or _t("Unknown import error")
+                QMessageBox.warning(self, _t("Import Error"), error_text)
+                logger.warning("Import errors: %s", result.errors)
+        except (RuntimeError, ValueError, TypeError, OSError) as error:
+            QMessageBox.critical(
+                self,
+                _t("Import Error"),
+                _t("Failed to import symbols: {0}").format(str(error)),
+            )
+            logger.error("Import error: %s", error)
 
     def export_to_file(self):
         """Export either current Skey as ASCII (.asc) or full DB snapshot as OIS (.ois)."""
