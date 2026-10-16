@@ -1,0 +1,63 @@
+name: Build Python package on version update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+      - pyproject.toml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+
+    - name: Check version metadata
+      id: version
+      run: |
+        version="$(python - <<'PY'
+        import tomllib
+        from pathlib import Path
+
+        config = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+        version_config = config.get("tool", {}).get("setuptools", {}).get("dynamic", {}).get("version", {})
+        if "version" not in config["project"].get("dynamic", []):
+            raise SystemExit("pyproject.toml must declare dynamic version metadata")
+        if version_config.get("file") != ["VERSION"]:
+            raise SystemExit("setuptools must read the project version from VERSION")
+
+        print(Path("VERSION").read_text(encoding="utf-8").strip())
+        PY
+        )"
+        echo "value=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Install build tools
+      run: python -m pip install --upgrade build twine
+
+    - name: Build wheel and source archive
+      run: python -m build
+
+    - name: Validate package metadata
+      run: twine check dist/*
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v5
+      with:
+        name: openiso-${{ steps.version.outputs.value }}
+        path: dist/*
+        if-no-files-found: error
+        retention-days: 30
