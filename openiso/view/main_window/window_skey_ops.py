@@ -7,7 +7,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import logging
 
@@ -228,14 +227,13 @@ class SkeyOpsMixin:
             logger.error("Import error: %s", error)
 
     def export_to_file(self):
-        """Export either current Skey as ASCII (.asc) or full DB snapshot as OIS (.ois)."""
+        """Export all Skeys as ASCII (.asc)."""
         form_data = self.form_adapter.collect_export_form_data()
         skey_name = form_data.get("skey_name") or "openiso_skeys"
-        file_path, selected_filter = QFileDialog.getSaveFileName(
+        file_path, _ = QFileDialog.getSaveFileName(
             self, _t("Export File"),
             os.path.join(os.path.expanduser("~"), f"{skey_name}.asc"),
             _t("ASCII Symbolic File") + " (*.asc);;"
-            + _t("OpenIso Skey File") + " (*.ois);;"
             + _t("All Files") + " (*)",
         )
         if not file_path:
@@ -245,31 +243,11 @@ class SkeyOpsMixin:
             export_path = file_path
             ext = os.path.splitext(file_path)[1].lower()
 
-            export_kind = None
-            if ext == ".ois":
-                export_kind = "ois"
-            elif ext == ".asc":
-                export_kind = "asc"
-            elif ext == "":
-                if "*.ois" in selected_filter:
-                    export_kind = "ois"
-                    export_path = file_path + ".ois"
-                else:
-                    export_kind = "asc"
-                    export_path = file_path + ".asc"
-            else:
+            if ext not in ("", ".asc"):
                 QMessageBox.warning(self, _t("Export Error"), _t("Unsupported export format"))
                 return
-
-            if export_kind == "ois":
-                payload = self.controller.export_all_skeys_to_ois_payload()
-                with open(export_path, 'w', encoding='utf-8') as f:
-                    json.dump(payload, f, ensure_ascii=False, indent=2)
-                self.status_bar_widget.showMessage(
-                    _t("Skeys exported to {0}").format(os.path.basename(export_path)), 3000
-                )
-                logger.info("All skeys exported to OIS: %s", export_path)
-                return
+            if ext == "":
+                export_path = file_path + ".asc"
 
             ascii_content = self.controller.export_all_skeys_to_ascii()
             with open(export_path, 'w', encoding='utf-8') as f:
@@ -282,8 +260,8 @@ class SkeyOpsMixin:
             WindowErrorHandler.handle_export_error(self, e)
 
     def print_symbol(self):
-        """Opens the printing dialog to output the current symbol design."""
-        logger.info("Print clicked")
+        """Printing is temporarily disabled."""
+        return
 
     def import_from_ascii_format(self):
         """Executes the import process for Skey data from an ASCII-encoded text file."""

@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
 import sys
 from pathlib import Path
 
@@ -95,6 +96,7 @@ pyz = PYZ(a.pure)
 # Place your icon file as 'data/icons/openiso.ico' or update the path below
 icon_path = spec_root / 'data' / 'icons' / 'openiso.ico'
 icon_file = str(icon_path) if icon_path.exists() and is_windows else None
+version_info = os.environ.get('OPENISO_VERSION_INFO') if is_windows else None
 
 # Versioned output name
 version_file = spec_root / 'VERSION'
@@ -123,4 +125,5 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=icon_file,  # Windows icon
+    version=version_info,
 )

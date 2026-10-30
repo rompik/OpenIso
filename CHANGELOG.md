@@ -12,7 +12,6 @@
 
 ## 0.8.9 (2026-06-04)
 
-Compared to the 0.8.8 baseline.
 
 ### New
 

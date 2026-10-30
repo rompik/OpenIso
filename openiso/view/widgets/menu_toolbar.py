@@ -48,6 +48,7 @@ class MenuToolbarWidget(QWidget):
         self.btn_import = self._create_tool_button("Import File", icon_path=ICONS["import"], text="")
         self.btn_export = self._create_tool_button("Export File", icon_path=ICONS["export"], text="")
         self.btn_print = self._create_tool_button("Print", icon_path=ICONS["print"])
+
         self.btn_save = self._create_tool_button("Save", icon_path=ICONS["save"])
 
         self.btn_import_from_ascii = self._create_tool_button("Import from ASCII", text="ASC")

@@ -343,7 +343,6 @@ class KeyboardShortcutsDialog(QDialog):
                     (_t("Import File"), None, "Ctrl+I"),
                     (_t("Export File"), None, "Ctrl+E"),
                     (_t("Save"), None, "Ctrl+S"),
-                    (_t("Print"), None, "Ctrl+P"),
                 ]
             },
             {
