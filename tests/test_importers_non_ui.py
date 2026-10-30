@@ -4,7 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from openiso.controller.importers import ASCIISkeyImporter, SkeyImporterFactory
+from openiso.controller.importers import (
+    ASCIISkeyImporter,
+    IDFSkeyImporter,
+    SkeyImporterFactory,
+)
 
 
 pytestmark = pytest.mark.integration
@@ -31,6 +35,33 @@ def test_ascii_importer_keeps_last_symbol_geometry_with_trailing_blank_lines(tmp
 
     assert result.success is True
     assert result.skeys[last_skey_name].geometry == expected.skeys[last_skey_name].geometry
+
+
+@pytest.mark.parametrize("importer_type", [ASCIISkeyImporter, IDFSkeyImporter])
+def test_importer_skips_empty_geometry_slots(tmp_path, importer_type):
+    header = list(" 501" + (" " * 97))
+    if importer_type is IDFSkeyImporter:
+        header[5:21] = list("ABCD,,NONE".ljust(16))
+    else:
+        header[11:15] = list("ABCD")
+    for start in (30, 38, 46):
+        header[start:start + 7] = list(f"{0:>7}")
+
+    record = list("502  " + (" " * 98))
+    record[5:14] = list(f"{1:>9}")
+    record[15:22] = list(f"{1000:>7}")
+    record[23:30] = list(f"{1000:>7}")
+
+    import_path = tmp_path / "partial.skey"
+    import_path.write_text(
+        "".join(header) + "\n" + "".join(record),
+        encoding="utf-8",
+    )
+    result = importer_type().import_from_file(str(import_path))
+
+    assert result.success is True
+    assert result.skeys["ABCD"].geometry
+    assert result.errors == []
 
 
 def test_importer_factory_chooses_by_extension_and_handles_missing_file(tmp_path):

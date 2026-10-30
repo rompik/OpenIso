@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: MIT
 
 from pathlib import Path
+import sys
 
 import pytest
 
 from openiso.application import Application
+from openiso.__main__ import _ensure_project_root
 
 
 pytestmark = pytest.mark.smoke
@@ -29,3 +31,14 @@ def test_settings_property_requires_qapplication():
 
     with pytest.raises(RuntimeError):
         _ = app.settings
+
+
+def test_entry_point_prioritizes_project_over_installed_package(monkeypatch):
+    project_root = str(Path(__file__).resolve().parent.parent)
+    package_directory = str(Path(project_root) / "openiso")
+    monkeypatch.setattr(sys, "path", [package_directory, project_root, "site-packages"])
+
+    _ensure_project_root()
+
+    assert sys.path[0] == project_root
+    assert sys.path.count(project_root) == 1

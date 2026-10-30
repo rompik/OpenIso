@@ -1,1 +1,0 @@
--- DEPRECATED: skey_groups table was moved to 01_create_tables.sql

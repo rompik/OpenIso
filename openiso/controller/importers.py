@@ -178,6 +178,8 @@ class ASCIISkeyImporter(BaseSkeyImporter):
 
         for start_action, end_action, start_x, end_x, start_y, end_y in positions:
             pen_action = row[start_action:end_action].strip()
+            if not pen_action:
+                continue
             pos_x = float(row[start_x:end_x].strip())
             pos_y = float(row[start_y:end_y].strip())
 
@@ -314,6 +316,8 @@ class IDFSkeyImporter(BaseSkeyImporter):
 
         for start_action, end_action, start_x, end_x, start_y, end_y in positions:
             pen_action = row[start_action:end_action].strip()
+            if not pen_action:
+                continue
             pos_x = float(row[start_x:end_x].strip())
             pos_y = float(row[start_y:end_y].strip())
 

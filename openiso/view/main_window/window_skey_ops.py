@@ -11,7 +11,7 @@ import os
 import logging
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 from openiso.controller.skey_request_mapper import (
     build_save_payload,
@@ -184,14 +184,19 @@ class SkeyOpsMixin:
 
     def import_external_file(self):
         """Import an ASCII or IDF symbol file selected by the user."""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            _t("Import File"),
-            os.path.expanduser("~"),
-            _t("Symbol files") + " (*.skey *.asc *.idf);;" + _t("All Files") + " (*)",
+        dialog = QFileDialog(self, _t("Import File"), os.path.expanduser("~"))
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setNameFilter(
+            _t("Symbol files") + " (*.skey *.asc *.idf);;" + _t("All Files") + " (*)"
         )
-        if not file_path:
+        dialog.setOption(QFileDialog.Option.DontUseNativeDialog, True)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
+
+        selected_files = dialog.selectedFiles()
+        if not selected_files:
+            return
+        file_path = selected_files[0]
 
         extension = os.path.splitext(file_path)[1].lower()
         try:

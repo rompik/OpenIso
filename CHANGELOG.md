@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.11 (2026-10-31)
+
+### Fixes
+
+- Fixed the official catalog sync failing with `FOREIGN KEY constraint failed` on a fresh database: symbols that reference a spindle missing from the database are now stored without the spindle link instead of aborting the sync.
+- Fixed the symbol explorer width being locked: the editor area no longer has an oversized minimum size, so the splitter can be dragged freely.
+- Fixed ASCII and IDF import crashing on geometry rows with an empty pen action; such rows are now skipped.
+
+### Improvements
+
+- The import dialog now uses the non-native Qt file dialog for consistent behavior.
+- `python -m openiso` now prefers the local project checkout over a separately installed `openiso` package.
+- `build.ps1` now installs dependencies and runs PyInstaller with Python 3.14, so the built executable no longer bundles an older interpreter that cannot run the code.
+
 ## 0.8.10 (2026-10-08)
 
 ### Improvements
