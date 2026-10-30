@@ -12,7 +12,6 @@
 
 ## 0.8.9 (2026-06-04)
 
-
 ### New
 
 - Added an Orientation group to the properties panel with four draw-orientation options: None, Always Vertical, All Primary, and User Defined.
@@ -26,8 +25,6 @@
 - Reviewed SKEY endpoint connection types against the standard list and identified the current UI/schema gaps.
 
 ## 0.8.8 (2026-06-03)
-
-Compared to the 0.8.6 baseline.
 
 ### New
 
@@ -45,7 +42,6 @@ Compared to the 0.8.6 baseline.
 
 ## 0.8.6 (2026-05-28)
 
-Compared to the 0.8.5 baseline.
 
 ### New
 
@@ -59,7 +55,6 @@ Compared to the 0.8.5 baseline.
 
 ## 0.8.5 (2026-05-26)
 
-Compared to the 0.7.5 baseline.
 
 ### New
 
