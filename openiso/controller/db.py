@@ -452,6 +452,13 @@ class SkeyDB:
                 (release_version, symbol_code, symbol_version, payload_hash, json.dumps(payload, ensure_ascii=False, sort_keys=True)),
             )
 
+    @staticmethod
+    def _existing_spindle_or_none(cur, name: str) -> str | None:
+        if not name:
+            return None
+        cur.execute("SELECT 1 FROM spindles WHERE name = ?", (name,))
+        return name if cur.fetchone() else None
+
     def upsert_official_skey(
         self,
         skey: SkeyData,
@@ -476,7 +483,7 @@ class SkeyDB:
             row = cur.fetchone()
 
             if not row:
-                spindle_skey = skey.spindle_skey or None
+                spindle_skey = self._existing_spindle_or_none(cur, skey.spindle_skey)
                 source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
                 cur.execute(
                     """
@@ -547,7 +554,7 @@ class SkeyDB:
                 )
                 return "conflict"
 
-            spindle_skey = skey.spindle_skey or None
+            spindle_skey = self._existing_spindle_or_none(cur, skey.spindle_skey)
             source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
             cur.execute(
                 """

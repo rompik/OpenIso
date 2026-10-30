@@ -64,7 +64,7 @@ foreach ($path in @('build', 'dist')) {
 }
 
 # Install or update Python dependencies.
-python -m pip install -r requirements.txt
+py -3.14 -m pip install -r requirements.txt
 if ($LASTEXITCODE -ne 0) {
     throw 'Failed to install Python dependencies.'
 }
@@ -73,7 +73,7 @@ if ($LASTEXITCODE -ne 0) {
 $null = [System.IO.File]::WriteAllText($versionInfoPath, $versionInfo, $utf8NoBom)
 $env:OPENISO_VERSION_INFO = $versionInfoPath
 try {
-    python -m PyInstaller --clean OpenIso_win.spec
+    py -3.14 -m PyInstaller --clean OpenIso_win.spec
     if ($LASTEXITCODE -ne 0) {
         throw 'PyInstaller failed to build OpenIso.'
     }

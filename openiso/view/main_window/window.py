@@ -303,7 +303,7 @@ class SkeyEditor(
         self.group_editor.setLayout(self.vbox_lay_editor)
         self.hbox_lay_editor = QHBoxLayout()
         self.vbox_lay_editor.addLayout(self.hbox_lay_editor)
-        self.group_editor.setMinimumSize(self.sheet_width + 140, self.sheet_height + 100)
+        self.group_editor.setMinimumSize(300, 300)
         self.group_editor.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.properties_widget = PropertiesWidget("", self.icons_library_path)
