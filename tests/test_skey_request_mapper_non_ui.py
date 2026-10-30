@@ -23,6 +23,7 @@ def test_build_save_payload_maps_fields():
         "description_text": "desc",
         "spindle_skey": "SP",
         "orientation": 1,
+        "draw_orientation": 2,
         "flow_arrow": 2,
         "dimensioned": 2,
         "tracing": 1,
@@ -43,6 +44,7 @@ def test_build_save_payload_maps_fields():
     assert payload["name"] == "SK01"
     assert payload["group_key"] == "group"
     assert payload["subgroup_key"] == "sub"
+    assert payload["draw_orientation"] == 2
     assert payload["geometry"] == geometry
     assert payload["lang_code"] == "en"
 
