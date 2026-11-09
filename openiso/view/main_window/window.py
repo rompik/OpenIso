@@ -480,6 +480,9 @@ class SkeyEditor(
         )
         self.properties_widget.txt_skey.textChanged.connect(lambda _text: self._mark_unsaved_changes())
         self.properties_widget.txt_alias_code.textChanged.connect(lambda _text: self._mark_unsaved_changes())
+        self.properties_widget.txt_isogen_base_code.textChanged.connect(
+            lambda _text: self._mark_unsaved_changes()
+        )
         self.properties_widget.txt_skey_desc.textChanged.connect(self._mark_unsaved_changes)
         self.properties_widget.txt_source_name.textChanged.connect(lambda _text: self._mark_unsaved_changes())
         self.properties_widget.txt_source_version.textChanged.connect(lambda _text: self._mark_unsaved_changes())

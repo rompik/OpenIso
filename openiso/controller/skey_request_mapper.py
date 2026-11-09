@@ -18,6 +18,7 @@ def build_save_payload(form_data: dict, skey_name: str, geometry: list, lang_cod
     """Build service payload for saving a Skey."""
     return {
         "name": skey_name,
+        "isogen_base_code": form_data["isogen_base_code"],
         "group_key": form_data["group_key"],
         "subgroup_key": form_data["subgroup_key"],
         "description_key": form_data["description_text"],

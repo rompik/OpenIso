@@ -39,6 +39,7 @@ def test_schema_contains_source_and_isogen_columns(tmp_path):
     assert "flow_dependency" in skeys_columns
     assert "source_id" in skeys_columns
     assert "isogen_standard" in skeys_columns
+    assert "isogen_base_code" in skeys_columns
     assert "source_id" in spindles_columns
     assert "isogen_standard" in spindles_columns
 
@@ -65,6 +66,7 @@ def test_insert_and_read_skey_with_source_metadata(tmp_path):
         source_type="standard",
         source_version="2008",
         isogen_standard=1,
+        isogen_base_code="BASE-VALVE",
         geometry=["Line: x1=0 y1=0 x2=1 y2=1"],
     )
 
@@ -84,6 +86,7 @@ def test_insert_and_read_skey_with_source_metadata(tmp_path):
     assert loaded.source_type == "standard"
     assert loaded.source_version == "2008"
     assert loaded.isogen_standard == 1
+    assert loaded.isogen_base_code == "BASE-VALVE"
     assert loaded.geometry == ["Line: x1=0 y1=0 x2=1 y2=1"]
 
 

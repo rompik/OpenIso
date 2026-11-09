@@ -32,6 +32,7 @@ class SkeyData:
     source_type: str = "standard"
     source_version: str = ""
     isogen_standard: int = 0
+    isogen_base_code: str = ""
     origin_type: str = "user"
     is_official: int = 0
     is_user_modified: int = 0
@@ -65,6 +66,7 @@ class SkeyData:
             "source_type": self.source_type,
             "source_version": self.source_version,
             "isogen_standard": self.isogen_standard,
+            "isogen_base_code": self.isogen_base_code,
             "origin_type": self.origin_type,
             "is_official": self.is_official,
             "is_user_modified": self.is_user_modified,
@@ -101,6 +103,7 @@ class SkeyData:
                 source_type=data.get("source_type", "standard"),
                 source_version=data.get("source_version", ""),
                 isogen_standard=data.get("isogen_standard", 0),
+                isogen_base_code=data.get("isogen_base_code", ""),
                 origin_type=data.get("origin_type", "user"),
                 is_official=data.get("is_official", 0),
                 is_user_modified=data.get("is_user_modified", 0),

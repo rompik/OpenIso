@@ -30,6 +30,7 @@ def test_skeydata_to_from_dict_roundtrip_with_source_fields():
         source_type="company",
         source_version="v2",
         isogen_standard=0,
+        isogen_base_code="BASE01",
         geometry=["Line: x1=0 y1=0 x2=1 y2=1"],
     )
 
@@ -48,6 +49,7 @@ def test_skeydata_to_from_dict_roundtrip_with_source_fields():
     assert restored.source_type == "company"
     assert restored.source_version == "v2"
     assert restored.isogen_standard == 0
+    assert restored.isogen_base_code == "BASE01"
 
 
 def test_geometry_converter_parse_value_and_relative_position():

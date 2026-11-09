@@ -93,6 +93,8 @@ class PropertiesWidget(QGroupBox):
         self.txt_skey = QLineEdit("")
         self.lbl_alias_code = QLabel(_t("Isogen Code"))
         self.txt_alias_code = QLineEdit("")
+        self.lbl_isogen_base_code = QLabel(_t("ISOGEN Base Code"))
+        self.txt_isogen_base_code = QLineEdit("")
         self.lbl_skey_group = QLabel(_t("Group"))
         self.cb_skey_group = QComboBox()
         self.cb_skey_group.setDuplicatesEnabled(False)
@@ -222,38 +224,40 @@ class PropertiesWidget(QGroupBox):
         self.grid_properties.addWidget(self.txt_skey, 0, 1)
         self.grid_properties.addWidget(self.lbl_alias_code, 1, 0)
         self.grid_properties.addWidget(self.txt_alias_code, 1, 1)
-        self.grid_properties.addWidget(self.lbl_skey_group, 2, 0)
-        self.grid_properties.addWidget(self.cb_skey_group, 2, 1)
-        self.grid_properties.addWidget(self.lbl_skey_subgroup, 3, 0)
-        self.grid_properties.addWidget(self.cb_skey_subgroup, 3, 1)
-        self.grid_properties.addWidget(self.lbl_spindle, 4, 0)
-        self.grid_properties.addWidget(self.cb_spindle_skey, 4, 1)
+        self.grid_properties.addWidget(self.lbl_isogen_base_code, 2, 0)
+        self.grid_properties.addWidget(self.txt_isogen_base_code, 2, 1)
+        self.grid_properties.addWidget(self.lbl_skey_group, 3, 0)
+        self.grid_properties.addWidget(self.cb_skey_group, 3, 1)
+        self.grid_properties.addWidget(self.lbl_skey_subgroup, 4, 0)
+        self.grid_properties.addWidget(self.cb_skey_subgroup, 4, 1)
+        self.grid_properties.addWidget(self.lbl_spindle, 5, 0)
+        self.grid_properties.addWidget(self.cb_spindle_skey, 5, 1)
 
-        self.grid_properties.addWidget(self.lbl_source_type, 5, 0)
-        self.grid_properties.addWidget(self.cb_source_type, 5, 1)
-        self.grid_properties.addWidget(self.lbl_source_name, 6, 0)
-        self.grid_properties.addWidget(self.txt_source_name, 6, 1)
-        self.grid_properties.addWidget(self.lbl_source_version, 7, 0)
-        self.grid_properties.addWidget(self.txt_source_version, 7, 1)
-        self.grid_properties.addWidget(self.lbl_pcf_identification, 8, 0)
-        self.grid_properties.addWidget(self.txt_pcf_identification, 8, 1)
-        self.grid_properties.addWidget(self.lbl_idf_record, 9, 0)
-        self.grid_properties.addWidget(self.txt_idf_record, 9, 1)
+        self.grid_properties.addWidget(self.lbl_source_type, 6, 0)
+        self.grid_properties.addWidget(self.cb_source_type, 6, 1)
+        self.grid_properties.addWidget(self.lbl_source_name, 7, 0)
+        self.grid_properties.addWidget(self.txt_source_name, 7, 1)
+        self.grid_properties.addWidget(self.lbl_source_version, 8, 0)
+        self.grid_properties.addWidget(self.txt_source_version, 8, 1)
+        self.grid_properties.addWidget(self.lbl_pcf_identification, 9, 0)
+        self.grid_properties.addWidget(self.txt_pcf_identification, 9, 1)
+        self.grid_properties.addWidget(self.lbl_idf_record, 10, 0)
+        self.grid_properties.addWidget(self.txt_idf_record, 10, 1)
 
-        self.grid_properties.addWidget(self.group_description, 10, 0, 1, 2)
-        self.grid_properties.addWidget(self.group_mirror, 11, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_description, 11, 0, 1, 2)
+        self.grid_properties.addWidget(self.group_mirror, 12, 0, 1, 2)
 
-        self.grid_properties.addWidget(self.group_draw_orientation, 12, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_flow_arrow, 13, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_dimensioned, 14, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_tracing, 15, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_insulation, 16, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_user_definable, 17, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_flow_dependency, 18, 0, 1, 2)
-        self.grid_properties.addWidget(self.chk_isogen_standard, 19, 0, 1, 2)
-        self.grid_properties.addWidget(self.lbl_geometry, 20, 0)
-        self.grid_properties.addWidget(self.lst_geometry, 21, 0, 1, 2)
-        self.grid_properties.setRowStretch(21, 1)
+        self.grid_properties.addWidget(self.group_draw_orientation, 13, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_arrow, 14, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_dimensioned, 15, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_tracing, 16, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_insulation, 17, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_user_definable, 18, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_flow_dependency, 19, 0, 1, 2)
+        self.grid_properties.addWidget(self.chk_isogen_standard, 20, 0, 1, 2)
+        self.grid_properties.addWidget(self.lbl_geometry, 21, 0)
+        self.grid_properties.addWidget(self.lst_geometry, 22, 0, 1, 2)
+        self.grid_properties.setRowStretch(22, 1)
 
         self._apply_hidden_properties_for_v090_todo()
 
@@ -283,6 +287,7 @@ class PropertiesWidget(QGroupBox):
         """Clears all input fields in the properties widget."""
         self.txt_skey.clear()
         self.txt_alias_code.clear()
+        self.txt_isogen_base_code.clear()
         # Keep current items in group combo but deselect
         self.cb_skey_group.setCurrentIndex(0)
         self.cb_skey_subgroup.clear()
@@ -309,6 +314,7 @@ class PropertiesWidget(QGroupBox):
         """Redraws and re-translates all static UI elements."""
         self.setTitle("")
         self.lbl_alias_code.setText(_t("Alias Code"))
+        self.lbl_isogen_base_code.setText(_t("ISOGEN Base Code"))
         self.lbl_skey_group.setText(_t("Group"))
         self.lbl_skey_subgroup.setText(_t("Subgroup"))
         self.lbl_spindle.setText(_t("Spindle"))
@@ -420,6 +426,7 @@ class PropertiesWidget(QGroupBox):
         return {
             "skey_code": self.txt_skey.text().strip(),
             "alias_code": self.txt_alias_code.text().strip(),
+            "isogen_base_code": self.txt_isogen_base_code.text().strip(),
             "group_key": self.cb_skey_group.currentData() or self.cb_skey_group.currentText(),
             "subgroup_key": self.cb_skey_subgroup.currentData() or self.cb_skey_subgroup.currentText(),
             "description": self.txt_skey_desc.toPlainText(),
@@ -539,6 +546,7 @@ class PropertiesWidget(QGroupBox):
 
         self.txt_skey.setText(skey_data.name or self._generate_skey_code(skey_data))
         self.txt_alias_code.setText(skey_data.name)
+        self.txt_isogen_base_code.setText(getattr(skey_data, "isogen_base_code", "") or "")
         self.cb_skey_group.setCurrentText(_t(skey_data.group_key))
         subgroup_index = self.cb_skey_subgroup.findData(skey_data.subgroup_key)
         if subgroup_index >= 0:

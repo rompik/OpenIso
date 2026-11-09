@@ -416,6 +416,7 @@ class SkeyService:
         source_type: str = "standard",
         source_version: str = "",
         isogen_standard: int = 0,
+        isogen_base_code: str = "",
     ):
         """Update or create a Skey in the database using hierarchical keys."""
         from openiso.core.i18n import save_json_translation
@@ -504,6 +505,7 @@ class SkeyService:
             source_type=source_type,
             source_version=source_version,
             isogen_standard=isogen_standard,
+            isogen_base_code=isogen_base_code,
             origin_type=origin_type,
             is_official=is_official,
             is_user_modified=is_user_modified,

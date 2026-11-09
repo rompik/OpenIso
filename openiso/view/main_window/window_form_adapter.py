@@ -26,6 +26,7 @@ class WindowFormAdapter:
     def collect_save_form_data(self) -> dict:
         return {
             "alias_code": self._props.txt_alias_code.text().strip(),
+            "isogen_base_code": self._props.txt_isogen_base_code.text().strip(),
             "skey_name": self._props.txt_skey.text().strip(),
             "group_key": self._props.cb_skey_group.currentData() or self._props.cb_skey_group.currentText(),
             "subgroup_key": self._props.cb_skey_subgroup.currentData() or self._props.cb_skey_subgroup.currentText(),

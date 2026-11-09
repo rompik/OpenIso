@@ -36,6 +36,7 @@ def test_build_save_payload_maps_fields():
         "source_type": "standard",
         "source_version": "1.0",
         "isogen_standard": 1,
+        "isogen_base_code": "BASE01",
     }
     geometry = ["Line: x1=0 y1=0 x2=1 y2=1"]
 
@@ -45,6 +46,7 @@ def test_build_save_payload_maps_fields():
     assert payload["group_key"] == "group"
     assert payload["subgroup_key"] == "sub"
     assert payload["draw_orientation"] == 2
+    assert payload["isogen_base_code"] == "BASE01"
     assert payload["geometry"] == geometry
     assert payload["lang_code"] == "en"
 
