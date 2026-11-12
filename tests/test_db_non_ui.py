@@ -40,6 +40,7 @@ def test_schema_contains_source_and_isogen_columns(tmp_path):
     assert "source_id" in skeys_columns
     assert "isogen_standard" in skeys_columns
     assert "isogen_base_code" in skeys_columns
+    assert "lifecycle_status" in skeys_columns
     assert "source_id" in spindles_columns
     assert "isogen_standard" in spindles_columns
 
@@ -52,6 +53,7 @@ def test_insert_and_read_skey_with_source_metadata(tmp_path):
         name="VAL01",
         group_key="valves",
         subgroup_key="gate",
+        lifecycle_status="in_review",
         description_key="valves.gate.val01.description",
         orientation=1,
         flow_arrow=2,
@@ -78,6 +80,7 @@ def test_insert_and_read_skey_with_source_metadata(tmp_path):
     loaded = all_skeys[0]
 
     assert loaded.name == "VAL01"
+    assert loaded.lifecycle_status == "in_review"
     assert loaded.pcf_identification == "VALVE"
     assert loaded.idf_record == "130"
     assert loaded.user_definable == 0

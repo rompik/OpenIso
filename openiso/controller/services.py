@@ -233,7 +233,8 @@ class SkeyService:
             name=symbol_code,
             group_key=payload.get("skey_group") or "unknown",
             subgroup_key=payload.get("subgroup") or "unknown",
-            description_key=payload.get("description") or "",
+            lifecycle_status=payload.get("lifecycle_status", "draft"),
+            description_key=payload.get("description_key", payload.get("description") or ""),
             spindle_skey=payload.get("spindle_skey") or "",
             orientation=int(payload.get("orientation", 0)),
             draw_orientation=int(payload.get("draw_orientation", 0)),
@@ -241,17 +242,26 @@ class SkeyService:
             dimensioned=int(payload.get("dimensioned", 0)),
             tracing=int(payload.get("tracing", 0)),
             insulation=int(payload.get("insulation", 0)),
+            pcf_identification=payload.get("pcf_identification") or payload.get("attributes", {}).get("pcf_identification", ""),
+            idf_record=payload.get("idf_record", ""),
+            user_definable=int(payload.get("user_definable", 1)),
+            flow_dependency=int(payload.get("flow_dependency", 0)),
+            source_name=payload.get("source_name", ""),
+            source_type=payload.get("source_type", "standard"),
+            source_version=payload.get("source_version", ""),
+            isogen_standard=int(payload.get("isogen_standard", 0)),
+            isogen_base_code=payload.get("isogen_base_code", ""),
             geometry=self._normalize_catalog_geometry(symbol_code, payload),
-            origin_type="official",
-            is_official=1,
-            is_user_modified=0,
-            upstream_symbol_code=symbol_code,
-            upstream_release_version=release_version,
-            upstream_symbol_version=symbol_version,
-            last_synced_upstream_version=symbol_version,
-            upstream_payload_hash=payload_hash,
-            local_revision=local_revision,
-            sync_state="synced",
+            origin_type=payload.get("origin_type", "official"),
+            is_official=int(payload.get("is_official", 1)),
+            is_user_modified=int(payload.get("is_user_modified", 0)),
+            upstream_symbol_code=payload.get("upstream_symbol_code", symbol_code),
+            upstream_release_version=payload.get("upstream_release_version", release_version),
+            upstream_symbol_version=int(payload.get("upstream_symbol_version", symbol_version)),
+            last_synced_upstream_version=int(payload.get("last_synced_upstream_version", symbol_version)),
+            upstream_payload_hash=payload.get("upstream_payload_hash", payload_hash),
+            local_revision=int(payload.get("local_revision", local_revision)),
+            sync_state=payload.get("sync_state", "synced"),
         )
 
     def resolve_sync_conflict_accept_upstream(self, skey_name: str) -> bool:
@@ -457,6 +467,7 @@ class SkeyService:
 
         existing = self.get_skey(name)
         if existing:
+            lifecycle_status = existing.lifecycle_status
             if existing.origin_type in ("official", "forked_official"):
                 origin_type = "forked_official"
                 is_official = 0
@@ -474,9 +485,10 @@ class SkeyService:
             upstream_payload_hash = existing.upstream_payload_hash
             local_revision = existing.local_revision + 1
         else:
+            lifecycle_status = "draft"
             origin_type = "user"
             is_official = 0
-            is_user_modified = 0
+            is_user_modified = 1
             sync_state = "synced"
             upstream_symbol_code = ""
             upstream_release_version = ""
@@ -489,6 +501,7 @@ class SkeyService:
             name=name,
             group_key=group_value,
             subgroup_key=subgroup_value,
+            lifecycle_status=lifecycle_status,
             description_key=desc_i18n_key,
             spindle_skey=spindle_skey,
             orientation=orientation,
@@ -550,7 +563,7 @@ class SkeyService:
             for name, skey in result.skeys.items():
                 skey.origin_type = "imported"
                 skey.is_official = 0
-                skey.is_user_modified = 0
+                skey.is_user_modified = 1
                 skey.local_revision = 1
                 skey.sync_state = "synced"
                 if skey.spindle_skey not in available_spindles:

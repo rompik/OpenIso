@@ -5,15 +5,12 @@
 </p>
 
 <p align="center">
-  Lightweight Isometric Piping Symbol Editor.
+  Isometric Piping Symbol Editor.
 </p>
 
 ---
 
 <p align="center">
-  <a href="https://crowdin.com/project/openiso">
-    <img src="https://badges.crowdin.net/openiso/localized.svg" alt="Crowdin" />
-  </a>
   <a href="https://github.com/rompik/OpenIso/actions/workflows/tests.yml">
     <img src="https://github.com/rompik/OpenIso/actions/workflows/tests.yml/badge.svg" alt="Tests" />
   </a>
@@ -36,7 +33,7 @@
   <img src="data/screenshots/en/openiso_01.png" alt="Main UI" />
 </p>
 
-**OpenIso** is a lightweight, open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (Skeys)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
+**OpenIso** is a open-source graphical editor designed for creating and managing piping isometric fitting symbols. It bridges the gap between manual sketching and complex CAD suites, providing a streamlined environment for designing **Symbol Keys (Skeys)** and component graphics used in industrial piping software like AVEVA PDMS/E3D or Intergraph Smart 3D.
 
 ## Features
 
@@ -46,7 +43,7 @@
   * Lines, Rectangles, Rhombus, Circle, Ellipses, Triangles, Caps (Arcs), Hexagons.
   * Hatching and Solid Color Fills.
 * **Modern Export:** Save symbols in **ASCII** format for integration with modern piping tools.
-* **Globalized:** Full localization support via Crowdin.
+* **Localized:** Application translations are maintained in the repository and contributed through GitHub.
 
 ---
 
@@ -82,7 +79,7 @@
 
 Requirements:
 
-* Python 3.10+
+* Latest stable Python 3.15.x for PyPI/source installation
 
 Install:
 
@@ -113,4 +110,7 @@ python -m openiso
 
 ## Documentation
 
+[:books: Documentation hub](./docs/README.md) - User guides, project specification, and contribution guides.
 [:uk: English](./docs/en/INDEX.MD) - Guide to using OpenIso, installation instructions, tutorials, and more.
+[:ru: Русский](./docs/ru/INDEX.MD) - Руководства и справочные материалы на русском языке.
+[Спецификация и технические требования](./docs/specification/README.md) - исходные требования к поведению и разработке OpenIso.

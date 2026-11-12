@@ -49,6 +49,7 @@ cd scripts/localisation
 3. **Translators edit .po files** using poedit or text editor
 4. **Run the script again** to compile updated translations
 5. **Test in application** to verify translations
+6. **Open a GitHub pull request** with the `.po` changes and generated files required by the project
 
 ### Adding a new language:
 
@@ -69,7 +70,8 @@ cd scripts/localisation
 
 4. Edit `po/de.po` to add translations
 
-5. Run the script again to compile
+5. Run the script again to compile and validate the translation
+6. Open a pull request with the translation changes
 
 ### File structure:
 

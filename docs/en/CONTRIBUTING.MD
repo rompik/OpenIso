@@ -60,7 +60,7 @@ OpenIso/
 │   └── view/           # UI components and windows
 ├── data/               # Resources (icons, stylesheets, database scripts)
 ├── docs/               # Documentation in multiple languages
-├── po/                 # Translation files (Crowdin)
+├── po/                 # Application translations (GNU gettext)
 └── requirements.txt    # Python dependencies
 ```
 
@@ -109,32 +109,31 @@ We follow standard Python conventions to maintain code quality.
 
 ## 📝 Translation Contributions {#translation-contributions}
 
-We support multiple languages (English, Russian) and welcome new translations.
+Translations are maintained in this GitHub repository. Russian is the source language for new and updated user documentation. Translated pages and application catalogs are reviewed through pull requests.
 
 ### Adding a New Language {#adding-a-new-language}
 
-1. Add the language code (e.g., `de`, `es`) to `po/LINGUAS`.
+#### User documentation
 
-2. Run the update script:
+1. Create the language directory under `docs/` using its language code (for example, `docs/de/`).
+2. Translate the relevant Markdown pages from `docs/ru/`, preserving links, code, and technical identifiers.
+3. Add the translated pages to that language's `index.json`.
+4. Open a pull request with the documentation changes.
 
-        ./scripts/localisation/update_translations.sh
+When updating an existing translation, compare it with the current Russian source. If a page has not been translated yet, leave it out of the language index rather than linking to a missing file.
 
-3. Edit the newly created `.po` file in `po/` (e.g., `po/de.po`) using Poedit or a text editor.
+#### Application interface
 
-4. Commit the `.po` file.
+1. Add the language code (for example, `de`) to `po/LINGUAS`.
+2. Run `scripts/localisation/update_translations.sh` to update the gettext catalogs.
+3. Translate the generated `po/de.po` with Poedit or a text editor.
+4. Run the script again and test the application.
+5. Open a pull request containing the `.po` changes and any updated generated files required by the project.
 
-See [Localization Guide](./LOCALISATION.md) for more details.
+See [Localization Guide](./LOCALISATION.md) for application translation details. Do not translate code identifiers, file names, or literal values used by the application.
 
 ---
 [Return to Index](./INDEX.MD)
-
-
-1. Visit our [project page on Crowdin](https://crowdin.com/project/openiso).
-2. Select a language you are proficient in.
-3. Start translating the available strings. You can also vote on translations provided by other contributors.
-4. Once translations are ready, they will be automatically submitted to this repository via a Pull Request.
-
-**Note:** Please do not submit translation Pull Requests directly on GitHub. All text changes should be handled through Crowdin to prevent synchronization conflicts.
 
 ## 🐛 Reporting Issues {#reporting-issues}
 

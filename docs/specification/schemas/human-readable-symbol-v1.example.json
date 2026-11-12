@@ -7,6 +7,7 @@
     "description": "Gate valve with straight-through bore",
     "group": "valves",
     "subgroup": "gate",
+    "lifecycle_status": "draft",
     "units": "mm",
     "origin": {
       "x": 0.0,
@@ -15,9 +16,16 @@
     "classification": {
       "pcf_identification": "VALVE",
       "idf_record": 50,
-      "flow_arrow": false,
-      "flow_dependency": true,
-      "user_definable": true,
+      "flow_arrow": 2,
+      "flow_dependency": 0,
+      "user_definable": 1,
+      "is_user_modified": 1,
+      "is_official": 1,
+      "orientation": 0,
+      "draw_orientation": 0,
+      "dimensioned": 0,
+      "tracing": 0,
+      "insulation": 0,
       "code_pattern": "VA**",
       "end_condition_tokens": ["BW", "SW", "FL", "SC"],
       "pattern_params": {

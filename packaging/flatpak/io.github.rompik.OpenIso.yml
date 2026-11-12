@@ -1,0 +1,59 @@
+app-id: io.github.rompik.OpenIso
+runtime: org.freedesktop.Platform
+runtime-version: "24.08"
+sdk: org.freedesktop.Sdk
+command: openiso
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+modules:
+  - name: python-dependencies-x86_64
+    only-arches:
+      - x86_64
+    buildsystem: simple
+    build-commands:
+      - python3 -m pip install --no-index --no-deps --prefix=/app *.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/f9/cb/7557f6c559b392bb66a184eee802091676bf8e67a0d00f19a0dc10b5a7ae/pyqt6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl
+        sha256: 1922bf7440310845a4fd06f4242288084dc26cf682a67e561b115570a8def3d1
+      - type: file
+        url: https://files.pythonhosted.org/packages/d1/e5/c296a9bcde5ef9bbbc5249079422266ccd9c583d117c27d0e832861e9767/pyqt6_qt6-6.12.0-py3-none-manylinux_2_34_x86_64.whl
+        sha256: b76e9962e83cf7daff9bb7ab169c804f37b77ab2d7393d3b380351f5a2441ee0
+      - type: file
+        url: https://files.pythonhosted.org/packages/70/01/6b4cd724cf503ec58418f40a7a9c110394032ad48e6b209cca0bf2d76769/pyqt6_sip-13.13.1-cp312-cp312-manylinux1_x86_64.manylinux_2_5_x86_64.whl
+        sha256: 5417e01a4b3079d60dc9401739c1a851ec7a2267b67b5cc57424a202b6f75044
+      - type: file
+        url: https://files.pythonhosted.org/packages/de/1f/77fa3081e4f66ca3576c896ae5d31c3002ac6607f9747d2e3aa49227e464/markdown-3.10.2-py3-none-any.whl
+        sha256: e91464b71ae3ee7afd3017d9f358ef0baf158fd9a298db92f1d4761133824c36
+  - name: python-dependencies-aarch64
+    only-arches:
+      - aarch64
+    buildsystem: simple
+    build-commands:
+      - python3 -m pip install --no-index --no-deps --prefix=/app *.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/37/5e/5154ead9550aed78ecf9adddb2d5087ac8878cb9c337834b951c32763fae/pyqt6-6.12.0-cp310-abi3-manylinux_2_39_aarch64.whl
+        sha256: 2799f2e75594af313222a2dc2da9f965fe88be29ee4293d7937e7763630f5610
+      - type: file
+        url: https://files.pythonhosted.org/packages/62/85/4987f605abd8854eaaefe7a26e5926bab0600985984aa5555cf0d8d7cb2f/pyqt6_qt6-6.12.0-py3-none-manylinux_2_39_aarch64.whl
+        sha256: 2460119ac5f725cfddc331bd56eca22fbb61b29a549d417b7bcc304c7fc9459b
+      - type: file
+        url: https://files.pythonhosted.org/packages/cb/ab/7f6b190ebe3e96832a531db2490a09996844159f575c1d5fdcee9988968c/pyqt6_sip-13.13.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl
+        sha256: 9ce18cb83284bc233366b9337cdf1dcefd4054aeaa87f9b76650aba240b6193d
+      - type: file
+        url: https://files.pythonhosted.org/packages/de/1f/77fa3081e4f66ca3576c896ae5d31c3002ac6607f9747d2e3aa49227e464/markdown-3.10.2-py3-none-any.whl
+        sha256: e91464b71ae3ee7afd3017d9f358ef0baf158fd9a298db92f1d4761133824c36
+  - name: openiso
+    buildsystem: simple
+    build-commands:
+      - python3 -m pip install --no-index --no-deps --no-build-isolation --prefix=/app .
+      - install -Dm644 data/io.github.rompik.OpenIso.desktop.in /app/share/applications/io.github.rompik.OpenIso.desktop
+      - install -Dm644 data/io.github.rompik.OpenIso.metainfo.xml.in /app/share/metainfo/io.github.rompik.OpenIso.metainfo.xml
+      - install -Dm644 data/icons/logo.svg /app/share/icons/hicolor/scalable/apps/io.github.rompik.OpenIso.svg
+    sources:
+      - type: dir
+        path: ../..

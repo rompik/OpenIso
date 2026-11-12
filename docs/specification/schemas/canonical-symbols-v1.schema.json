@@ -46,6 +46,23 @@
             "type": "string",
             "minLength": 1
           },
+          "lifecycle_status": {
+            "type": "string",
+            "enum": ["draft", "in_progress", "in_review", "approved", "deprecated"]
+          },
+          "origin_type": {
+            "type": "string",
+            "enum": ["user", "official", "forked_official", "imported"]
+          },
+          "is_official": {
+            "type": "integer",
+            "enum": [0, 1]
+          },
+          "is_user_modified": {
+            "description": "ISOGEN user-editability code; it does not indicate whether a local edit has occurred.",
+            "type": "integer",
+            "enum": [0, 1]
+          },
           "name": {
             "type": "string"
           },
@@ -106,6 +123,9 @@
               },
               "last_synced_release_version": {
                 "type": "string"
+              },
+              "has_local_changes": {
+                "type": "boolean"
               },
               "sync_state": {
                 "type": "string",

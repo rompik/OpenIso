@@ -15,7 +15,7 @@
     },
     "symbol": {
       "type": "object",
-      "required": ["code", "group", "subgroup", "units", "origin", "connectors", "primitives"],
+      "required": ["code", "group", "subgroup", "lifecycle_status", "units", "origin", "connectors", "primitives"],
       "properties": {
         "code": {
           "type": "string",
@@ -34,6 +34,10 @@
         "subgroup": {
           "type": "string",
           "minLength": 1
+        },
+        "lifecycle_status": {
+          "type": "string",
+          "enum": ["draft", "in_progress", "in_review", "approved", "deprecated"]
         },
         "units": {
           "type": "string",
@@ -124,13 +128,44 @@
           ]
         },
         "flow_arrow": {
-          "type": "boolean"
+          "type": "integer",
+          "enum": [0, 1, 2]
         },
         "flow_dependency": {
-          "type": "boolean"
+          "type": "integer",
+          "minimum": 0
         },
         "user_definable": {
-          "type": "boolean"
+          "type": "integer",
+          "enum": [0, 1]
+        },
+        "is_user_modified": {
+          "type": "integer",
+          "enum": [0, 1]
+        },
+        "is_official": {
+          "type": "integer",
+          "enum": [0, 1]
+        },
+        "orientation": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3]
+        },
+        "draw_orientation": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3]
+        },
+        "dimensioned": {
+          "type": "integer",
+          "enum": [0, 1, 2]
+        },
+        "tracing": {
+          "type": "integer",
+          "enum": [0, 1, 2]
+        },
+        "insulation": {
+          "type": "integer",
+          "enum": [0, 1, 2]
         },
         "code_pattern": {
           "type": "string"

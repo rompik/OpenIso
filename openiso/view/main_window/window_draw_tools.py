@@ -90,9 +90,6 @@ class DrawToolsMixin:
             "Line": self._on_draw_line_clicked,
             "Polyline": self._on_draw_polyline_clicked,
             "Orthogonal Polyline": self._on_draw_polyline_orthogonal_clicked,
-            _t("Line"): self._on_draw_line_clicked,
-            _t("Polyline"): self._on_draw_polyline_clicked,
-            _t("Orthogonal Polyline"): self._on_draw_polyline_orthogonal_clicked,
         }
         handler = tool_map.get(tool_name)
         if handler:
@@ -122,16 +119,6 @@ class DrawToolsMixin:
             "Pentagon": self._on_draw_pentagon_clicked,
             "Octagon": self._on_draw_octagon_clicked,
             "Dodecagon": self._on_draw_dodecagon_clicked,
-            _t("Square"): self._on_draw_square_clicked,
-            _t("Rectangle"): self._on_draw_rect_clicked,
-            _t("Circle"): self._on_draw_circle_clicked,
-            _t("Triangle"): self._on_draw_triangle_clicked,
-            _t("Diamond"): self._on_draw_diamond_clicked,
-            _t("Cap"): self._on_draw_cap_clicked,
-            _t("Hexagon"): self._on_draw_hexagon_clicked,
-            _t("Pentagon"): self._on_draw_pentagon_clicked,
-            _t("Octagon"): self._on_draw_octagon_clicked,
-            _t("Dodecagon"): self._on_draw_dodecagon_clicked,
         }
         handler = tool_map.get(tool_name)
         if handler:

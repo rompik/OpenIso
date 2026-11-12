@@ -64,7 +64,7 @@ OpenIso/
 │   └── view/           # UI components and windows
 ├── data/               # Resources (icons, stylesheets, database scripts)
 ├── docs/               # Documentation in multiple languages
-├── po/                 # Translation files (Crowdin)
+├── po/                 # Переводы интерфейса (GNU gettext)
 └── requirements.txt    # Python dependencies
 ```
 
@@ -94,16 +94,27 @@ OpenIso/
 
 ## 📝 Translation Contributions
 
-Мы используем Crowdin для перевода нашей документации. Это помогает нам держать переводы в актуальном состоянии без необходимости редактировать код напрямую.
+Переводы хранятся в этом GitHub-репозитории и принимаются через pull request. Русский язык является исходным для новых и обновляемых пользовательских руководств.
 
-How to contribute translations:
+### Перевод документации
 
-1. Visit our [project page on Crowdin](https://crowdin.com/project/openiso).
-2. Select a language you are proficient in.
-3. Start translating the available strings. You can also vote on translations provided by other contributors.
-4. Once translations are ready, they will be automatically submitted to this repository via a Pull Request.
+1. Создайте или обновите соответствующую страницу на русском языке в `docs/ru/`.
+2. Для другого языка переведите страницу из `docs/ru/` в соответствующую папку `docs/<код-языка>/`.
+3. Сохраните ссылки, примеры кода и технические идентификаторы без изменений.
+4. Добавьте страницу в языковой `index.json` и откройте pull request.
 
-**Note:** Please do not submit translation Pull Requests directly on GitHub. All text changes should be handled through Crowdin to prevent synchronization conflicts.
+Если русский оригинал изменился, проверьте соответствующий перевод и обновите его в том же или отдельном pull request. Не добавляйте в индекс ссылку на отсутствующую страницу.
+
+### Перевод интерфейса приложения
+
+Каталоги GNU gettext находятся в `po/`. Чтобы обновить или добавить перевод:
+
+1. Укажите язык в `po/LINGUAS`.
+2. Запустите `scripts/localisation/update_translations.sh`.
+3. Переведите соответствующий `.po`-файл, повторно запустите скрипт и проверьте приложение.
+4. Отправьте изменения через pull request.
+
+См. [руководство по локализации](./LOCALISATION.md). Не переводите идентификаторы кода, имена файлов и значения, которые приложение использует как ключи.
 
 ## 🐛 Reporting Issues
 

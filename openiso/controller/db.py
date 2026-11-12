@@ -100,6 +100,7 @@ class SkeyDB:
                 name TEXT NOT NULL UNIQUE,
                 skey_group_key TEXT NOT NULL,
                 skey_subgroup_key TEXT NOT NULL,
+                lifecycle_status TEXT NOT NULL DEFAULT 'draft',
                 skey_description_key TEXT,
                 spindle_skey TEXT,
                 orientation INTEGER NOT NULL DEFAULT 0,
@@ -271,6 +272,7 @@ class SkeyDB:
             )
 
             new_skey_columns = [
+                ("lifecycle_status", "TEXT NOT NULL DEFAULT 'draft'"),
                 ("pcf_identification", "TEXT"),
                 ("idf_record", "TEXT"),
                 ("user_definable", "INTEGER NOT NULL DEFAULT 1"),
@@ -476,7 +478,7 @@ class SkeyDB:
             cur = conn.cursor()
             cur.execute(
                 """
-                SELECT id, origin_type, is_user_modified
+                SELECT id, origin_type, is_official
                 FROM skeys
                 WHERE name = ?
                 """,
@@ -490,7 +492,7 @@ class SkeyDB:
                 cur.execute(
                     """
                     INSERT INTO skeys (
-                        name, skey_group_key, skey_subgroup_key, skey_description_key,
+                        name, skey_group_key, skey_subgroup_key, lifecycle_status, skey_description_key,
                         spindle_skey, orientation, draw_orientation, flow_arrow, dimensioned, tracing, insulation,
                         pcf_identification, idf_record, user_definable, flow_dependency,
                         source_id, isogen_standard,
@@ -498,14 +500,14 @@ class SkeyDB:
                         upstream_symbol_code, upstream_release_version,
                         upstream_symbol_version, last_synced_upstream_version,
                         upstream_payload_hash, local_revision, sync_state
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
-                        skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
+                        skey.name, skey.group_key, skey.subgroup_key, skey.lifecycle_status, skey.description_key,
                         spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                         skey.tracing, skey.insulation, skey.pcf_identification, skey.idf_record,
                         skey.user_definable, skey.flow_dependency, source_id, skey.isogen_standard,
-                        "official", 1, 0,
+                        skey.origin_type, skey.is_official, skey.is_user_modified,
                         upstream_symbol_code, release_version,
                         upstream_symbol_version, upstream_symbol_version,
                         upstream_payload_hash, 1, "synced",
@@ -524,24 +526,9 @@ class SkeyDB:
                     )
                 return "inserted"
 
-            skey_id, origin_type, is_user_modified = row
+            skey_id, origin_type, is_official = row
 
-            if origin_type in ("user", "imported"):
-                cur.execute(
-                    """
-                    UPDATE skeys
-                    SET upstream_symbol_code = ?,
-                        upstream_release_version = ?,
-                        upstream_symbol_version = ?,
-                        upstream_payload_hash = ?,
-                        sync_state = 'upstream_newer'
-                    WHERE id = ?
-                    """,
-                    (upstream_symbol_code, release_version, upstream_symbol_version, upstream_payload_hash, skey_id),
-                )
-                return "skipped_user"
-
-            if is_user_modified:
+            if origin_type == "forked_official":
                 cur.execute(
                     """
                     UPDATE skeys
@@ -556,6 +543,21 @@ class SkeyDB:
                 )
                 return "conflict"
 
+            if not is_official:
+                cur.execute(
+                    """
+                    UPDATE skeys
+                    SET upstream_symbol_code = ?,
+                        upstream_release_version = ?,
+                        upstream_symbol_version = ?,
+                        upstream_payload_hash = ?,
+                        sync_state = 'upstream_newer'
+                    WHERE id = ?
+                    """,
+                    (upstream_symbol_code, release_version, upstream_symbol_version, upstream_payload_hash, skey_id),
+                )
+                return "skipped_user"
+
             spindle_skey = self._existing_spindle_or_none(cur, skey.spindle_skey)
             source_id = self._ensure_symbol_source(skey.source_name, skey.source_type, skey.source_version)
             cur.execute(
@@ -563,6 +565,7 @@ class SkeyDB:
                 UPDATE skeys SET
                     skey_group_key = ?,
                     skey_subgroup_key = ?,
+                    lifecycle_status = ?,
                     skey_description_key = ?,
                     spindle_skey = ?,
                     orientation = ?,
@@ -577,9 +580,9 @@ class SkeyDB:
                     flow_dependency = ?,
                     source_id = ?,
                     isogen_standard = ?,
-                    origin_type = 'official',
-                    is_official = 1,
-                    is_user_modified = 0,
+                    origin_type = ?,
+                    is_official = ?,
+                    is_user_modified = ?,
                     upstream_symbol_code = ?,
                     upstream_release_version = ?,
                     upstream_symbol_version = ?,
@@ -589,11 +592,12 @@ class SkeyDB:
                 WHERE id = ?
                 """,
                 (
-                    skey.group_key, skey.subgroup_key, skey.description_key,
+                    skey.group_key, skey.subgroup_key, skey.lifecycle_status, skey.description_key,
                     spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,
                     skey.flow_dependency, source_id, skey.isogen_standard,
+                    skey.origin_type, skey.is_official, skey.is_user_modified,
                     upstream_symbol_code, release_version, upstream_symbol_version,
                     upstream_symbol_version, upstream_payload_hash,
                     skey_id,
@@ -652,7 +656,7 @@ class SkeyDB:
             cur.execute(
                 """
                 SELECT
-                    s.id, s.name, s.skey_group_key, s.skey_subgroup_key, s.skey_description_key,
+                    s.id, s.name, s.skey_group_key, s.skey_subgroup_key, s.lifecycle_status, s.skey_description_key,
                     s.spindle_skey, s.orientation, s.draw_orientation, s.flow_arrow, s.dimensioned, s.tracing, s.insulation,
                     s.pcf_identification, s.idf_record, s.user_definable, s.flow_dependency,
                     s.source_id, s.isogen_standard, s.isogen_base_code, s.origin_type, s.is_official, s.is_user_modified,
@@ -672,6 +676,7 @@ class SkeyDB:
                     name=row["name"],
                     group_key=row["skey_group_key"],
                     subgroup_key=row["skey_subgroup_key"],
+                    lifecycle_status=row["lifecycle_status"],
                     description_key=row["skey_description_key"],
                     spindle_skey=row["spindle_skey"] or "",
                     orientation=row["orientation"],
@@ -726,7 +731,7 @@ class SkeyDB:
             cur.execute(
                 """
                 INSERT INTO skeys (
-                    name, skey_group_key, skey_subgroup_key, skey_description_key,
+                    name, skey_group_key, skey_subgroup_key, lifecycle_status, skey_description_key,
                     spindle_skey, orientation, draw_orientation, flow_arrow, dimensioned, tracing, insulation,
                     pcf_identification, idf_record, user_definable, flow_dependency,
                     source_id, isogen_standard, isogen_base_code,
@@ -734,10 +739,10 @@ class SkeyDB:
                     upstream_symbol_code, upstream_release_version,
                     upstream_symbol_version, last_synced_upstream_version,
                     upstream_payload_hash, local_revision, sync_state
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    skey.name, skey.group_key, skey.subgroup_key, skey.description_key,
+                    skey.name, skey.group_key, skey.subgroup_key, skey.lifecycle_status, skey.description_key,
                     spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,
@@ -783,6 +788,7 @@ class SkeyDB:
                 UPDATE skeys SET
                     skey_group_key = ?,
                     skey_subgroup_key = ?,
+                    lifecycle_status = ?,
                     skey_description_key = ?,
                     spindle_skey = ?,
                     orientation = ?,
@@ -811,7 +817,7 @@ class SkeyDB:
                 WHERE id = ?
                 """,
                 (
-                    skey.group_key, skey.subgroup_key, skey.description_key,
+                    skey.group_key, skey.subgroup_key, skey.lifecycle_status, skey.description_key,
                     spindle_skey, skey.orientation, skey.draw_orientation, skey.flow_arrow, skey.dimensioned,
                     skey.tracing, skey.insulation,
                     skey.pcf_identification, skey.idf_record, skey.user_definable,

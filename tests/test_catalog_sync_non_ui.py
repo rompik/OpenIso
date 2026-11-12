@@ -55,6 +55,7 @@ def test_catalog_sync_inserts_official_symbol(tmp_path, monkeypatch):
                 "skey_group": "Valves",
                 "subgroup": "Gate",
                 "description": "Gate valve",
+                "lifecycle_status": "draft",
                 "orientation": 0,
                 "flow_arrow": 1,
                 "dimensioned": 1,
@@ -72,6 +73,7 @@ def test_catalog_sync_inserts_official_symbol(tmp_path, monkeypatch):
     skey = service.get_skey("ABCD")
     assert skey is not None
     assert skey.origin_type == "official"
+    assert skey.lifecycle_status == "draft"
     assert skey.is_official == 1
     assert skey.is_user_modified == 0
     assert skey.upstream_release_version == "1.0.0"

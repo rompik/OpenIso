@@ -194,12 +194,10 @@ if [ "$HAS_FUZZY" = true ]; then
     echo "   2. Remove '#, fuzzy' comment when translation is complete"
     echo "   3. Run this script again to recompile"
     echo "   4. Test: LANG=ru_RU python -m openiso"
+    echo "   5. Push your branch and open a GitHub pull request"
 else
-    echo "   1. Commit changes: git add po/ && git commit -m 'Update translations'"
-    echo "   2. Test: LANG=ru_RU python -m openiso"
+    echo "   1. Commit and push your translation changes"
+    echo "   2. Open a GitHub pull request"
+    echo "   3. Test: LANG=ru_RU python -m openiso"
 fi
-echo ""
-echo "🌐 Crowdin Integration:"
-echo "   crowdin upload sources"
-echo "   crowdin download"
 echo ""

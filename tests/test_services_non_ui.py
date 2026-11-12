@@ -154,6 +154,7 @@ def test_skey_service_export_all_skeys_to_ois_payload_contains_all_fields():
         name="M3",
         group_key="Valves",
         subgroup_key="3-Way Valve",
+        lifecycle_status="in_review",
         description_key="",
         spindle_skey="SP01",
         orientation=1,
@@ -180,6 +181,7 @@ def test_skey_service_export_all_skeys_to_ois_payload_contains_all_fields():
     assert payload["skeys"]["M3"]["name"] == "M3"
     assert payload["skeys"]["M3"]["group_key"] == "Valves"
     assert payload["skeys"]["M3"]["subgroup_key"] == "3-Way Valve"
+    assert payload["skeys"]["M3"]["lifecycle_status"] == "in_review"
     assert payload["skeys"]["M3"]["geometry"] == ["Line: x1=0 y1=0 x2=1 y2=1"]
 
 

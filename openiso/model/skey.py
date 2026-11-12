@@ -15,6 +15,7 @@ class SkeyData:
     name: str
     group_key: str = " "
     subgroup_key: str = " "
+    lifecycle_status: str = "draft"
     description_key: str = ""
     spindle_skey: str = ""
     orientation: int = Orientation.SYMMETRICAL
@@ -49,6 +50,7 @@ class SkeyData:
         return {
             "group_key": self.group_key,
             "subgroup_key": self.subgroup_key,
+            "lifecycle_status": self.lifecycle_status,
             "description_key": self.description_key,
             "spindle_skey": self.spindle_skey,
             "orientation": self.orientation,
@@ -86,6 +88,7 @@ class SkeyData:
                 name=name,
                 group_key=data.get("group_key", data.get("group", " ")),
                 subgroup_key=data.get("subgroup_key", data.get("subgroup", " ")),
+                lifecycle_status=data.get("lifecycle_status", "draft"),
                 description_key=data.get("description_key", data.get("description", "")),
                 spindle_skey=data.get("spindle_skey", ""),
                 orientation=data.get("orientation", 0),

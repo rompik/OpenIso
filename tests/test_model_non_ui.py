@@ -14,6 +14,7 @@ def test_skeydata_to_from_dict_roundtrip_with_source_fields():
         name="VALV1",
         group_key="valves",
         subgroup_key="gate",
+        lifecycle_status="in_review",
         description_key="valves.gate.valv1.description",
         spindle_skey="SP01",
         orientation=2,
@@ -40,6 +41,7 @@ def test_skeydata_to_from_dict_roundtrip_with_source_fields():
     assert restored.name == "VALV1"
     assert restored.group_key == "valves"
     assert restored.subgroup_key == "gate"
+    assert restored.lifecycle_status == "in_review"
     assert restored.pcf_identification == "VALVE"
     assert restored.idf_record == "130"
     assert restored.user_definable == 0

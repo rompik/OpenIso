@@ -7,7 +7,7 @@ name = "openiso"
 dynamic = ["version"]
 description = "Lightweight isometric piping symbol editor"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.15,<3.16"
 license = { text = "MIT" }
 authors = [
     { name = "Roman PARYGIN", email = "roman.parygin@gmail.com" },
@@ -21,10 +21,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Multimedia :: Graphics :: Editors",
 ]
 dependencies = [
@@ -94,7 +91,7 @@ markers = [
 
 [tool.black]
 line-length = 120
-target-version = ["py310"]
+target-version = ["py315"]
 include = '(openiso/.*\\.py|docs/.*/.*\\.py)'
 
 [tool.isort]

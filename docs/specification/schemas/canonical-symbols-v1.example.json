@@ -1,7 +1,7 @@
 {
   "format": "OpenIso.Canonical",
   "schema_version": 1,
-  "format_version": "1.0.0",
+  "format_version": "1.1.0",
   "generated_at": "2026-04-22T12:00:00Z",
   "source": {
     "type": "official_catalog",
@@ -11,6 +11,10 @@
   "symbols": [
     {
       "symbol_code": "VAVW",
+      "lifecycle_status": "draft",
+      "origin_type": "official",
+      "is_official": 1,
+      "is_user_modified": 1,
       "name": "Gate Valve",
       "group_key": "valves",
       "subgroup_key": "gate",
@@ -31,7 +35,8 @@
         "payload_hash": "sha256:9f2ca1bcd5",
         "change_ticket": "OPENISO-241",
         "last_synced_release_version": "0.8.0",
-        "sync_state": "synced"
+        "sync_state": "synced",
+        "has_local_changes": false
       },
       "connectors": [
         {
@@ -94,6 +99,10 @@
       },
       "attribute_schema_version": 1,
       "attributes": {
+        "orientation": 0,
+        "flow_arrow": 2,
+        "dimensioned": 0,
+        "flow_dependency": 0,
         "insulation_required": false,
         "project_rating": "PN16"
       }
